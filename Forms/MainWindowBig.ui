@@ -1,0 +1,1664 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>698</width>
+    <height>610</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Auto Baseline </string>
+  </property>
+  <property name="animated">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="title">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>20</y>
+      <width>251</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Product Sans</family>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Auto Baseline</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="export_button">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>490</y>
+      <width>121</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Export</string>
+    </property>
+   </widget>
+   <widget class="QTabWidget" name="additional_tabs">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>671</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="sys_tab">
+     <attribute name="title">
+      <string>Systems</string>
+     </attribute>
+     <widget class="QPushButton" name="system_win_1">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>25</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #1 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_1">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>30</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>70</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="system_win_2">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>65</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #2 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_3">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>110</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="system_win_3">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>105</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #3 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_4">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>150</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="system_win_4">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>145</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #4 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_5">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>190</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="system_win_5">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>185</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #5 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_6">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>230</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="system_win_6">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>225</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #6 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_7">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>265</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="system_win_7">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>260</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #7 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="system_bar_8">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>305</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="system_win_8">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>300</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>System #8 Information</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="ws_tab">
+     <attribute name="title">
+      <string>Workstations</string>
+     </attribute>
+     <widget class="QProgressBar" name="work_bar_1">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>30</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_1">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>30</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #1 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="work_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>70</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_2">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>70</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #2 Information</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_4">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>150</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #4 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="work_bar_4">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>150</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="work_bar_3">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>110</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_3">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>110</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #3 Information</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_7">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>270</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #7 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="work_bar_7">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>270</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_6">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>230</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #6 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="work_bar_8">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>310</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="work_bar_6">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>230</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_8">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>310</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #8 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="work_bar_5">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>190</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>7</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="workstation_win_5">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>190</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WorkStation #5 Information</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="generator_tab">
+     <attribute name="title">
+      <string>RF Generators</string>
+     </attribute>
+     <widget class="QProgressBar" name="stockert_bar_1">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>20</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="stockert_win_1">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>20</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Stockert </string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="stockert_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>50</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="stockert_win_2">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>50</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Stockert </string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="smartablate_win_1">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>80</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>SmartAblate™</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="smartablate_bar_1">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>80</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>3</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="smartablate_win_2">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>110</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>SmartAblate™</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="smartablate_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>110</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>3</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="smartablate_win_3">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>140</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>SmartAblate™</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="smartablate_bar_3">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>140</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>3</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ngen_win_1">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>170</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>nGEN™</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ngen_bar_1">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>170</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>25</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ngen_win_2">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>200</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>nGEN™</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ngen_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>200</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>25</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ngen_win_3">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>230</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>nGEN™</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ngen_bar_3">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>230</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>25</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="nmark_win_1">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>260</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>nMARQ™</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="nmark_bar_1">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>260</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>9</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="nmark_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>290</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>9</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="nmark_win_2">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>290</y>
+        <width>191</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>nMARQ™</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="ultra_tab">
+     <attribute name="title">
+      <string>Ultrasounds</string>
+     </attribute>
+     <widget class="QPushButton" name="ultra_win_1">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>15</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #1 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_1">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>20</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ultra_win_2">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>55</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #2 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>60</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ultra_win_3">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>95</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #3 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_3">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>100</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ultra_win_5">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>175</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #5 Information</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ultra_win_4">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>135</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #4 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_5">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>180</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_4">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>140</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ultra_win_6">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>215</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #6 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_6">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>220</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_7">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>260</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ultra_win_7">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>255</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #7 Information</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ultra_win_8">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>295</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ultrasound #8 Information</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="ultra_bar_8">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>300</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="catheters_tab">
+     <attribute name="title">
+      <string>Catheters</string>
+     </attribute>
+     <widget class="QPushButton" name="catheter_1">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>10</y>
+        <width>141</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Catheter</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="catheter_list">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>40</y>
+        <width>291</width>
+        <height>291</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="catheter_2">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>10</y>
+        <width>141</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Remove Catheter</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="extra_tab">
+     <attribute name="title">
+      <string>Extra</string>
+     </attribute>
+     <widget class="QProgressBar" name="pacer_bar">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>70</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>2</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pacer_win">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>30</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Pacer</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="qdot_bar">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>70</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>3</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="qdot_win">
+      <property name="geometry">
+       <rect>
+        <x>185</x>
+        <y>30</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Qdot™ Dongle</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="printer_bar">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>70</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>2</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="printer_win">
+      <property name="geometry">
+       <rect>
+        <x>355</x>
+        <y>30</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Printer</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="epu_bar">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>70</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>2</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="epu_win">
+      <property name="geometry">
+       <rect>
+        <x>515</x>
+        <y>30</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>EPU Device</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="demo_bar">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>300</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="demo_win">
+      <property name="geometry">
+       <rect>
+        <x>25</x>
+        <y>260</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Demo Laptop</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="demo_bar_2">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>300</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="demo_win_2">
+      <property name="geometry">
+       <rect>
+        <x>185</x>
+        <y>260</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Demo Laptop #2</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="demo_bar_3">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>300</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="demo_win_3">
+      <property name="geometry">
+       <rect>
+        <x>345</x>
+        <y>260</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Demo Laptop #3</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="import_button">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>490</y>
+      <width>121</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Import</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>698</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAdd_Device">
+    <property name="title">
+     <string>Add Device</string>
+    </property>
+    <addaction name="actionSystem"/>
+    <addaction name="actionUltraSound"/>
+    <addaction name="actionWork_Station"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="actionRF_Generator_Stockert"/>
+    <addaction name="actionRF_Generator_Smart_Ablate"/>
+    <addaction name="actionRF_Generator_nGen"/>
+    <addaction name="actionRF_Generator_nMARQ"/>
+    <addaction name="separator"/>
+    <addaction name="actionPacer"/>
+    <addaction name="actionQDOT_Dongle"/>
+    <addaction name="actionPrinter"/>
+    <addaction name="actionEPU_Device"/>
+    <addaction name="actionDemo_Laptop"/>
+   </widget>
+   <widget class="QMenu" name="toolsMenu">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionCatalog_Helper"/>
+   </widget>
+   <addaction name="menuAdd_Device"/>
+   <addaction name="toolsMenu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSystem">
+   <property name="text">
+    <string>System</string>
+   </property>
+  </action>
+  <action name="actionUltraSound">
+   <property name="text">
+    <string>Ultrasound</string>
+   </property>
+  </action>
+  <action name="actionWork_Station">
+   <property name="text">
+    <string>Work Station</string>
+   </property>
+  </action>
+  <action name="actionCatheters">
+   <property name="text">
+    <string>Catheters</string>
+   </property>
+  </action>
+  <action name="actionRF_Generator_Stockert">
+   <property name="text">
+    <string>RF Generator - Stockert</string>
+   </property>
+  </action>
+  <action name="actionRF_Generator_Smart_Ablate">
+   <property name="text">
+    <string>RF Generator - Smart Ablate</string>
+   </property>
+  </action>
+  <action name="actionRF_Generator_nGen">
+   <property name="text">
+    <string>RF Generator - nGen</string>
+   </property>
+  </action>
+  <action name="actionRF_Generator_nMARQ">
+   <property name="text">
+    <string>RF Generator - nMARQ™</string>
+   </property>
+  </action>
+  <action name="actionQDOT">
+   <property name="text">
+    <string>QDOT</string>
+   </property>
+  </action>
+  <action name="actionPacer">
+   <property name="text">
+    <string>Pacer</string>
+   </property>
+  </action>
+  <action name="actionQDOT_Dongle">
+   <property name="text">
+    <string>QDOT Dongle</string>
+   </property>
+  </action>
+  <action name="actionPrinter">
+   <property name="text">
+    <string>Printer</string>
+   </property>
+  </action>
+  <action name="actionEPU_Device">
+   <property name="text">
+    <string>EPU Device</string>
+   </property>
+  </action>
+  <action name="actionDemo_Laptop">
+   <property name="text">
+    <string>Demo Laptop</string>
+   </property>
+  </action>
+  <action name="actionCatalog_Helper">
+   <property name="text">
+    <string>Catalog Helper</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

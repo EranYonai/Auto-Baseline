@@ -600,7 +600,7 @@ class MainWindow(QtWidgets.QMainWindow):
             for x in self.wsList_info[number]:
                 if len(x) != 0:
                     count += 1
-            count -= 1 #Minus value of solios check.
+            count -= 2 #Minus value of solios check and Performance
             if number == 0:
                 self.ui.work_bar_1.setValue(count)
             if number == 1:
@@ -759,7 +759,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.workstationOpened[position]:
             self.wsList[position].fillFields(self.wsList_info[position])
         self.wsList[position].exec_()
-        self.wsList_info[position] = [self.wsList[position].softwarever, self.wsList[position].upgradefrom, self.wsList[position].dspver,self.wsList[position].imagever, self.wsList[position].servicetag, self.wsList[position].wsconf, self.wsList[position].wsmodel, str(self.wsList[position].solios)]
+        self.wsList_info[position] = [self.wsList[position].softwarever, self.wsList[position].upgradefrom, self.wsList[position].dspver,self.wsList[position].imagever, self.wsList[position].servicetag, self.wsList[position].wsconf, self.wsList[position].wsmodel, str(self.wsList[position].solios), str(self.wsList[position].performance)]
         self.workstationOpened[position] = True
         self.updateProgressbars("ws",position)
         #self.WSlist_info in place of WS if true add licenses = self.wsList[position].Licenses
@@ -978,7 +978,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if tf:
                     countOpenWin += 1
             title_ws = ET.SubElement(root, "Workstations", {"count":str(countOpenWin)}) #Sub element - "Workstations" count: workcount
-            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios'] #in order to print a good looking xml
+            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios', 'Performance'] #in order to print a good looking xml
             for x in range (self.workCount): #for each opened workcount window because if he opened the first and the third
                 if (self.workstationOpened[x]): #If workstation window was really opened and not just shown
                     child_ws = ET.SubElement(title_ws, "Workstation_"+str(count_)) #Creating a child <Workstation_x> 
@@ -1194,7 +1194,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 soliosState = "Yes"
             else:
                 soliosState = "No"
-            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nLicenses:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState, self.wsList[position].licensesToExport)
+            if (self.wsList_info[position][8] == "True"):
+                performance = "Yes"
+            else:
+                performance = "No"
+            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nLicenses:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList[position].licensesToExport)
         if type == 'catheters': #Loops for items in list, assign to [] and loop through it printings. Might want to add Cables:
             items = []
             catToReturn = "Catheters & Extenders: \n"
@@ -1360,7 +1364,20 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.confirm_button.clicked.connect(self.confirmPressed)
         self.udialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        # dict_of_values = {
+        # "system": "",
+        # "swversion": "",
+        # "slnumber":"",
+        # "swlcable":"",
+        # "videocable":"",
+        # "ethcable":""}
     def infoBox(self):
+        # self.dict_of_values["system"] = self.udialog.ultrasound_combo.currentText()
+        # self.dict_of_values["swversion"] = self.udialog.softwarever_text.text()
+        # self.dict_of_values["slnumber"] = self.udialog.serialnum_text.text()
+        # self.dict_of_values["swlcable"] = self.udialog.swiftlink_text.text()
+        # self.dict_of_values["videocable"] = self.udialog.videocable_text.text()
+        # self.dict_of_values["ethcable"] = self.udialog.ethernet_text.text()
         self.ultrasystem = self.udialog.ultrasound_combo.currentText()
         self.SWversion = self.udialog.softwarever_text.text()
         self.SLnumber = self.udialog.serialnum_text.text()
@@ -1612,6 +1629,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.wsconf = self.wdialog.wsconf_text.text()
         self.wsmodel = self.wdialog.wsmodel_text.text()
         self.solios = self.wdialog.solios_check.isChecked()
+        self.performance = self.wdialog.performance_check.isChecked()
     def fillFields(self, clip):
         self.wdialog.softwarever_text.setText(clip[0])
         self.wdialog.upgradefrom_text.setText(clip[1])
@@ -1624,6 +1642,10 @@ class Workstation_Dialog(QtWidgets.QDialog):
             self.wdialog.solios_check.setChecked(True)
         else:
             self.wdialog.solios_check.setChecked(False)
+        if clip[8] == "True":
+            self.wdialog.performance_check.setChecked(True)
+        else:
+            self.wdialog.performance_check.setChecked(False)
         self.infoBox() #After filling fields also apply values to self.values.
     def open_workstationDialog_licenses(self):
         if not self.LicensesOpened:

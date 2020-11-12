@@ -354,7 +354,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return state #if any window opened return False, if not, return True.
     def catalogHelp(self):
         self.experimentalWarning("experimental")
-        catWin = CatalogHelper_Dialog()
+        catWin = CatalogHelper_Dialog(self) #Inheritance -> Passing MainWindow (self) as an argument
         catWin.exec_()
     def showThings(self, show):
         if show == "workstation":
@@ -1282,7 +1282,7 @@ class MainWindow(QtWidgets.QMainWindow):
             notimplemented.exec_()
         if (kind == "beta"):
             notimplemented = QtWidgets.QMessageBox()
-            notimplemented.setText("This program is in a beta state, please use in care.\nIf you see an issue please contact Eran.")
+            notimplemented.setText("This program is in beta, please use in care.\nIf you see an issue please contact Eran.")
             notimplemented.setWindowTitle("Warning")
             notimplemented.exec_()
         if (kind =="wslicenses"):
@@ -1455,11 +1455,12 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.ethernet_text.setText(clip[5])
         self.infoBox() #After filling fields also apply values to self.values.
 class CatalogHelper_Dialog(QtWidgets.QDialog):
-    def __init__(self):
+    def __init__(self, mainWin):
         super(CatalogHelper_Dialog, self).__init__()
         self.ui = cathelp_mainUi()
         self.ui.setupUi(self)
         self.ui.getCatalog_B.clicked.connect(self.oneCatalog)
+        self.mainWin = mainWin
     def getMFG_selenium(self, part):
         try:
             #This function uses selenium to open Chrome -> go to catheter catalog, enter 'part' into the search bar
@@ -1484,7 +1485,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
     def oneCatalog(self):
         cat = self.getMFG_selenium(self.ui.signelCatalog_Text.text())
         if (cat != False):
-            singleCat = SingleCatheter(cat)
+            singleCat = SingleCatheter(cat,self)
             singleCat.exec_()
         else:
             notimplemented = QtWidgets.QMessageBox()
@@ -1492,16 +1493,24 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             notimplemented.setWindowTitle("Error")
             notimplemented.exec_()
 class SingleCatheter(QtWidgets.QDialog):
-    def __init__(self, listValues):
+    def __init__(self, listValues, parent_win):
         super(SingleCatheter, self).__init__()
         self.dialog = cathelp_detUi()
         self.dialog.setupUi(self)
-        self.dialog.pushButton.clicked.connect(self.thanks)
+        self.parent_win = parent_win
+        self.dialog.pushButton.clicked.connect(self.sendExtenders)
+        self.dialog.pushButton_2.clicked.connect(self.sendCatheters)
         self.dialog.catalog_text.setText(listValues[3])
         self.dialog.mfg_text.setText(listValues[0])
         self.dialog.description_text.setText(listValues[1])
         self.dialog.family_text.setText(listValues[2])
-    def thanks(self):
+    def sendExtenders(self):
+        item = self.dialog.description_text.text()+': '+self.dialog.mfg_text.text()
+        self.parent_win.mainWin.ui.extender_list_2.addItem(item)
+        self.close()
+    def sendCatheters(self):
+        item = self.dialog.description_text.text()+': '+self.dialog.mfg_text.text()
+        self.parent_win.mainWin.ui.catheter_list.addItem(item)
         self.close()
 class System_Dialog(QtWidgets.QDialog):
     def __init__(self):

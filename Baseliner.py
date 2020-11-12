@@ -80,8 +80,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.ultra_win_6.clicked.connect(lambda: self.open_ultrasoundDialog(5))
         self.ui.ultra_win_7.clicked.connect(lambda: self.open_ultrasoundDialog(6))
         self.ui.ultra_win_8.clicked.connect(lambda: self.open_ultrasoundDialog(7))
-        self.ui.catheter_1.clicked.connect(self.open_cathetersDialog) #Upon pressing add catheter -> opening Catheter dialog. User inserts MFG and family of such
-        self.ui.catheter_2.clicked.connect(self.remove_catheter) #Upon pressing remove catheter -> deletes the selected item. Can store the item if wanted.
+        self.ui.catheter_1.clicked.connect(lambda: self.open_cathetersDialog(0)) #Upon pressing add catheter -> opening Catheter dialog. User inserts MFG and family of such
+        self.ui.catheter_2.clicked.connect(lambda: self.remove_catheter(0)) #Upon pressing remove catheter -> deletes the selected item. Can store the item if wanted.
+        self.ui.extender_b.clicked.connect(lambda: self.open_cathetersDialog(1))
+        self.ui.remove_extender_b.clicked.connect(lambda: self.remove_catheter(1))
         self.ui.stockert_win_1.clicked.connect(lambda: self.open_stockertDialog(0))#For each System number there's a specific stockert dialog
         self.ui.stockert_win_2.clicked.connect(lambda: self.open_stockertDialog(1))
         self.ui.smartablate_win_1.clicked.connect(lambda: self.open_smartablateDialog(0))#For each System number there's a specific smartablate dialog
@@ -185,6 +187,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.demo_bar_2.hide()
         self.ui.demo_win_3.hide()
         self.ui.demo_bar_3.hide()
+        self.ui.bar_win.hide()
+        self.ui.bard_bar.hide()
+        self.ui.spu_bar.hide()
+        self.ui.spu_win.hide()
     def createWindowsLists(self, kind):
         if (kind == "ws"):
             wsList = [Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog()]
@@ -261,7 +267,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.printerlist_info = [[]]
         self.epulist_info = [[]]
         self.demolist_info = [[],[],[]]
+        self.header = ""
         self.ui.catheter_list.clear()
+        self.ui.extender_list_2.clear()
     def reset_progressbars(self):
         self.ui.work_bar_1.setValue(0)
         self.ui.work_bar_2.setValue(0)
@@ -600,7 +608,7 @@ class MainWindow(QtWidgets.QMainWindow):
             for x in self.wsList_info[number]:
                 if len(x) != 0:
                     count += 1
-            count -= 1 #Minus value of solios check.
+            count -= 2 #Minus value of solios check and Performance
             if number == 0:
                 self.ui.work_bar_1.setValue(count)
             if number == 1:
@@ -744,7 +752,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ultraList[position].fillFields(self.ultraList_info[position])
         self.ultraList[position].exec_()
         self.ultraList_info[position] = [self.ultraList[position].ultrasystem, self.ultraList[position].SWversion, self.ultraList[position].SLnumber,
-                           self.ultraList[position].SWLcable, self.ultraList[position].Videocable, self.ultraList[position].Ethcable]
+                           self.ultraList[position].appVer, self.ultraList[position].Videocable, self.ultraList[position].Ethcable]
         self.updateProgressbars("us", position)
         self.ultrasoundOpened[position] = True
     def open_systemDialog(self, position):
@@ -759,23 +767,34 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.workstationOpened[position]:
             self.wsList[position].fillFields(self.wsList_info[position])
         self.wsList[position].exec_()
-        self.wsList_info[position] = [self.wsList[position].softwarever, self.wsList[position].upgradefrom, self.wsList[position].dspver,self.wsList[position].imagever, self.wsList[position].servicetag, self.wsList[position].wsconf, self.wsList[position].wsmodel, str(self.wsList[position].solios)]
+        self.wsList_info[position] = [self.wsList[position].softwarever, self.wsList[position].upgradefrom, self.wsList[position].dspver,self.wsList[position].imagever, self.wsList[position].servicetag, self.wsList[position].wsconf, self.wsList[position].wsmodel, str(self.wsList[position].solios), str(self.wsList[position].performance)]
         self.workstationOpened[position] = True
         self.updateProgressbars("ws",position)
         #self.WSlist_info in place of WS if true add licenses = self.wsList[position].Licenses
-    def open_cathetersDialog(self):
+    def open_cathetersDialog(self, cat_ext):
         cathetersDialog = Catheters_Dialog()
         cathetersDialog.exec_()
         cathetersClip = [cathetersDialog.Catfamily, cathetersDialog.CatMFG]
         item = cathetersClip[0]+": "+cathetersClip[1]
         #In order to get catheters list for export just run for loop for each item in widgetlist
-        self.ui.catheter_list.addItem(item)
-    def get_catheterList(self):
-        if (self.ui.catheter_list.count() > 0):
-            catheterList = [str(self.ui.catheter_list.item(i).text())for i in range(self.ui.catheter_list.count())]
-            return catheterList
-        else:
-            return []
+        if len(item) > 2: 
+            if (cat_ext == 0):
+                self.ui.catheter_list.addItem(item)
+            if (cat_ext == 1):
+                self.ui.extender_list_2.addItem(item)
+    def get_catheterList(self, cat_ext):
+        if (cat_ext == 0):
+            if (self.ui.catheter_list.count() > 0):
+                catheterList = [str(self.ui.catheter_list.item(i).text())for i in range(self.ui.catheter_list.count())]
+                return catheterList
+            else:
+                return []
+        if (cat_ext == 1):
+            if (self.ui.extender_list_2.count() > 0):
+                extenderList = [str(self.ui.extender_list_2.item(i).text())for i in range(self.ui.extender_list_2.count())]
+                return extenderList
+            else:
+                return []
     def open_stockertDialog(self, position):
         if self.stockertOpened[position]:
             self.stockertList[position].fillFields(self.stockertList_info[position])
@@ -839,10 +858,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.demolist_info[position] = self.demoList[position].infoList
         self.updateProgressbars("demo", position)
         self.demoOpened[position] = True
-    def remove_catheter(self):
-        item = self.ui.catheter_list.takeItem(self.ui.catheter_list.currentRow())
-        item = None
-        #remove itemmmmmmm plsssssssss
+    def remove_catheter(self, cat_ext):
+        if (cat_ext == 0):
+            item = self.ui.catheter_list.takeItem(self.ui.catheter_list.currentRow())
+            item = None
+        if (cat_ext == 1):
+            item = self.ui.extender_list_2.takeItem(self.ui.extender_list_2.currentRow())
+            item = None
     def exportTXT(self):
         error_list = ""
         self.experimentalWarning("wslicenses")
@@ -958,6 +980,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     if self.ui.qdot_bar.value() > 1 and a == 0:
                         toText.append(self.format("qdot", 0))
             toText.append(self.format('catheters', None))
+            toText.append(self.format('extenders', None))
             export_file = open(self.exportfilelocation, 'a')
             for i in range (len(toText)):
                 export_file.write(toText[i])
@@ -971,6 +994,7 @@ class MainWindow(QtWidgets.QMainWindow):
             root = ET.Element("Baseline_data") #Root tag -> <Baseline_data>
             comment = ET.Comment("Import data for Baseline Tool") #Creating a tag to the root tag and appending it the next line
             root.append(comment)
+            #Header
             #Start of WS export
             countOpenWin = 0
             count_ = 0 
@@ -978,13 +1002,18 @@ class MainWindow(QtWidgets.QMainWindow):
                 if tf:
                     countOpenWin += 1
             title_ws = ET.SubElement(root, "Workstations", {"count":str(countOpenWin)}) #Sub element - "Workstations" count: workcount
-            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios'] #in order to print a good looking xml
+            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios', 'Performance'] #in order to print a good looking xml
             for x in range (self.workCount): #for each opened workcount window because if he opened the first and the third
                 if (self.workstationOpened[x]): #If workstation window was really opened and not just shown
                     child_ws = ET.SubElement(title_ws, "Workstation_"+str(count_)) #Creating a child <Workstation_x> 
                     for y in range(len(fieldsofWS)):
                         child_field = ET.SubElement(child_ws, fieldsofWS[y]) #Creating a child to <Workstation_x> called the field name e.g. <SoftwareVer>
                         child_field.text = self.wsList_info[x][y] #adding text to the field 
+                    # LicensesWS = self.wsList[x].Licenses
+                    # print(LicensesWS)
+                    # for i in range(len(LicensesWS)):
+                    #     child_license = ET.SubElement(child_ws, LicensesWS[i][0])
+                    #     child_license.text = str(LicensesWS[i][1])
                     count_ += 1
             #End of WS  export
             #Start of SYS export
@@ -1164,12 +1193,20 @@ class MainWindow(QtWidgets.QMainWindow):
                     count_ += 1
             #End of Demo export
             #Start of Catheters export
-            catheterlist = self.get_catheterList()
+            catheterlist = self.get_catheterList(0)
             title_catheters = ET.SubElement(root, "Catheters", {"count":str(len(catheterlist))})
             if (len(catheterlist) > 0):
                 for item in range(len(catheterlist)):
                     field = ET.SubElement(title_catheters, ("catheter_"+str(item)))
                     field.text = catheterlist[item]
+            #End of Catheters export
+            #Start of Catheters export
+            extenderslist = self.get_catheterList(1)
+            title_extenders = ET.SubElement(root, "Extenders", {"count":str(len(extenderslist))})
+            if (len(extenderslist) > 0):
+                for item in range(len(extenderslist)):
+                    field = ET.SubElement(title_extenders, ("extender_"+str(item)))
+                    field.text = extenderslist[item]
             #End of Catheters export
             b_xml = ET.tostring(root) # parse to bytes
             with open(fileLocation, "wb") as f: #might want to to apply the xml insted of rewriting.
@@ -1188,21 +1225,33 @@ class MainWindow(QtWidgets.QMainWindow):
         if type == 'system':
             return 'System #%d: \nSystem Number:\t\t%s\nPIU Configuration:\t%s\nLocation Pad:\t\t%s\nPatch Unit:\t\t%s\nMonitor Model:\t\t%s\nECG Phantom:\t\t%s\nAquarium Number:\t%s\nAquarium Maximo:\t%s\n-------------------\n' % (position + 1, self.sysList_info[position][0], self.sysList_info[position][1], self.sysList_info[position][2], self.sysList_info[position][3], self.sysList_info[position][4], self.sysList_info[position][5], self.sysList_info[position][6], self.sysList_info[position][7])
         if type == 'ultra':
-            return 'Ultrasound #%d: \nUltrasound System:\t%s\nSoftware Version:\t%s\nSerial Number:\t\t%s\nSwiftLink Cable:\t%s\nVideo Cable:\t\t%s\nEthernet Cable:\t\t%s\n-------------------\n' %(position + 1, self.ultraList_info[position][0], self.ultraList_info[position][1], self.ultraList_info[position][2], self.ultraList_info[position][3], self.ultraList_info[position][4], self.ultraList_info[position][5])
+            return 'Ultrasound #%d: \nUltrasound System:\t%s\nSoftware Version:\t%s\nSerial Number:\t\t%s\nApplication Version:\t%s\nVideo Cable:\t\t%s\nEthernet Cable:\t\t%s\n-------------------\n' %(position + 1, self.ultraList_info[position][0], self.ultraList_info[position][1], self.ultraList_info[position][2], self.ultraList_info[position][3], self.ultraList_info[position][4], self.ultraList_info[position][5])
         if type == 'ws':
             if (self.wsList_info[position][7] == "True"):
                 soliosState = "Yes"
             else:
                 soliosState = "No"
-            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nLicenses:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState, self.wsList[position].licensesToExport)
+            if (self.wsList_info[position][8] == "True"):
+                performance = "Yes"
+            else:
+                performance = "No"
+            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nLicenses:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList[position].licensesToExport)
         if type == 'catheters': #Loops for items in list, assign to [] and loop through it printings. Might want to add Cables:
             items = []
-            catToReturn = "Catheters & Extenders: \n"
+            catToReturn = "Catheters: \n"
             for i in range (self.ui.catheter_list.count()):
                 items.append(self.ui.catheter_list.item(i))
             for x in range(len(items)):
                 catToReturn += '%s\n' % (items[x].text())
             return catToReturn
+        if type == 'extenders': #Loops for items in list, assign to [] and loop through it printings. Might want to add Cables:
+            items = []
+            extToReturn = "Extenders: \n"
+            for i in range (self.ui.extender_list_2.count()):
+                items.append(self.ui.extender_list_2.item(i))
+            for x in range(len(items)):
+                extToReturn += '%s\n' % (items[x].text())
+            return extToReturn
         if type == "stockert":
             return 'Stockert GmbH SMARTABLATE System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O Sys to Carto:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\n-------------------\n' %(position+1,self.stockertList_info[position][0],self.stockertList_info[position][1],self.stockertList_info[position][2],self.stockertList_info[position][3],self.stockertList_info[position][4])
         if type == "smartablate":
@@ -1275,7 +1324,7 @@ class MainWindow(QtWidgets.QMainWindow):
     	imported_xml = ET.parse(filelocation)
     	importedroot = imported_xml.getroot()
     	for child in importedroot:
-            if (child.tag != "Catheters"):
+            if (child.tag != 'Catheters' and child.tag != 'Extenders'):
                 for childx2 in child: #Workstation_0
                     listofValues = []
                     for childx3 in childx2:
@@ -1284,7 +1333,10 @@ class MainWindow(QtWidgets.QMainWindow):
                         else:
                             listofValues.append(childx3.text)
                     self.importaddtoInfoCount(child.tag, listofValues)
-            else:
+            elif child.tag == 'Catheters':
+                for childx2 in child:
+                    self.importaddtoInfoCount(child.tag, childx2.text)
+            elif (child.tag == 'Extenders'):
                 for childx2 in child:
                     self.importaddtoInfoCount(child.tag, childx2.text)
     def importaddtoInfoCount(self, type, listValues):
@@ -1352,6 +1404,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.updateProgressbars("demo", self.demoCount-1)
         if (type == "Catheters"):
             self.ui.catheter_list.addItem(listValues)
+        if (type == "Extenders"):
+            self.ui.extender_list_2.addItem(listValues)
 class Ultrasound_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Ultrasound_Dialog, self).__init__()
@@ -1367,7 +1421,6 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         # "swlcable":"",
         # "videocable":"",
         # "ethcable":""}
-
     def infoBox(self):
         # self.dict_of_values["system"] = self.udialog.ultrasound_combo.currentText()
         # self.dict_of_values["swversion"] = self.udialog.softwarever_text.text()
@@ -1378,7 +1431,7 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.ultrasystem = self.udialog.ultrasound_combo.currentText()
         self.SWversion = self.udialog.softwarever_text.text()
         self.SLnumber = self.udialog.serialnum_text.text()
-        self.SWLcable = self.udialog.swiftlink_text.text()
+        self.appVer = self.udialog.applicationver_text.text()
         self.Videocable = self.udialog.videocable_text.text()
         self.Ethcable = self.udialog.ethernet_text.text()
     def confirmPressed(self):
@@ -1397,7 +1450,7 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
             self.udialog.ultrasound_combo.setCurrentIndex(index)
         self.udialog.softwarever_text.setText(clip[1])
         self.udialog.serialnum_text.setText(clip[2])
-        self.udialog.swiftlink_text.setText(clip[3])
+        self.udialog.applicationver_text.setText(clip[3])
         self.udialog.videocable_text.setText(clip[4])
         self.udialog.ethernet_text.setText(clip[5])
         self.infoBox() #After filling fields also apply values to self.values.
@@ -1626,6 +1679,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.wsconf = self.wdialog.wsconf_text.text()
         self.wsmodel = self.wdialog.wsmodel_text.text()
         self.solios = self.wdialog.solios_check.isChecked()
+        self.performance = self.wdialog.performance_check.isChecked()
     def fillFields(self, clip):
         self.wdialog.softwarever_text.setText(clip[0])
         self.wdialog.upgradefrom_text.setText(clip[1])
@@ -1638,6 +1692,10 @@ class Workstation_Dialog(QtWidgets.QDialog):
             self.wdialog.solios_check.setChecked(True)
         else:
             self.wdialog.solios_check.setChecked(False)
+        if clip[8] == "True":
+            self.wdialog.performance_check.setChecked(True)
+        else:
+            self.wdialog.performance_check.setChecked(False)
         self.infoBox() #After filling fields also apply values to self.values.
     def open_workstationDialog_licenses(self):
         if not self.LicensesOpened:

@@ -29,7 +29,6 @@ An auto baseline generator project
 	9. Added Tools tab -> Catalog Helper.
 	Includes call in __init__ when triggering menu and two classes - CatalogHelper_Dialog and SingleCatheter
 	Added import selenium
-	https://stackoverflow.com/questions/47690548/running-pyinstaller-another-pc-with-chromedriver
 	Read about pyinstaller with selenium
 	Need to put chromedriver in the dist folder in order to not crash when using selenium.
 	10. Change .txt format to "Catheter & Extenders" from "Catheters"

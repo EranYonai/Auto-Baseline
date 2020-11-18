@@ -22,6 +22,8 @@ from Forms.demo_dialog import Ui_Dialog as demo_Ui
 from Forms.printer_dialog import Ui_Dialog as printer_Ui
 from Forms.CatalogHelper_details import Ui_Dialog as cathelp_detUi
 from Forms.CatalogHelper_main import Ui_Dialog as cathelp_mainUi
+from Forms.spu_dialog import Ui_Dialog as spu_Ui
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__(parent=None)
@@ -43,6 +45,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.printerList = self.createWindowsLists("printer")
         self.epuList = self.createWindowsLists("epu")
         self.demoList = self.createWindowsLists("demo")
+        self.bardList = self.createWindowsLists('bard')
+        self.spuList = self.createWindowsLists("spu")
         self.ui.actionWork_Station.triggered.connect(lambda: self.showThings("workstation")) #Calls function "showThings" that shows the sent item
         self.ui.actionRF_Generator_Stockert.triggered.connect(lambda: self.showThings("stockert")) #Calls function "showThings" that shows the sent item
         self.ui.actionRF_Generator_Smart_Ablate.triggered.connect(lambda: self.showThings("smartablate")) #Calls function "showThings" that shows the sent item
@@ -101,6 +105,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.demo_win.clicked.connect(lambda: self.open_demoDialog(0))#For each System number there's a specific demo dialog
         self.ui.demo_win_2.clicked.connect(lambda: self.open_demoDialog(1))
         self.ui.demo_win_3.clicked.connect(lambda: self.open_demoDialog(2))
+        self.ui.actionBard.triggered.connect(lambda: self.experimentalWarning("notimp"))
+        self.ui.actionSPU.triggered.connect(lambda: self.showThings("spu"))
+        self.ui.spu_win.clicked.connect(lambda: self.open_SPUDialog(0))
         self.ui.export_button.clicked.connect(self.exportTXT) #Upon pressing "export" the program will append it's current content to a .txt file
         self.ui.import_button.clicked.connect(self.importButton) #This is the next step of the program, upon importing txt file
         self.experimentalWarning("beta")
@@ -228,6 +235,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if (kind == "demo"):
             demoList = [Demo_Dialog(),Demo_Dialog(),Demo_Dialog()]
             return demoList
+        if (kind == 'bard'):
+            bardList = [Bard_Dialog()]
+            return bardList
+        if (kind == 'spu'):
+            spuList = [SPU_Dialog()]
+            return spuList
         if (kind == "all"):
             self.wsList = [Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog()]
             self.sysList = [System_Dialog(),System_Dialog(),System_Dialog(),System_Dialog(),System_Dialog(),System_Dialog(),System_Dialog(),System_Dialog()]
@@ -241,8 +254,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.printerList = [Printer_Dialog()]
             self.epuList = [epu_Dialog()]
             self.demoList = [Demo_Dialog(),Demo_Dialog(),Demo_Dialog()]
+            self.bardList = [Bard_Dialog()]
+            self.spuList = [SPU_Dialog()]
     def reset_allFields(self):
-        self.workCount, self.stockertCount, self.smartablateCount, self.ngenCount, self.nmarqCount, self.ultraCount, self.systemCount, self.demoCount, self.pacerCount, self.qdotdongleCount, self.printerCount, self.epuCount  = 0,0,0,0,0,0,0,0,0,0,0,0 #Declare counts in order to know how much of each.
+        self.workCount, self.stockertCount, self.smartablateCount, self.ngenCount, self.nmarqCount, self.ultraCount, self.systemCount, self.demoCount, self.pacerCount, self.qdotdongleCount, self.printerCount, self.epuCount, self.spuCount, self.bardCount  = 0,0,0,0,0,0,0,0,0,0,0,0,0,0 #Declare counts in order to know how much of each.
         self.workstationOpened = [False,False,False,False,False,False,False,False] # List of bool values in order to know if window was opened before.
         self.systemOpened = [False,False,False,False,False,False,False,False] # List of bool values in order to know if window was opened before.
         self.ultrasoundOpened = [False,False,False,False,False,False,False,False] # List of bool values in order to know if window was opened before.
@@ -255,6 +270,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.printerOpened = [False]
         self.epuOpened = [False]
         self.demoOpened = [False,False,False]
+        self.bardOpened = [False]
+        self.spuOpened = [False]
         self.wsList_info = [[],[],[],[],[],[],[],[],[]] #List stores WS info
         self.ultraList_info = [[],[],[],[],[],[],[],[]] #List stores Ultrasound info
         self.sysList_info = [[],[],[],[],[],[],[],[]] #List stores System info
@@ -267,6 +284,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.printerlist_info = [[]]
         self.epulist_info = [[]]
         self.demolist_info = [[],[],[]]
+        self.spuList_info = [[]]
+        self.bardList_info = [[]]
         self.header = ""
         self.ui.catheter_list.clear()
         self.ui.extender_list_2.clear()
@@ -350,6 +369,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 state = False
         for dem in self.demoOpened:
             if dem:
+                state = False
+        for spu in self.spuOpened:
+            if spu:
+                state = False
+        for bard in self.bardOpened:
+            if bard:
                 state = False
         return state #if any window opened return False, if not, return True.
     def catalogHelp(self):
@@ -581,6 +606,19 @@ class MainWindow(QtWidgets.QMainWindow):
                 notimplemented.setWindowTitle("Work in Progress")
                 notimplemented.exec_()
                 self.epuCount = 1
+        if show == "spu":
+            self.spuCount += 1
+            self.ui.additional_tabs.setCurrentIndex(5)
+            if self.spuCount == 1:
+                self.ui.spu_win.show()
+                self.ui.spu_bar.show()
+            if self.spuCount > 1:
+                notimplemented = QtWidgets.QMessageBox()
+                notimplemented.setText(
+                    "You've reached maximum number of SPUs")
+                notimplemented.setWindowTitle("Work in Progress")
+                notimplemented.exec_()
+                self.spuCount = 1
         if show == "demo":
             self.ui.additional_tabs.setCurrentIndex(5)
             self.demoCount +=1
@@ -735,6 +773,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     count+=1
             if number == 0:
                 self.ui.epu_bar.setValue(count)
+        if (type == "spu"):
+            count = 0
+            for x in self.spuList_info[number]:
+                if len(x) != 0:
+                    count+=1
+            if number == 0:
+                self.ui.spu_bar.setValue(count)
         if (type == "demo"):
             count = 0
             for x in self.demolist_info[number]:
@@ -763,11 +808,20 @@ class MainWindow(QtWidgets.QMainWindow):
                             self.sysList[position].Monitormodel, self.sysList[position].ECGnumber, self.sysList[position].Aquanumber, self.sysList[position].Aquamax]
         self.updateProgressbars("sys", position)
         self.systemOpened[position] = True
+    def open_bardDialog(self, position):
+        pass
+    def open_SPUDialog(self, position):
+        if self.spuOpened[position]:
+            self.spuList[position].fillFields(self.spuList_info[position])
+        self.spuList[position].exec_()
+        self.spuList_info[position] = [self.spuList[position].mainfwver, self.spuList[position].swver, self.spuList[position].pn, self.spuList[position].secfwver, self.spuList[position].sn, self.spuList[position].frontloc, self.spuList[position].frontloc_rev, self.spuList[position].ledbo, self.spuList[position].ledbo_rev, self.spuList[position].motherbo, self.spuList[position].motherbo_rev, self.spuList[position].powerb, self.spuList[position].powerb_rev, self.spuList[position].backbo, self.spuList[position].backbo_rev, self.spuList[position].upbo, self.spuList[position].upbo_rev, self.spuList[position].tpibo, self.spuList[position].tpibo_rev, self.spuList[position].pacingbo, self.spuList[position].pacingbo_rev, self.spuList[position].digibo, self.spuList[position].digibo_rev, self.spuList[position].ecgbo, self.spuList[position].ecgbo_rev, self.spuList[position].spuprobo, self.spuList[position].spuprobo_rev]
+        self.updateProgressbars("spu", position)
+        self.spuOpened[position] = True
     def open_workstationDialog(self, position):
         if self.workstationOpened[position]:
             self.wsList[position].fillFields(self.wsList_info[position])
         self.wsList[position].exec_()
-        self.wsList_info[position] = [self.wsList[position].softwarever, self.wsList[position].upgradefrom, self.wsList[position].dspver,self.wsList[position].imagever, self.wsList[position].servicetag, self.wsList[position].wsconf, self.wsList[position].wsmodel, str(self.wsList[position].solios), str(self.wsList[position].performance)]
+        self.wsList_info[position] = [self.wsList[position].softwarever, self.wsList[position].upgradefrom, self.wsList[position].dspver,self.wsList[position].imagever, self.wsList[position].servicetag, self.wsList[position].wsconf, self.wsList[position].wsmodel, str(self.wsList[position].solios), str(self.wsList[position].performance), self.wsList[position].gpu]
         self.workstationOpened[position] = True
         self.updateProgressbars("ws",position)
         #self.WSlist_info in place of WS if true add licenses = self.wsList[position].Licenses
@@ -979,6 +1033,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 if self.qdotdongleOpened[a]:
                     if self.ui.qdot_bar.value() > 1 and a == 0:
                         toText.append(self.format("qdot", 0))
+            for a in range (len(self.spuOpened)):
+                if self.spuOpened[a]:
+                    if self.ui.spu_bar.value() > 1 and a == 0:
+                        toText.append(self.format("spu", 0))
             toText.append(self.format('catheters', None))
             toText.append(self.format('extenders', None))
             export_file = open(self.exportfilelocation, 'a')
@@ -1002,7 +1060,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if tf:
                     countOpenWin += 1
             title_ws = ET.SubElement(root, "Workstations", {"count":str(countOpenWin)}) #Sub element - "Workstations" count: workcount
-            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios', 'Performance'] #in order to print a good looking xml
+            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios', 'Performance', 'GraphicsCard'] #in order to print a good looking xml
             for x in range (self.workCount): #for each opened workcount window because if he opened the first and the third
                 if (self.workstationOpened[x]): #If workstation window was really opened and not just shown
                     child_ws = ET.SubElement(title_ws, "Workstation_"+str(count_)) #Creating a child <Workstation_x> 
@@ -1176,6 +1234,22 @@ class MainWindow(QtWidgets.QMainWindow):
                         child_field.text = self.epulist_info[x][y]
                     count_ += 1
             #End of EPU export
+            #Start of SPU export
+            countOpenWin = 0
+            count_ = 0 
+            for tf in (self.spuOpened):
+                if tf:
+                    countOpenWin += 1
+            title_spu = ET.SubElement(root, "SPUs", {"count":str(countOpenWin)})
+            fieldofSPU = ['MainfwVer', 'swVer', 'PN', 'SecFwVer', 'SN','frontloc','frontloc_rev','ledbo','ledbo_rev','motherbo', 'motherbo_rev','powerb', 'powerb_rev','backbo','backbo_rev','upbo','upbo_rev','tpibo','tpibo_rev','pacingbo','pacingbo_rev','digibo','digibo_rev','ecgbo','ecgbo_rev','spuprobo','spuprobo_rev']
+            for x in range (self.spuCount):
+                if (self.spuOpened[x]):
+                    child_spu = ET.SubElement(title_spu, "SPU_"+str(count_))
+                    for y in range(len(fieldofSPU)):
+                        child_field = ET.SubElement(child_spu, fieldofSPU[y])
+                        child_field.text = self.spuList_info[x][y]
+                    count_ += 1
+            #End of SPU export
             #Start of Demo export
             countOpenWin = 0
             count_ = 0 
@@ -1221,6 +1295,8 @@ class MainWindow(QtWidgets.QMainWindow):
             notimplemented.setWindowTitle("Error while exporting")
             notimplemented.exec_()
             print (e)
+    # format is a function that takes (self,type,position) as arguments.
+    # self being the pyqt5 inheritance - this function is being called by self.format(type,position)
     def format(self, type, position):
         if type == 'system':
             return 'System #%d: \nSystem Number:\t\t%s\nPIU Configuration:\t%s\nLocation Pad:\t\t%s\nPatch Unit:\t\t%s\nMonitor Model:\t\t%s\nECG Phantom:\t\t%s\nAquarium Number:\t%s\nAquarium Maximo:\t%s\n-------------------\n' % (position + 1, self.sysList_info[position][0], self.sysList_info[position][1], self.sysList_info[position][2], self.sysList_info[position][3], self.sysList_info[position][4], self.sysList_info[position][5], self.sysList_info[position][6], self.sysList_info[position][7])
@@ -1235,7 +1311,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 performance = "Yes"
             else:
                 performance = "No"
-            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nLicenses:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList[position].licensesToExport)
+            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nGraphics Card:\t\t%s\nLicenses:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList_info[position][9], self.wsList[position].licensesToExport)
         if type == 'catheters': #Loops for items in list, assign to [] and loop through it printings. Might want to add Cables:
             items = []
             catToReturn = "Catheters: \n"
@@ -1274,22 +1350,35 @@ class MainWindow(QtWidgets.QMainWindow):
             return 'EPU Device:\nUnit Serial Number:\t%s\nUnit Version:\t\t%s\n-------------------\n' % (self.epulist_info[position][0],self.epulist_info[position][1])
         if type == "qdot":
             return 'qDOT Dongle:\nSerial Number:\t\t%s\nSoftware Version:\t%s\nHardware Version:\t%s\n-------------------\n' % (self.qdotdonglelist_info[position][0],self.qdotdonglelist_info[position][1],self.qdotdonglelist_info[position][2])
+        if type == "spu":
+            return 'SPU:\nS/N: \t\t%s\nP/N:\t\t%s\nSW Version:\t%s\nMain FW Version:\t%s\nSecondary FW Ver:\t%s\n   Board\t| P/N\t    |Revision\nFront Location\t|%s|%s\nLed Board\t|%s|%s\nMother Board\t|%s|%s\nBack Board\t|%s|%s\nPower Board\t|%s|%s\nUpper Board\t|%s|%s\nPacing Board\t|%s|%s\nTPI Board\t|%s|%s\nDigital Board\t|%s|%s\nECG Board\t|%s|%s\nSPU Prototypes\t|%s|%s\n' % (self.spuList_info[position][4], self.spuList_info[position][2], self.spuList_info[position][1], self.spuList_info[position][0], self.spuList_info[position][3], self.spuList_info[position][5], self.spuList_info[position][6], self.spuList_info[position][7], self.spuList_info[position][8], self.spuList_info[position][9], self.spuList_info[position][10], self.spuList_info[position][13], self.spuList_info[position][14], self.spuList_info[position][11], self.spuList_info[position][12], self.spuList_info[position][15], self.spuList_info[position][16], self.spuList_info[position][19],self.spuList_info[position][20], self.spuList_info[position][17],self.spuList_info[position][18], self.spuList_info[position][21], self.spuList_info[position][22], self.spuList_info[position][23], self.spuList_info[position][24], self.spuList_info[position][25],self.spuList_info[position][26])
+    # experimentalWarning is a function that takes (self, kind) as arguments.
+    # self being the pyqt5 inheritance - this function is being called by self.experimentalWarning(kind)
+    # :param kind - 'experimental' will print an experimental feature messageBox.
+    # :param kind - 'beta' will print a beta messageBox.
+    # :param kind - 'wslicenses' will print licenses upon error bug description messageBox.
+    # :param kind - 'notimp' will print not yet implemented warning messageBox.
     def experimentalWarning(self, kind):
         if (kind == "experimental"):
-            notimplemented = QtWidgets.QMessageBox()
-            notimplemented.setText("This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.")
-            notimplemented.setWindowTitle("Warning")
-            notimplemented.exec_()
+            warning = QtWidgets.QMessageBox()
+            warning.setText("This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.")
+            warning.setWindowTitle("Warning")
+            warning.exec_()
         if (kind == "beta"):
-            notimplemented = QtWidgets.QMessageBox()
-            notimplemented.setText("This program is in beta, please use in care.\nIf you see an issue please contact Eran.")
-            notimplemented.setWindowTitle("Warning")
-            notimplemented.exec_()
+            warning = QtWidgets.QMessageBox()
+            warning.setText("This program is in beta, please use in care.\nIf you see an issue please contact Eran.")
+            warning.setWindowTitle("Warning")
+            warning.exec_()
         if (kind =="wslicenses"):
-            notimplemented = QtWidgets.QMessageBox()
-            notimplemented.setText("Upon export of data, each WS licenses are deleted.\nIt is a known bug please wait for next version for a fix.\nMake sure to save the .txt file.")
-            notimplemented.setWindowTitle("Warning")
-            notimplemented.exec_()
+            warning = QtWidgets.QMessageBox()
+            warning.setText("Upon export of data, each WS licenses are deleted.\nIt is a known bug please wait for next version for a fix.\nMake sure to save the .txt file.")
+            warning.setWindowTitle("Warning")
+            warning.exec_()
+        if (kind == "notimp"):
+            warning = QtWidgets.QMessageBox()
+            warning.setText("Not yet implemented")
+            warning.setWindowTitle("Warning")
+            warning.exec_()
     def importButton(self):
         try:
             state = self.check_progressbars()
@@ -1321,9 +1410,9 @@ class MainWindow(QtWidgets.QMainWindow):
             notimplemented.exec_()
             print (e)
     def importBase(self, filelocation):
-    	imported_xml = ET.parse(filelocation)
-    	importedroot = imported_xml.getroot()
-    	for child in importedroot:
+        imported_xml = ET.parse(filelocation)
+        importedroot = imported_xml.getroot()
+        for child in importedroot:
             if (child.tag != 'Catheters' and child.tag != 'Extenders'):
                 for childx2 in child: #Workstation_0
                     listofValues = []
@@ -1397,6 +1486,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.epuOpened[self.epuCount-1] = True
             self.epulist_info[self.epuCount-1] = listValues
             self.updateProgressbars("epu", self.epuCount-1)
+        if (type == "SPUs"):
+            self.showThings("spu")
+            self.spuOpened[self.spuCount-1] = True
+            self.spuList_info[self.spuCount-1] = listValues
+            self.updateProgressbars("spu",self.spuCount-1)
         if (type == "DemoLaptops"):
             self.showThings("demo")
             self.demoOpened[self.demoCount-1] = True
@@ -1456,6 +1550,9 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.infoBox() #After filling fields also apply values to self.values.
 class CatalogHelper_Dialog(QtWidgets.QDialog):
     def __init__(self, mainWin):
+        """Here is a good example of inheritance between pyqt5 objects - which works differently then normal python inheritance.
+        Here, I need to pass in the __init__ function the parent self. - which means, when i'm using this class in the parent class, i'll need to send it
+        self as a variable, and here, at the child class, enter it into an object. This way I can call parent functions as variable from the child."""
         super(CatalogHelper_Dialog, self).__init__()
         self.ui = cathelp_mainUi()
         self.ui.setupUi(self)
@@ -1492,6 +1589,84 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             notimplemented.setText("Couldn't find item in catalog")
             notimplemented.setWindowTitle("Error")
             notimplemented.exec_()
+class SPU_Dialog(QtWidgets.QDialog):
+    def __init__(self):
+        super(SPU_Dialog, self).__init__()
+        self.spdialog = spu_Ui()
+        self.spdialog.setupUi(self)
+        self.spdialog.confirm_button.clicked.connect(self.confirmPressed)
+        self.spdialog.check_button.clicked.connect(self.verification)
+        self.infoBox()
+    def confirmPressed(self):
+        self.infoBox()
+        self.close()
+    def verification(self):
+        notimplemented = QtWidgets.QMessageBox()
+        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
+        notimplemented.setText('To be implemented...')
+        notimplemented.setWindowTitle("Work in Progress")
+        notimplemented.exec_()
+    def infoBox(self):
+        self.mainfwver = self.spdialog.mainfwver_text.text()
+        self.swver = self.spdialog.swver_text.text()
+        self.pn = self.spdialog.pn_text.text()
+        self.secfwver = self.spdialog.secfwver_text.text()
+        self.sn = self.spdialog.sn_text.text()
+        self.frontloc = self.spdialog.frontloc_text.text()
+        self.frontloc_rev = self.spdialog.frontloc_text_rev.text()
+        self.ledbo = self.spdialog.ledbo_text.text()
+        self.ledbo_rev = self.spdialog.ledbo_text_rev.text()
+        self.motherbo = self.spdialog.motherbo_text.text()
+        self.motherbo_rev = self.spdialog.motherbo_text_rev.text()
+        self.powerb = self.spdialog.powerb_text.text()
+        self.powerb_rev = self.spdialog.powerb_text_rev.text()
+        self.backbo = self.spdialog.backbo_text.text()
+        self.backbo_rev = self.spdialog.backbo_text_rev.text()
+        self.upbo = self.spdialog.upbo_text.text()
+        self.upbo_rev = self.spdialog.upbo_text_rev.text()
+        self.backbo = self.spdialog.backbo_text.text()
+        self.backbo_rev = self.spdialog.backbo_text_rev.text()
+        self.tpibo = self.spdialog.tpibo_text.text()
+        self.tpibo_rev = self.spdialog.tpibo_text_rev.text()
+        self.pacingbo = self.spdialog.pacingbo_text.text()
+        self.pacingbo_rev = self.spdialog.pacingbo_text_rev.text()
+        self.digibo = self.spdialog.digibo_text.text()
+        self.digibo_rev = self.spdialog.digibo_text_rev.text()
+        self.ecgbo = self.spdialog.ecgbo_text.text()
+        self.ecgbo_rev = self.spdialog.ecgbo_text_rev.text()
+        self.spuprobo = self.spdialog.spuprobo_text.text()
+        self.spuprobo_rev = self.spdialog.spuprobo_text_rev.text()
+    def fillFields(self, clip):
+        self.spdialog.mainfwver_text.setText(clip[0])
+        self.spdialog.swver_text.setText(clip[1])
+        self.spdialog.pn_text.setText(clip[2])
+        self.spdialog.secfwver_text.setText(clip[3])
+        self.spdialog.sn_text.setText(clip[4])
+        self.spdialog.frontloc_text.setText(clip[5])
+        self.spdialog.frontloc_text_rev.setText(clip[6])
+        self.spdialog.ledbo_text.setText(clip[7])
+        self.spdialog.ledbo_text_rev.setText(clip[8])
+        self.spdialog.motherbo_text.setText(clip[9])
+        self.spdialog.motherbo_text_rev.setText(clip[10])
+        self.spdialog.powerb_text.setText(clip[11])
+        self.spdialog.powerb_text_rev.setText(clip[12])
+        self.spdialog.backbo_text.setText(clip[13])
+        self.spdialog.backbo_text_rev.setText(clip[14])
+        self.spdialog.upbo_text.setText(clip[15])
+        self.spdialog.upbo_text_rev.setText(clip[16])
+        self.spdialog.tpibo_text.setText(clip[17])
+        self.spdialog.tpibo_text_rev.setText(clip[18])
+        self.spdialog.pacingbo_text.setText(clip[19])
+        self.spdialog.pacingbo_text_rev.setText(clip[20])
+        self.spdialog.digibo_text.setText(clip[21])
+        self.spdialog.digibo_text_rev.setText(clip[22])
+        self.spdialog.ecgbo_text.setText(clip[23])
+        self.spdialog.ecgbo_text_rev.setText(clip[24])
+        self.spdialog.spuprobo_text.setText(clip[25])
+        self.spdialog.spuprobo_text_rev.setText(clip[26])
+        self.infoBox()
+class Bard_Dialog(QtWidgets.QDialog):
+    pass
 class SingleCatheter(QtWidgets.QDialog):
     def __init__(self, listValues, parent_win):
         super(SingleCatheter, self).__init__()
@@ -1689,6 +1864,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.wsmodel = self.wdialog.wsmodel_text.text()
         self.solios = self.wdialog.solios_check.isChecked()
         self.performance = self.wdialog.performance_check.isChecked()
+        self.gpu = self.wdialog.gpu_text.text()
     def fillFields(self, clip):
         self.wdialog.softwarever_text.setText(clip[0])
         self.wdialog.upgradefrom_text.setText(clip[1])
@@ -1705,6 +1881,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
             self.wdialog.performance_check.setChecked(True)
         else:
             self.wdialog.performance_check.setChecked(False)
+        self.wdialog.gpu_text.setText(clip[9])
         self.infoBox() #After filling fields also apply values to self.values.
     def open_workstationDialog_licenses(self):
         if not self.LicensesOpened:

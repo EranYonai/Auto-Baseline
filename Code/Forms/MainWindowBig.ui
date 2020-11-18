@@ -59,7 +59,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="sys_tab">
      <attribute name="title">
@@ -1224,7 +1224,7 @@
      <widget class="QPushButton" name="catheter_1">
       <property name="geometry">
        <rect>
-        <x>170</x>
+        <x>10</x>
         <y>10</y>
         <width>141</width>
         <height>28</height>
@@ -1237,7 +1237,7 @@
      <widget class="QListWidget" name="catheter_list">
       <property name="geometry">
        <rect>
-        <x>170</x>
+        <x>10</x>
         <y>40</y>
         <width>291</width>
         <height>291</height>
@@ -1247,7 +1247,7 @@
      <widget class="QPushButton" name="catheter_2">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>160</x>
         <y>10</y>
         <width>141</width>
         <height>28</height>
@@ -1255,6 +1255,42 @@
       </property>
       <property name="text">
        <string>Remove Catheter</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="remove_extender_b">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>10</y>
+        <width>141</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Remove Extender</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="extender_b">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>10</y>
+        <width>141</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Extender</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="extender_list_2">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>40</y>
+        <width>291</width>
+        <height>291</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -1528,6 +1564,82 @@
        <string>Demo Laptop #3</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="bar_win">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>140</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Bard</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="bard_bar">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>180</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>2</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="spu_win">
+      <property name="geometry">
+       <rect>
+        <x>175</x>
+        <y>140</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>SPU</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="spu_bar">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>180</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>2</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="textDirection">
+       <enum>QProgressBar::TopToBottom</enum>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QPushButton" name="import_button">
@@ -1572,6 +1684,8 @@
     <addaction name="actionPrinter"/>
     <addaction name="actionEPU_Device"/>
     <addaction name="actionDemo_Laptop"/>
+    <addaction name="actionBard"/>
+    <addaction name="actionSPU"/>
    </widget>
    <widget class="QMenu" name="toolsMenu">
     <property name="title">
@@ -1656,6 +1770,16 @@
   <action name="actionCatalog_Helper">
    <property name="text">
     <string>Catalog Helper</string>
+   </property>
+  </action>
+  <action name="actionBard">
+   <property name="text">
+    <string>Bard</string>
+   </property>
+  </action>
+  <action name="actionSPU">
+   <property name="text">
+    <string>SPU</string>
    </property>
   </action>
  </widget>

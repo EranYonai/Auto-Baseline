@@ -55,7 +55,7 @@
     <string>Verify</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="swiftlink_text">
+  <widget class="QLineEdit" name="applicationver_text">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -89,7 +89,7 @@
     <rect>
      <x>20</x>
      <y>205</y>
-     <width>131</width>
+     <width>151</width>
      <height>31</height>
     </rect>
    </property>
@@ -100,7 +100,7 @@
     </font>
    </property>
    <property name="text">
-    <string>SwiftLink Cable:</string>
+    <string>Application Version:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="serialnum_text">

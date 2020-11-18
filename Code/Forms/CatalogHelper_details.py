@@ -43,7 +43,7 @@ class Ui_Dialog(object):
         self.mfg_text.setGeometry(QtCore.QRect(110, 70, 221, 22))
         self.mfg_text.setObjectName("mfg_text")
         self.label_4 = QtWidgets.QLabel(Dialog)
-        self.label_4.setGeometry(QtCore.QRect(10, 150, 81, 21))
+        self.label_4.setGeometry(QtCore.QRect(10, 145, 81, 21))
         font = QtGui.QFont()
         font.setFamily("Product Sans")
         font.setPointSize(10)
@@ -53,11 +53,14 @@ class Ui_Dialog(object):
         self.catalog_text.setGeometry(QtCore.QRect(110, 30, 221, 22))
         self.catalog_text.setObjectName("catalog_text")
         self.family_text = QtWidgets.QLineEdit(Dialog)
-        self.family_text.setGeometry(QtCore.QRect(110, 150, 221, 22))
+        self.family_text.setGeometry(QtCore.QRect(110, 145, 221, 22))
         self.family_text.setObjectName("family_text")
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(120, 180, 93, 28))
+        self.pushButton.setGeometry(QtCore.QRect(30, 180, 131, 28))
         self.pushButton.setObjectName("pushButton")
+        self.pushButton_2 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_2.setGeometry(QtCore.QRect(200, 180, 121, 28))
+        self.pushButton_2.setObjectName("pushButton_2")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -69,7 +72,8 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "MFG Part:"))
         self.label_3.setText(_translate("Dialog", "Description:"))
         self.label_4.setText(_translate("Dialog", "Family:"))
-        self.pushButton.setText(_translate("Dialog", "Thanks!"))
+        self.pushButton.setText(_translate("Dialog", "Add to Extenders"))
+        self.pushButton_2.setText(_translate("Dialog", "Add to Catheres"))
 
 
 if __name__ == "__main__":

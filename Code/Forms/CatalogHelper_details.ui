@@ -94,7 +94,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>150</y>
+     <y>145</y>
      <width>81</width>
      <height>21</height>
     </rect>
@@ -123,7 +123,7 @@
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>150</y>
+     <y>145</y>
      <width>221</width>
      <height>22</height>
     </rect>
@@ -132,14 +132,27 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>30</x>
      <y>180</y>
-     <width>93</width>
+     <width>131</width>
      <height>28</height>
     </rect>
    </property>
    <property name="text">
-    <string>Thanks!</string>
+    <string>Add to Extenders</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>180</y>
+     <width>121</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add to Catheres</string>
    </property>
   </widget>
  </widget>

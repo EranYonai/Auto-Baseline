@@ -1351,7 +1351,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if type == "qdot":
             return 'qDOT Dongle:\nSerial Number:\t\t%s\nSoftware Version:\t%s\nHardware Version:\t%s\n-------------------\n' % (self.qdotdonglelist_info[position][0],self.qdotdonglelist_info[position][1],self.qdotdonglelist_info[position][2])
         if type == "spu":
-            return 'SPU:\nS/N: \t\t%s\nP/N:\t\t%s\nSW Version:\t%s\nMain FW Version:\t%s\nSecondary FW Ver:\t%s\n   Board\t| P/N\t    |Revision\nFront Location\t|%s|%s\nLed Board\t|%s|%s\nMother Board\t|%s|%s\nBack Board\t|%s|%s\nPower Board\t|%s|%s\nUpper Board\t|%s|%s\nPacing Board\t|%s|%s\nTPI Board\t|%s|%s\nDigital Board\t|%s|%s\nECG Board\t|%s|%s\nSPU Prototypes\t|%s|%s\n' % (self.spuList_info[position][4], self.spuList_info[position][2], self.spuList_info[position][1], self.spuList_info[position][0], self.spuList_info[position][3], self.spuList_info[position][5], self.spuList_info[position][6], self.spuList_info[position][7], self.spuList_info[position][8], self.spuList_info[position][9], self.spuList_info[position][10], self.spuList_info[position][13], self.spuList_info[position][14], self.spuList_info[position][11], self.spuList_info[position][12], self.spuList_info[position][15], self.spuList_info[position][16], self.spuList_info[position][19],self.spuList_info[position][20], self.spuList_info[position][17],self.spuList_info[position][18], self.spuList_info[position][21], self.spuList_info[position][22], self.spuList_info[position][23], self.spuList_info[position][24], self.spuList_info[position][25],self.spuList_info[position][26])
+            return 'SPU:\nS/N: \t\t%s\nP/N:\t\t%s\nSW Version:\t%s\nMain FW Version:\t%s\nSecondary FW Ver:\t%s\n   Board\t| P/N\t    |Revision\nFront Location\t|%s|%s\nLed Board\t|%s|%s\nMother Board\t|%s|%s\nBack Board\t|%s|%s\nPower Board\t|%s|%s\nUpper Board\t|%s|%s\nPacing Board\t|%s|%s\nTPI Board\t|%s|%s\nDigital Board\t|%s|%s\nECG Board\t|%s|%s\nSPU Prototypes\t|%s|%s\n-------------------\n' % (self.spuList_info[position][4], self.spuList_info[position][2], self.spuList_info[position][1], self.spuList_info[position][0], self.spuList_info[position][3], self.spuList_info[position][5], self.spuList_info[position][6], self.spuList_info[position][7], self.spuList_info[position][8], self.spuList_info[position][9], self.spuList_info[position][10], self.spuList_info[position][13], self.spuList_info[position][14], self.spuList_info[position][11], self.spuList_info[position][12], self.spuList_info[position][15], self.spuList_info[position][16], self.spuList_info[position][19],self.spuList_info[position][20], self.spuList_info[position][17],self.spuList_info[position][18], self.spuList_info[position][21], self.spuList_info[position][22], self.spuList_info[position][23], self.spuList_info[position][24], self.spuList_info[position][25],self.spuList_info[position][26])
     # experimentalWarning is a function that takes (self, kind) as arguments.
     # self being the pyqt5 inheritance - this function is being called by self.experimentalWarning(kind)
     # :param kind - 'experimental' will print an experimental feature messageBox.
@@ -1877,11 +1877,19 @@ class Workstation_Dialog(QtWidgets.QDialog):
             self.wdialog.solios_check.setChecked(True)
         else:
             self.wdialog.solios_check.setChecked(False)
-        if clip[8] == "True":
-            self.wdialog.performance_check.setChecked(True)
-        else:
+        try:
+            if clip[8] == "True":
+                self.wdialog.performance_check.setChecked(True)
+            else:
+                self.wdialog.performance_check.setChecked(False)
+            self.wdialog.gpu_text.setText(clip[9])
+        except:
             self.wdialog.performance_check.setChecked(False)
-        self.wdialog.gpu_text.setText(clip[9])
+            warning = QtWidgets.QMessageBox()
+            warning.setText("You imported an older version XML, please inspect performance and GPU fields.")
+            warning.setWindowTitle("Warning")
+            warning.exec_()
+
         self.infoBox() #After filling fields also apply values to self.values.
     def open_workstationDialog_licenses(self):
         if not self.LicensesOpened:

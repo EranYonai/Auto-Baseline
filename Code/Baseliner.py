@@ -1067,11 +1067,18 @@ class MainWindow(QtWidgets.QMainWindow):
                     for y in range(len(fieldsofWS)):
                         child_field = ET.SubElement(child_ws, fieldsofWS[y]) #Creating a child to <Workstation_x> called the field name e.g. <SoftwareVer>
                         child_field.text = self.wsList_info[x][y] #adding text to the field 
-                    # LicensesWS = self.wsList[x].Licenses
-                    # print(LicensesWS)
-                    # for i in range(len(LicensesWS)):
-                    #     child_license = ET.SubElement(child_ws, LicensesWS[i][0])
-                    #     child_license.text = str(LicensesWS[i][1])
+                    LicensesWS = self.wsList[x].licensesToImport
+                    LicensesSPWS = self.wsList[x].licensesSPtoImport
+                    for i in range(len(LicensesWS)):
+                        LicensesWS[i][0] = LicensesWS[i][0].replace('®','1')
+                        LicensesWS[i][0] = LicensesWS[i][0].replace('™','2')
+                        LicensesWS[i][0] = LicensesWS[i][0].replace(' ','_')
+                    for i in range(len(LicensesWS)):
+                        child_license = ET.SubElement(child_ws, LicensesWS[i][0])
+                        child_license.text = str(LicensesWS[i][1])
+                    for i in range(len(LicensesSPWS)):
+                        child_license = ET.SubElement(child_ws, LicensesSPWS[i][0])
+                        child_license.text = str(LicensesSPWS[i][1])
                     count_ += 1
             #End of WS  export
             #Start of SYS export
@@ -1311,7 +1318,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 performance = "Yes"
             else:
                 performance = "No"
-            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nGraphics Card:\t\t%s\nLicenses:\t\t%s\nService Packs:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList_info[position][9], self.wsList[position].licensesToExport, self.wsList[position].spToExport)
+            if (len(self.wsList_info[position][1]) > 1):
+                toReturn = 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nGraphics Card:\t\t%s\nLicenses:\t\t%s\nService Packs:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList_info[position][9], self.wsList[position].licensesToExport, self.wsList[position].spToExport)
+            else:
+                toReturn = 'Workstation #%d:\nSW Version:\t\t%s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nGraphics Card:\t\t%s\nLicenses:\t\t%s\nService Packs:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList_info[position][9], self.wsList[position].licensesToExport, self.wsList[position].spToExport)
+            return toReturn
         if type == 'catheters': #Loops for items in list, assign to [] and loop through it printings. Might want to add Cables:
             items = []
             catToReturn = "Catheters: \n"
@@ -1389,7 +1400,7 @@ class MainWindow(QtWidgets.QMainWindow):
             else:
                 #some windows were opened, notify the loss of data and
                 windowsOpened_alert = QtWidgets.QMessageBox()
-                windowsOpened_alert.setText("Some windows were opened, Importing now will result in the loss of data. \nDo you want to continue?")
+                windowsOpened_alert.setText("Some windows were opened, import now will result in the loss of data. \nDo you want to continue?")
                 windowsOpened_alert.setWindowTitle("Confirmation Window")
                 windowsOpened_alert.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
                 button_okCancel = windowsOpened_alert.exec_() #if pressed okay -> 1024 if pressed cancel -> 4194304
@@ -1413,8 +1424,8 @@ class MainWindow(QtWidgets.QMainWindow):
         imported_xml = ET.parse(filelocation)
         importedroot = imported_xml.getroot()
         for child in importedroot:
-            if (child.tag != 'Catheters' and child.tag != 'Extenders'):
-                for childx2 in child: #Workstation_0
+            if (child.tag != 'Catheters' and child.tag != 'Extenders' and child.tag != 'Workstations'):
+                for childx2 in child: #Ultrasound_0
                     listofValues = []
                     for childx3 in childx2:
                         if childx3.text == None: #Crash when Object is None. (because somewhere it tries to len() it)
@@ -1428,14 +1439,54 @@ class MainWindow(QtWidgets.QMainWindow):
             elif (child.tag == 'Extenders'):
                 for childx2 in child:
                     self.importaddtoInfoCount(child.tag, childx2.text)
+            elif (child.tag == 'Workstations'):
+                for childx2 in child: #Workstation_0
+                    listofValues = []
+                    for childx3 in childx2:
+                        if childx3.text == None: #Crash when Object is None. (because somewhere it tries to len() it)
+                            listofValues.append("") 
+                        else:
+                            listofValues.append([childx3.tag,childx3.text])
+                    self.importaddtoInfoCount(child.tag, listofValues)
     def importaddtoInfoCount(self, type, listValues):
         #This function gets type (child.tag) e.g. "Workstations" and listValues which is the list of all the values of the children texts(childx3.text)
         #importaddtoInfoCount starts by self.showThings
         if (type == "Workstations"):
-            self.showThings("workstation")
-            self.workstationOpened[self.workCount-1] = True
-            self.wsList_info[self.workCount-1] = listValues
-            self.updateProgressbars("ws", self.workCount-1)
+            costumValue = []
+            listLicenses = []
+            listSP = []
+            if len(listValues)  == 10:
+                self.showThings("workstation")
+                self.workstationOpened[self.workCount-1] = True
+                toSend = []
+                for i in listValues:
+                    toSend.append(i[1])
+                self.wsList_info[self.workCount-1] = toSend
+                self.updateProgressbars("ws", self.workCount-1)
+            else:
+                listforWS = listValues[:10]
+                listValues = listValues[10:]
+                if len(listValues) == 36: #That means the user added custom license
+                    listLicenses = listValues[:31]
+                    costumValue = listValues[31]
+                    listSP = listValues[32:]
+                else:
+                    listLicenses =listValues[:31]
+                    listSP = listValues[31:]
+                    costumValue = None
+                self.showThings("workstation")
+                self.workstationOpened[self.workCount-1] = True
+                listforWStoSend = []
+                for i in listforWS:
+                    if (i != ''):
+                        listforWStoSend.append(i[1])
+                    if (i == ''):
+                        listforWStoSend.append('')
+                self.wsList_info[self.workCount-1] = listforWStoSend
+                self.wsList[self.workCount-1].importedLicenses = listLicenses
+                self.wsList[self.workCount-1].importedSP = listSP
+                self.wsList[self.workCount-1].importedManual = costumValue
+                self.updateProgressbars("ws", self.workCount-1)
         if (type == "Systems"):
             self.showThings("system")
             self.systemOpened[self.systemCount-1] = True
@@ -1731,6 +1782,8 @@ class Licenses_Dialog(QtWidgets.QDialog):
         self.licenseClip = []
         self.ldialog.comboBox.currentTextChanged.connect(self.presets)
         self.ldialog.confirm_button.clicked.connect(self.grabcheckboxes)
+        if (len(parentWin.importedLicenses) > 1):
+            self.fillFields(parentWin.importedLicenses, parentWin.importedSP, parentWin.importedManual)
     def grabcheckboxes(self):
         licensesclip = []
         spclip = []
@@ -1836,6 +1889,81 @@ class Licenses_Dialog(QtWidgets.QDialog):
             self.ldialog.soundfam.setChecked(False)
             self.ldialog.activationv7p3.setChecked(False)
             self.ldialog.activationv7sp2.setChecked(False)
+    def fillFields(self, LicenseClip, spClip, customValue):
+        for i in range(len(LicenseClip)):
+            if ("CARTOMERGE" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.merge.setChecked(True)
+            if ("CARTOSOUND" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.sound.setChecked(True)
+            if ("PASO" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.paso.setChecked(True)
+            if ("CAFE" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.cafe_2.setChecked(True)
+            if ("SMARTTOUCH" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.smarttouch.setChecked(True)
+            if ("CARTOUNIVU" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.nivu.setChecked(True)
+            if ("VISITAG2" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.visitag.setChecked(True)
+            if ("RMT" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.rmt.setChecked(True)
+            if ("CARTO_31_Activation" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.activation3.setChecked(True)
+            if ("CARTOSEG2_Extended_CT" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.segct.setChecked(True)
+            if ("CARTOSEG2_Extended_MR" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.segmr.setChecked(True)
+            if ("Dual-Monitor" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.dualmonitor.setChecked(True)
+            if ("CONFIDENSE" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.confidense.setChecked(True)
+            if ("CARTOFINDER" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.finder.setChecked(True)
+            if ("VISITAG_SURPOINT2" == LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.visitagsur.setChecked(True)
+            if ("CARTOREPLAY2" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.replay.setChecked(True)
+            if ("Ripple_Mapping" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.ripple.setChecked(True)
+            if ("FAM_Dx" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.famdx.setChecked(True)
+            if ("CARTO_QDOT_MICRO2" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.qdotmicro.setChecked(True)
+            if ("VISITAG_SURPOINT2_EPU" == LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.visitagepu.setChecked(True)
+            if ("SIA" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.sia.setChecked(True)
+            if ("Complex_Point" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.complex.setChecked(True)
+            if ("HD_Coloring" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.hdcolor.setChecked(True)
+            if ("CARTO_PRIME2" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.prime.setChecked(True)
+            if ("HELIOSTAR2" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.helios.setChecked(True)
+            if ("RF_BALLOON" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.baloon.setChecked(True)
+            if ("CARTO_3_V7_Activation" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.activationv7.setChecked(True)
+            if ("CARTO_3_V8_Activation" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.activationv8.setChecked(True)
+            if ("SOUNDFAM2" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.soundfam.setChecked(True)
+            if ("CARTO_3_V7_Phase_3_Activation" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.activationv7p3.setChecked(True)
+            if ("CARTO_3_V7_Phase_2_SP_Activation" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+                self.ldialog.activationv7sp2.setChecked(True)
+        for i in range (len(spClip)):
+            if ("HELIOSTAR" in spClip[i][0] and spClip[i][1] == "True"):
+                self.ldialog.sp_helios.setChecked(True)
+            if ("LASSOSTARNav" in spClip[i][0] and spClip[i][1] == "True"):
+                self.ldialog.sp_lasso.setChecked(True)
+            if ("QDOT" in spClip[i][0] and spClip[i][1] == "True"):
+                self.ldialog.sp_qdot.setChecked(True)
+            if ("SPU" in spClip[i][0] and spClip[i][1] == "True"):
+                self.ldialog.sp_spu.setChecked(True)
+        if customValue != None:
+            self.ldialog.ManualLine.setText(customValue[0])
 class Workstation_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Workstation_Dialog, self).__init__()
@@ -1843,6 +1971,11 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.wdialog.setupUi(self)
         self.licensesToExport = ""
         self.spToExport = ""
+        self.licensesToImport = []
+        self.importedLicenses = []
+        self.importedSP = []
+        self.importedManual = ""
+        self.licensesSPtoImport = []
         self.LicensesOpened = False
         self.wdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.wdialog.check_button.clicked.connect(self.verification)
@@ -1876,6 +2009,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.wdialog.servicetag_text.setText(clip[4])
         self.wdialog.wsconf_text.setText(clip[5])
         self.wdialog.wsmodel_text.setText(clip[6])
+        self.wdialog.gpu_text.setText(clip[9])
         if clip[7] == "True":
             self.wdialog.solios_check.setChecked(True)
         else:
@@ -1885,7 +2019,6 @@ class Workstation_Dialog(QtWidgets.QDialog):
                 self.wdialog.performance_check.setChecked(True)
             else:
                 self.wdialog.performance_check.setChecked(False)
-            self.wdialog.gpu_text.setText(clip[9])
         except:
             self.wdialog.performance_check.setChecked(False)
             warning = QtWidgets.QMessageBox()
@@ -1899,7 +2032,8 @@ class Workstation_Dialog(QtWidgets.QDialog):
             self.licenseDialog = Licenses_Dialog(self)
             self.LicensesOpened = True
         self.licenseDialog.exec_()
-        Licenses = self.licenseDialog.licenseClip 
+        Licenses = self.licenseDialog.licenseClip
+        self.licensesToImport = Licenses
         toExportLicenses = ""
         for i in range (len(Licenses)):
             if Licenses[i][1]:
@@ -1907,6 +2041,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.licensesToExport = toExportLicenses[:-2] #Deletes the , 
         toExportSP = ""
         spLicenses = self.licenseDialog.spClip
+        self.licensesSPtoImport = spLicenses
         for i in range(len(spLicenses)):
             if spLicenses[i][1]:
                 toExportSP += spLicenses[i][0]+', '

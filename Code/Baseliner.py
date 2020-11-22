@@ -1823,7 +1823,9 @@ class Licenses_Dialog(QtWidgets.QDialog):
         spclip.append([self.ldialog.sp_qdot.text(), self.ldialog.sp_qdot.isChecked()])
         spclip.append([self.ldialog.sp_spu.text(), self.ldialog.sp_spu.isChecked()])
         if len(self.ldialog.ManualLine.text()) > 1:
-            licensesclip.append([self.ldialog.ManualLine.text(), True])
+            manualline = self.ldialog.ManualLine.text()#because those chars breaks the XML
+            manualline = manualline.replace('!', '').replace('@','').replace('#','').replace('$','').replace('%','').replace('^','').replace('&','').replace('*','').replace('(','').replace(')','')
+            licensesclip.append([manualline, True])
         self.licenseClip = licensesclip
         self.spClip = spclip
         self.close()

@@ -921,7 +921,7 @@ class MainWindow(QtWidgets.QMainWindow):
             item = None
     def exportTXT(self):
         error_list = ""
-        self.experimentalWarning("wslicenses")
+        #self.experimentalWarning("wslicenses") In experimental branch i fixed this issue.
         if not self.filePath_configured:
             self.exportfilelocation = QtWidgets.QFileDialog.getSaveFileName(None, "Save File", '/',"Text Files (*.txt)")[0]
             self.filePath_configured = True
@@ -1825,6 +1825,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
         if len(self.ldialog.ManualLine.text()) > 1:
             manualline = self.ldialog.ManualLine.text()#because those chars breaks the XML
             manualline = manualline.replace('!', '').replace('@','').replace('#','').replace('$','').replace('%','').replace('^','').replace('&','').replace('*','').replace('(','').replace(')','')
+            print(manualline)
             licensesclip.append([manualline, True])
         self.licenseClip = licensesclip
         self.spClip = spclip

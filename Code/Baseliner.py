@@ -1311,7 +1311,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 performance = "Yes"
             else:
                 performance = "No"
-            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nGraphics Card:\t\t%s\nLicenses:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList_info[position][9], self.wsList[position].licensesToExport)
+            return 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nGraphics Card:\t\t%s\nLicenses:\t\t%s\nService Packs:\t\t%s\n-------------------\n'%(position + 1,self.wsList_info[position][0], self.wsList_info[position][1], self.wsList_info[position][2], self.wsList_info[position][3], self.wsList_info[position][4], self.wsList_info[position][5], self.wsList_info[position][6], soliosState,performance, self.wsList_info[position][9], self.wsList[position].licensesToExport, self.wsList[position].spToExport)
         if type == 'catheters': #Loops for items in list, assign to [] and loop through it printings. Might want to add Cables:
             items = []
             catToReturn = "Catheters: \n"
@@ -1724,7 +1724,7 @@ class System_Dialog(QtWidgets.QDialog):
         self.sdialog.aquamax_text.setText(clip[7])
         self.infoBox() #After filling fields also apply values to self.values.
 class Licenses_Dialog(QtWidgets.QDialog):
-    def __init__(self):
+    def __init__(self, parentWin):
         super(Licenses_Dialog, self).__init__()
         self.ldialog = Ui_licenses_Dialog()
         self.ldialog.setupUi(self)
@@ -1733,6 +1733,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
         self.ldialog.confirm_button.clicked.connect(self.grabcheckboxes)
     def grabcheckboxes(self):
         licensesclip = []
+        spclip = []
         licensesclip.append([self.ldialog.merge.text(), self.ldialog.merge.isChecked()])
         licensesclip.append([self.ldialog.sound.text(), self.ldialog.sound.isChecked()])
         licensesclip.append([self.ldialog.paso.text(), self.ldialog.paso.isChecked()])
@@ -1764,9 +1765,14 @@ class Licenses_Dialog(QtWidgets.QDialog):
         licensesclip.append([self.ldialog.soundfam.text(),self.ldialog.soundfam.isChecked()])
         licensesclip.append([self.ldialog.activationv7p3.text(), self.ldialog.activationv7p3.isChecked()])
         licensesclip.append([self.ldialog.activationv7sp2.text(), self.ldialog.activationv7sp2.isChecked()])
+        spclip.append([self.ldialog.sp_helios.text(), self.ldialog.sp_helios.isChecked()])
+        spclip.append([self.ldialog.sp_lasso.text(), self.ldialog.sp_lasso.isChecked()])
+        spclip.append([self.ldialog.sp_qdot.text(), self.ldialog.sp_qdot.isChecked()])
+        spclip.append([self.ldialog.sp_spu.text(), self.ldialog.sp_spu.isChecked()])
         if len(self.ldialog.ManualLine.text()) > 1:
             licensesclip.append([self.ldialog.ManualLine.text(), True])
         self.licenseClip = licensesclip
+        self.spClip = spclip
         self.close()
     def presets(self, index):
         if self.ldialog.comboBox.currentText() == "Select All":
@@ -1788,14 +1794,11 @@ class Licenses_Dialog(QtWidgets.QDialog):
             self.ldialog.replay.setChecked(True)
             self.ldialog.ripple.setChecked(True)
             self.ldialog.famdx.setChecked(True)
-            self.ldialog.qdotmicro.setChecked(True)
             self.ldialog.visitagepu.setChecked(True)
             self.ldialog.sia.setChecked(True)
             self.ldialog.complex.setChecked(True)
             self.ldialog.hdcolor.setChecked(True)
             self.ldialog.prime.setChecked(True)
-            self.ldialog.helios.setChecked(True)
-            self.ldialog.baloon.setChecked(True)
             self.ldialog.activationv7.setChecked(True)
             self.ldialog.activationv8.setChecked(True)
             self.ldialog.soundfam.setChecked(True)
@@ -1838,8 +1841,8 @@ class Workstation_Dialog(QtWidgets.QDialog):
         super(Workstation_Dialog, self).__init__()
         self.wdialog = Ui_workstation_Dialog()
         self.wdialog.setupUi(self)
-        self.Licenses = []
         self.licensesToExport = ""
+        self.spToExport = ""
         self.LicensesOpened = False
         self.wdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.wdialog.check_button.clicked.connect(self.verification)
@@ -1893,15 +1896,21 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.infoBox() #After filling fields also apply values to self.values.
     def open_workstationDialog_licenses(self):
         if not self.LicensesOpened:
-            self.licenseDialog = Licenses_Dialog()
+            self.licenseDialog = Licenses_Dialog(self)
             self.LicensesOpened = True
         self.licenseDialog.exec_()
-        self.Licenses = self.licenseDialog.licenseClip #HEEEEEEREEEEEEEEEEEEEE need to loop if true enter to a string to export.
+        Licenses = self.licenseDialog.licenseClip 
         toExportLicenses = ""
-        for i in range (len(self.Licenses)):
-            if self.Licenses[i][1]:
-                toExportLicenses += self.Licenses[i][0]+', '
-        self.licensesToExport = toExportLicenses
+        for i in range (len(Licenses)):
+            if Licenses[i][1]:
+                toExportLicenses += Licenses[i][0]+', '
+        self.licensesToExport = toExportLicenses[:-2] #Deletes the , 
+        toExportSP = ""
+        spLicenses = self.licenseDialog.spClip
+        for i in range(len(spLicenses)):
+            if spLicenses[i][1]:
+                toExportSP += spLicenses[i][0]+', '
+        self.spToExport = toExportSP[:-2]
 class Catheters_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Catheters_Dialog, self).__init__()

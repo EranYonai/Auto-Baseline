@@ -251,6 +251,16 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>software_text</tabstop>
+  <tabstop>SN_text</tabstop>
+  <tabstop>EPcable_text</tabstop>
+  <tabstop>abaadaCable_text</tabstop>
+  <tabstop>epboxSN_text</tabstop>
+  <tabstop>epioCable_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

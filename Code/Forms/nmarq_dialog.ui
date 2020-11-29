@@ -347,6 +347,19 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>software_text</tabstop>
+  <tabstop>SN_text</tabstop>
+  <tabstop>GtoCable_text</tabstop>
+  <tabstop>ethernetCable_text</tabstop>
+  <tabstop>gToPumpCable_text</tabstop>
+  <tabstop>gToM_text</tabstop>
+  <tabstop>pumpSN_text</tabstop>
+  <tabstop>pumpModel_text</tabstop>
+  <tabstop>footPadel_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

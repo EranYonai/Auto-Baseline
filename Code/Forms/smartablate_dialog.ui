@@ -146,6 +146,13 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>software_text</tabstop>
+  <tabstop>SN_text</tabstop>
+  <tabstop>cables_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

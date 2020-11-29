@@ -111,6 +111,15 @@ class Ui_system_dialog(object):
 
         self.retranslateUi(system_dialog)
         QtCore.QMetaObject.connectSlotsByName(system_dialog)
+        system_dialog.setTabOrder(self.system_text, self.piu_text)
+        system_dialog.setTabOrder(self.piu_text, self.lp_text)
+        system_dialog.setTabOrder(self.lp_text, self.patchunit_text)
+        system_dialog.setTabOrder(self.patchunit_text, self.mm_text)
+        system_dialog.setTabOrder(self.mm_text, self.ecg_text)
+        system_dialog.setTabOrder(self.ecg_text, self.aquanum_text)
+        system_dialog.setTabOrder(self.aquanum_text, self.aquamax_text)
+        system_dialog.setTabOrder(self.aquamax_text, self.check_button)
+        system_dialog.setTabOrder(self.check_button, self.confirm_button)
 
     def retranslateUi(self, system_dialog):
         _translate = QtCore.QCoreApplication.translate

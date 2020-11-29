@@ -10,7 +10,7 @@ from Forms.system_dialog import Ui_system_dialog
 from Forms.ultrasound_dialog import Ui_Dialog as Ui_ultrasound_Dialog
 from Forms.workstation_dialog import Ui_workstation_Dialog
 from Forms.licenses_dialog import Ui_licenses_Dialog
-from Forms.catheters_Dialog import Ui_Dialog as catheters_Ui
+from Forms.catheters_dialog import Ui_Dialog as catheters_Ui
 from Forms.stockert_dialog import Ui_Dialog as stockert_Ui
 from Forms.smartablate_dialog import Ui_Dialog as smartablate_Ui
 from Forms.ngen_dialog import Ui_Dialog as ngen_Ui
@@ -23,6 +23,7 @@ from Forms.printer_dialog import Ui_Dialog as printer_Ui
 from Forms.CatalogHelper_details import Ui_Dialog as cathelp_detUi
 from Forms.CatalogHelper_main import Ui_Dialog as cathelp_mainUi
 from Forms.spu_dialog import Ui_Dialog as spu_Ui
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -111,6 +112,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.export_button.clicked.connect(self.exportTXT) #Upon pressing "export" the program will append it's current content to a .txt file
         self.ui.import_button.clicked.connect(self.importButton) #This is the next step of the program, upon importing txt file
         self.experimentalWarning("beta")
+
     def hideThings(self):
         self.ui.workstation_win_1.hide()
         self.ui.work_bar_1.hide()
@@ -198,6 +200,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.bard_bar.hide()
         self.ui.spu_bar.hide()
         self.ui.spu_win.hide()
+
     def createWindowsLists(self, kind):
         if (kind == "ws"):
             wsList = [Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog(),Workstation_Dialog()]
@@ -256,6 +259,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.demoList = [Demo_Dialog(),Demo_Dialog(),Demo_Dialog()]
             self.bardList = [Bard_Dialog()]
             self.spuList = [SPU_Dialog()]
+
     def reset_allFields(self):
         self.workCount, self.stockertCount, self.smartablateCount, self.ngenCount, self.nmarqCount, self.ultraCount, self.systemCount, self.demoCount, self.pacerCount, self.qdotdongleCount, self.printerCount, self.epuCount, self.spuCount, self.bardCount  = 0,0,0,0,0,0,0,0,0,0,0,0,0,0 #Declare counts in order to know how much of each.
         self.workstationOpened = [False,False,False,False,False,False,False,False] # List of bool values in order to know if window was opened before.
@@ -289,6 +293,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.header = ""
         self.ui.catheter_list.clear()
         self.ui.extender_list_2.clear()
+
     def reset_progressbars(self):
         self.ui.work_bar_1.setValue(0)
         self.ui.work_bar_2.setValue(0)
@@ -331,6 +336,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.demo_bar.setValue(0)
         self.ui.demo_bar_2.setValue(0)
         self.ui.demo_bar_3.setValue(0)
+
     def check_progressbars(self):
         #I can also check if for each xxxOpened the progress bars.value is > 0
         state = True
@@ -377,10 +383,12 @@ class MainWindow(QtWidgets.QMainWindow):
             if bard:
                 state = False
         return state #if any window opened return False, if not, return True.
+
     def catalogHelp(self):
         self.experimentalWarning("experimental")
         catWin = CatalogHelper_Dialog(self) #Inheritance -> Passing MainWindow (self) as an argument
         catWin.exec_()
+
     def showThings(self, show):
         if show == "workstation":
             self.ui.additional_tabs.setCurrentIndex(1)
@@ -638,6 +646,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 notimplemented.setWindowTitle("Work in Progress")
                 notimplemented.exec()
                 self.demoCount = 3
+
     def updateProgressbars(self, type, number):
         #This function gets type of window and the number of the window (in order to extract info from typeList_info)
         #And iterates through the values if > 0 adds to count and update the matching progress bar
@@ -792,6 +801,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.ui.demo_bar_2.setValue(count)
             if number == 2:
                 self.ui.demo_bar_3.setValue(count)
+
     def open_ultrasoundDialog(self, position):
         if self.ultrasoundOpened[position]:
             self.ultraList[position].fillFields(self.ultraList_info[position])
@@ -800,6 +810,7 @@ class MainWindow(QtWidgets.QMainWindow):
                            self.ultraList[position].appVer, self.ultraList[position].Videocable, self.ultraList[position].Ethcable]
         self.updateProgressbars("us", position)
         self.ultrasoundOpened[position] = True
+
     def open_systemDialog(self, position):
         if self.systemOpened[position]:
             self.sysList[position].fillFields(self.sysList_info[position])
@@ -808,8 +819,10 @@ class MainWindow(QtWidgets.QMainWindow):
                             self.sysList[position].Monitormodel, self.sysList[position].ECGnumber, self.sysList[position].Aquanumber, self.sysList[position].Aquamax]
         self.updateProgressbars("sys", position)
         self.systemOpened[position] = True
+
     def open_bardDialog(self, position):
         pass
+
     def open_SPUDialog(self, position):
         if self.spuOpened[position]:
             self.spuList[position].fillFields(self.spuList_info[position])
@@ -817,6 +830,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.spuList_info[position] = [self.spuList[position].mainfwver, self.spuList[position].swver, self.spuList[position].pn, self.spuList[position].secfwver, self.spuList[position].sn, self.spuList[position].frontloc, self.spuList[position].frontloc_rev, self.spuList[position].ledbo, self.spuList[position].ledbo_rev, self.spuList[position].motherbo, self.spuList[position].motherbo_rev, self.spuList[position].powerb, self.spuList[position].powerb_rev, self.spuList[position].backbo, self.spuList[position].backbo_rev, self.spuList[position].upbo, self.spuList[position].upbo_rev, self.spuList[position].tpibo, self.spuList[position].tpibo_rev, self.spuList[position].pacingbo, self.spuList[position].pacingbo_rev, self.spuList[position].digibo, self.spuList[position].digibo_rev, self.spuList[position].ecgbo, self.spuList[position].ecgbo_rev, self.spuList[position].spuprobo, self.spuList[position].spuprobo_rev]
         self.updateProgressbars("spu", position)
         self.spuOpened[position] = True
+
     def open_workstationDialog(self, position):
         if self.workstationOpened[position]:
             self.wsList[position].fillFields(self.wsList_info[position])
@@ -825,6 +839,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.workstationOpened[position] = True
         self.updateProgressbars("ws",position)
         #self.WSlist_info in place of WS if true add licenses = self.wsList[position].Licenses
+
     def open_cathetersDialog(self, cat_ext):
         cathetersDialog = Catheters_Dialog()
         cathetersDialog.exec_()
@@ -836,6 +851,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.ui.catheter_list.addItem(item)
             if (cat_ext == 1):
                 self.ui.extender_list_2.addItem(item)
+
     def get_catheterList(self, cat_ext):
         if (cat_ext == 0):
             if (self.ui.catheter_list.count() > 0):
@@ -849,6 +865,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 return extenderList
             else:
                 return []
+
     def open_stockertDialog(self, position):
         if self.stockertOpened[position]:
             self.stockertList[position].fillFields(self.stockertList_info[position])
@@ -856,6 +873,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stockertList_info[position] = self.stockertList[position].infoList
         self.updateProgressbars("stockert", position)
         self.stockertOpened[position] = True
+
     def open_smartablateDialog(self, position):
         if self.smartablateOpened[position]:
             self.smartablateList[position].fillFields(self.smartablate_info[position])
@@ -863,6 +881,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.smartablate_info[position] = self.smartablateList[position].infoList
         self.updateProgressbars("smartablate", position)
         self.smartablateOpened[position] = True
+
     def open_ngenDialog(self, position):
         if self.ngenOpened[position]:
             self.ngenList[position].fillFields(self.ngenlist_info[position])
@@ -870,6 +889,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ngenlist_info[position] = self.ngenList[position].infoList
         self.updateProgressbars("ngen", position)
         self.ngenOpened[position] = True
+
     def open_nmarqDialog(self, position):
         if self.nmarqOpened[position]:
             self.nmarqList[position].fillFields(self.nmarqlist_info[position])
@@ -877,6 +897,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.nmarqlist_info[position] = self.nmarqList[position].infoList
         self.updateProgressbars("nmarq", position)
         self.nmarqOpened[position] = True
+
     def open_pacerDialog(self, position):
         if self.pacerOpened[position]:
             self.pacerList[position].fillFields(self.pacerlist_info[position])
@@ -884,6 +905,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pacerlist_info[position] = self.pacerList[position].infoList
         self.updateProgressbars("pacer", position)
         self.pacerOpened[position] = True
+
     def open_qdotdongleDialog(self, position):
         if self.qdotdongleOpened[position]:
             self.qdotdongleList[position].fillFields(self.qdotdonglelist_info[position])
@@ -891,6 +913,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.qdotdonglelist_info[position] = self.qdotdongleList[position].infoList
         self.updateProgressbars("qdotdongle", position)
         self.qdotdongleOpened[position] = True
+
     def open_printerDialog(self, position):
         if self.printerOpened[position]:
             self.printerList[position].fillFields(self.printerlist_info[position])
@@ -898,6 +921,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.printerlist_info[position] = self.printerList[position].infoList
         self.updateProgressbars("printer", position)
         self.printerOpened[position] = True
+
     def open_epuDialog(self, position):
         if self.epuOpened[position]:
             self.epuList[position].fillFields(self.epulist_info[position])
@@ -905,6 +929,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.epulist_info[position] = self.epuList[position].infoList
         self.updateProgressbars("epu", position)
         self.epuOpened[position] = True
+
     def open_demoDialog(self, position):
         if self.demoOpened[position]:
             self.demoList[position].fillFields(self.demolist_info[position])
@@ -912,6 +937,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.demolist_info[position] = self.demoList[position].infoList
         self.updateProgressbars("demo", position)
         self.demoOpened[position] = True
+
     def remove_catheter(self, cat_ext):
         if (cat_ext == 0):
             item = self.ui.catheter_list.takeItem(self.ui.catheter_list.currentRow())
@@ -919,6 +945,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if (cat_ext == 1):
             item = self.ui.extender_list_2.takeItem(self.ui.extender_list_2.currentRow())
             item = None
+
     def exportTXT(self):
         error_list = ""
         #self.experimentalWarning("wslicenses") In experimental branch i fixed this issue.
@@ -1045,6 +1072,7 @@ class MainWindow(QtWidgets.QMainWindow):
             export_file.close()
             self.exportXML(self.exportfilelocation)
             self.filePath_configured = False # This way the user can save as many times as he wants, without appending toText again to the same file.
+
     def exportXML(self, fileLocation):
         try:
             fileLocation = fileLocation[:-4]
@@ -1302,6 +1330,7 @@ class MainWindow(QtWidgets.QMainWindow):
             notimplemented.setWindowTitle("Error while exporting")
             notimplemented.exec_()
             print (e)
+
     # format is a function that takes (self,type,position) as arguments.
     # self being the pyqt5 inheritance - this function is being called by self.format(type,position)
     def format(self, type, position):
@@ -1363,6 +1392,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return 'qDOT Dongle:\nSerial Number:\t\t%s\nSoftware Version:\t%s\nHardware Version:\t%s\n-------------------\n' % (self.qdotdonglelist_info[position][0],self.qdotdonglelist_info[position][1],self.qdotdonglelist_info[position][2])
         if type == "spu":
             return 'SPU:\nS/N: \t\t%s\nP/N:\t\t%s\nSW Version:\t%s\nMain FW Version:\t%s\nSecondary FW Ver:\t%s\n   Board\t| P/N\t    |Revision\nFront Location\t|%s|%s\nLed Board\t|%s|%s\nMother Board\t|%s|%s\nBack Board\t|%s|%s\nPower Board\t|%s|%s\nUpper Board\t|%s|%s\nPacing Board\t|%s|%s\nTPI Board\t|%s|%s\nDigital Board\t|%s|%s\nECG Board\t|%s|%s\nSPU Prototypes\t|%s|%s\n-------------------\n' % (self.spuList_info[position][4], self.spuList_info[position][2], self.spuList_info[position][1], self.spuList_info[position][0], self.spuList_info[position][3], self.spuList_info[position][5], self.spuList_info[position][6], self.spuList_info[position][7], self.spuList_info[position][8], self.spuList_info[position][9], self.spuList_info[position][10], self.spuList_info[position][13], self.spuList_info[position][14], self.spuList_info[position][11], self.spuList_info[position][12], self.spuList_info[position][15], self.spuList_info[position][16], self.spuList_info[position][19],self.spuList_info[position][20], self.spuList_info[position][17],self.spuList_info[position][18], self.spuList_info[position][21], self.spuList_info[position][22], self.spuList_info[position][23], self.spuList_info[position][24], self.spuList_info[position][25],self.spuList_info[position][26])
+
     # experimentalWarning is a function that takes (self, kind) as arguments.
     # self being the pyqt5 inheritance - this function is being called by self.experimentalWarning(kind)
     # :param kind - 'experimental' will print an experimental feature messageBox.
@@ -1390,6 +1420,7 @@ class MainWindow(QtWidgets.QMainWindow):
             warning.setText("Not yet implemented")
             warning.setWindowTitle("Warning")
             warning.exec_()
+
     def importButton(self):
         try:
             state = self.check_progressbars()
@@ -1420,6 +1451,7 @@ class MainWindow(QtWidgets.QMainWindow):
             notimplemented.setWindowTitle("Error")
             notimplemented.exec_()
             print (e)
+
     def importBase(self, filelocation):
         imported_xml = ET.parse(filelocation)
         importedroot = imported_xml.getroot()
@@ -1448,6 +1480,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         else:
                             listofValues.append([childx3.tag,childx3.text])
                     self.importaddtoInfoCount(child.tag, listofValues)
+
     def importaddtoInfoCount(self, type, listValues):
         #This function gets type (child.tag) e.g. "Workstations" and listValues which is the list of all the values of the children texts(childx3.text)
         #importaddtoInfoCount starts by self.showThings
@@ -1551,6 +1584,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.catheter_list.addItem(listValues)
         if (type == "Extenders"):
             self.ui.extender_list_2.addItem(listValues)
+
+
 class Ultrasound_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Ultrasound_Dialog, self).__init__()
@@ -1566,6 +1601,7 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         # "swlcable":"",
         # "videocable":"",
         # "ethcable":""}
+
     def infoBox(self):
         # self.dict_of_values["system"] = self.udialog.ultrasound_combo.currentText()
         # self.dict_of_values["swversion"] = self.udialog.softwarever_text.text()
@@ -1579,15 +1615,18 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.appVer = self.udialog.applicationver_text.text()
         self.Videocable = self.udialog.videocable_text.text()
         self.Ethcable = self.udialog.ethernet_text.text()
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def fillFields(self, clip):
         index = self.udialog.ultrasound_combo.findText(
             clip[0], QtCore.Qt.MatchFixedString)
@@ -1599,6 +1638,8 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.videocable_text.setText(clip[4])
         self.udialog.ethernet_text.setText(clip[5])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class CatalogHelper_Dialog(QtWidgets.QDialog):
     def __init__(self, mainWin):
         """Here is a good example of inheritance between pyqt5 objects - which works differently then normal python inheritance.
@@ -1609,6 +1650,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
         self.ui.setupUi(self)
         self.ui.getCatalog_B.clicked.connect(self.oneCatalog)
         self.mainWin = mainWin
+
     def getMFG_selenium(self, part):
         try:
             #This function uses selenium to open Chrome -> go to catheter catalog, enter 'part' into the search bar
@@ -1630,6 +1672,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
         except:
             driver.close()
             return False
+
     def oneCatalog(self):
         cat = self.getMFG_selenium(self.ui.signelCatalog_Text.text())
         if (cat != False):
@@ -1640,6 +1683,8 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             notimplemented.setText("Couldn't find item in catalog")
             notimplemented.setWindowTitle("Error")
             notimplemented.exec_()
+
+
 class SPU_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(SPU_Dialog, self).__init__()
@@ -1648,15 +1693,18 @@ class SPU_Dialog(QtWidgets.QDialog):
         self.spdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.spdialog.check_button.clicked.connect(self.verification)
         self.infoBox()
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.mainfwver = self.spdialog.mainfwver_text.text()
         self.swver = self.spdialog.swver_text.text()
@@ -1687,6 +1735,7 @@ class SPU_Dialog(QtWidgets.QDialog):
         self.ecgbo_rev = self.spdialog.ecgbo_text_rev.text()
         self.spuprobo = self.spdialog.spuprobo_text.text()
         self.spuprobo_rev = self.spdialog.spuprobo_text_rev.text()
+
     def fillFields(self, clip):
         self.spdialog.mainfwver_text.setText(clip[0])
         self.spdialog.swver_text.setText(clip[1])
@@ -1716,8 +1765,12 @@ class SPU_Dialog(QtWidgets.QDialog):
         self.spdialog.spuprobo_text.setText(clip[25])
         self.spdialog.spuprobo_text_rev.setText(clip[26])
         self.infoBox()
+
+
 class Bard_Dialog(QtWidgets.QDialog):
     pass
+
+
 class SingleCatheter(QtWidgets.QDialog):
     def __init__(self, listValues, parent_win):
         super(SingleCatheter, self).__init__()
@@ -1730,14 +1783,18 @@ class SingleCatheter(QtWidgets.QDialog):
         self.dialog.mfg_text.setText(listValues[0])
         self.dialog.description_text.setText(listValues[1])
         self.dialog.family_text.setText(listValues[2])
+
     def sendExtenders(self):
         item = self.dialog.description_text.text()+': '+self.dialog.mfg_text.text()
         self.parent_win.mainWin.ui.extender_list_2.addItem(item)
         self.close()
+
     def sendCatheters(self):
         item = self.dialog.description_text.text()+': '+self.dialog.mfg_text.text()
         self.parent_win.mainWin.ui.catheter_list.addItem(item)
         self.close()
+
+
 class System_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(System_Dialog, self).__init__()
@@ -1746,15 +1803,18 @@ class System_Dialog(QtWidgets.QDialog):
         self.sdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.sdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.Systemnumber = self.sdialog.system_text.text()
         self.PIUconf = self.sdialog.piu_text.text()
@@ -1764,6 +1824,7 @@ class System_Dialog(QtWidgets.QDialog):
         self.ECGnumber = self.sdialog.ecg_text.text()
         self.Aquanumber = self.sdialog.aquanum_text.text()
         self.Aquamax = self.sdialog.aquamax_text.text()
+
     def fillFields(self, clip):
         self.sdialog.system_text.setText(clip[0])
         self.sdialog.piu_text.setText(clip[1])
@@ -1774,6 +1835,8 @@ class System_Dialog(QtWidgets.QDialog):
         self.sdialog.aquanum_text.setText(clip[6])
         self.sdialog.aquamax_text.setText(clip[7])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class Licenses_Dialog(QtWidgets.QDialog):
     def __init__(self, parentWin):
         super(Licenses_Dialog, self).__init__()
@@ -1784,6 +1847,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
         self.ldialog.confirm_button.clicked.connect(self.grabcheckboxes)
         if (len(parentWin.importedLicenses) > 1):
             self.fillFields(parentWin.importedLicenses, parentWin.importedSP, parentWin.importedManual)
+
     def grabcheckboxes(self):
         licensesclip = []
         spclip = []
@@ -1830,6 +1894,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
         self.licenseClip = licensesclip
         self.spClip = spclip
         self.close()
+
     def presets(self, index):
         if self.ldialog.comboBox.currentText() == "Select All":
             self.ldialog.merge.setChecked(True)
@@ -1892,6 +1957,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
             self.ldialog.soundfam.setChecked(False)
             self.ldialog.activationv7p3.setChecked(False)
             self.ldialog.activationv7sp2.setChecked(False)
+
     def fillFields(self, LicenseClip, spClip, customValue):
         for i in range(len(LicenseClip)):
             if ("CARTOMERGE" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
@@ -1967,6 +2033,8 @@ class Licenses_Dialog(QtWidgets.QDialog):
                 self.ldialog.sp_spu.setChecked(True)
         if customValue != None:
             self.ldialog.ManualLine.setText(customValue[0])
+
+
 class Workstation_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Workstation_Dialog, self).__init__()
@@ -1984,15 +2052,18 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.wdialog.check_button.clicked.connect(self.verification)
         self.wdialog.licenses.clicked.connect(self.open_workstationDialog_licenses)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.softwarever = self.wdialog.softwarever_text.text()
         self.upgradefrom = self.wdialog.upgradefrom_text.text()
@@ -2004,6 +2075,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.solios = self.wdialog.solios_check.isChecked()
         self.performance = self.wdialog.performance_check.isChecked()
         self.gpu = self.wdialog.gpu_text.text()
+
     def fillFields(self, clip):
         self.wdialog.softwarever_text.setText(clip[0])
         self.wdialog.upgradefrom_text.setText(clip[1])
@@ -2030,6 +2102,7 @@ class Workstation_Dialog(QtWidgets.QDialog):
             warning.exec_()
 
         self.infoBox() #After filling fields also apply values to self.values.
+
     def open_workstationDialog_licenses(self):
         if not self.LicensesOpened:
             self.licenseDialog = Licenses_Dialog(self)
@@ -2049,6 +2122,8 @@ class Workstation_Dialog(QtWidgets.QDialog):
             if spLicenses[i][1]:
                 toExportSP += spLicenses[i][0]+', '
         self.spToExport = toExportSP[:-2]
+
+
 class Catheters_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Catheters_Dialog, self).__init__()
@@ -2057,18 +2132,23 @@ class Catheters_Dialog(QtWidgets.QDialog):
         self.cdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.cdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.Catfamily = self.cdialog.mfg_text_2.text()
         self.CatMFG = self.cdialog.mfg_text.text()
+
+
 class Stockert_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Stockert_Dialog, self).__init__()
@@ -2077,15 +2157,18 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.stdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.stdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.sysSW = self.stdialog.software_text.text()
         self.sn = self.stdialog.SN_text.text()
@@ -2094,6 +2177,7 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.epboxSN = self.stdialog.epboxSN_text.text()
         self.epioCable = self.stdialog.epioCable_text.text()
         self.infoList = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable]
+
     def fillFields(self, clip):
         self.stdialog.software_text.setText(clip[0])
         self.stdialog.SN_text.setText(clip[1])
@@ -2101,7 +2185,9 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.stdialog.abaadaCable_text.setText(clip[3])
         self.stdialog.epboxSN_text.setText(clip[4])
         self.stdialog.epioCable_text.setText(clip[5])
-        self.infoBox() #After filling fields also apply values to self.values.
+        self.infoBox()  #After filling fields also apply values to self.values.
+
+
 class SmartAblate_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(SmartAblate_Dialog, self).__init__()
@@ -2110,25 +2196,31 @@ class SmartAblate_Dialog(QtWidgets.QDialog):
         self.sadialog.confirm_button.clicked.connect(self.confirmPressed)
         self.sadialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.sysSW = self.sadialog.software_text.text()
         self.sn = self.sadialog.SN_text.text()
         self.cables = self.sadialog.cables_text.text()
         self.infoList = [self.sysSW, self.sn, self.cables]
+
     def fillFields(self, clip):
         self.sadialog.software_text.setText(clip[0])
         self.sadialog.SN_text.setText(clip[1])
         self.sadialog.cables_text.setText(clip[2])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class nGEN_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(nGEN_Dialog, self).__init__()
@@ -2137,15 +2229,18 @@ class nGEN_Dialog(QtWidgets.QDialog):
         self.ngdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.ngdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.consoleSN = self.ngdialog.consoleSN_text.text()
         self.consolePN = self.ngdialog.consolePN_text.text()
@@ -2173,6 +2268,7 @@ class nGEN_Dialog(QtWidgets.QDialog):
         self.ngenPumpV = self.ngdialog.ngenPumpV_text.text()
         self.pumptoConsoleCable = self.ngdialog.pumptoConsoleCable_text.text()
         self.infoList = [self.consoleSN,self.consolePN,self.consoleV,self.psuSN,self.psuPN,self.psuCable,self.genToPiu,self.monitor1SN,self.monitor1PN,self.monitor1V,self.monitor1HubSN,self.monitor1HubPN,self.monitor1PsuSN,self.monitor1PsuPN,self.monitor2SN,self.monitor2PN,self.monitor2V,self.monitor2HubSN,self.monitor2HubPN,self.monitor2PsuSN,self.monitor2PsuPN,self.ngenPumpSN,self.ngenPumpPN,self.ngenPumpV,self.pumptoConsoleCable]
+
     def fillFields(self, clip):
         self.ngdialog.consoleSN_text.setText(clip[0])
         self.ngdialog.consolePN_text.setText(clip[1])
@@ -2200,6 +2296,8 @@ class nGEN_Dialog(QtWidgets.QDialog):
         self.ngdialog.ngenPumpV_text.setText(clip[23])
         self.ngdialog.pumptoConsoleCable_text.setText(clip[24])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class nMARQ_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(nMARQ_Dialog, self).__init__()
@@ -2208,15 +2306,18 @@ class nMARQ_Dialog(QtWidgets.QDialog):
         self.nmdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.nmdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.software = self.nmdialog.software_text.text()
         self.SN = self.nmdialog.SN_text.text()
@@ -2228,6 +2329,7 @@ class nMARQ_Dialog(QtWidgets.QDialog):
         self.pumpModel = self.nmdialog.pumpModel_text.text()
         self.footPadel = self.nmdialog.footPadel_text.text()
         self.infoList = [self.software,self.SN,self.GtoCable,self.ethernetCable,self.gToPumpCable, self.gToM,self.pumpSN,self.pumpModel,self.footPadel]
+
     def fillFields(self, clip):
         self.nmdialog.software_text.setText(clip[0])
         self.nmdialog.SN_text.setText(clip[1])
@@ -2239,6 +2341,8 @@ class nMARQ_Dialog(QtWidgets.QDialog):
         self.nmdialog.pumpModel_text.setText(clip[7])
         self.nmdialog.footPadel_text.setText(clip[8])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class Pacer_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Pacer_Dialog, self).__init__()
@@ -2247,23 +2351,29 @@ class Pacer_Dialog(QtWidgets.QDialog):
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.unitSN = self.pdialog.unitSN_text.text()
         self.unitV = self.pdialog.unitV_text.text()
         self.infoList = [self.unitSN, self.unitV]
+
     def fillFields(self, clip):
         self.pdialog.unitSN_text.setText(clip[0])
         self.pdialog.unitV_text.setText(clip[1])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class Printer_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Printer_Dialog, self).__init__()
@@ -2272,23 +2382,29 @@ class Printer_Dialog(QtWidgets.QDialog):
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.unitSN = self.pdialog.unitSN_text.text()
         self.unitV = self.pdialog.unitV_text.text()
         self.infoList = [self.unitSN, self.unitV]
+
     def fillFields(self, clip):
         self.pdialog.unitSN_text.setText(clip[0])
         self.pdialog.unitV_text.setText(clip[1])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class qDotDongle_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(qDotDongle_Dialog, self).__init__()
@@ -2297,25 +2413,31 @@ class qDotDongle_Dialog(QtWidgets.QDialog):
         self.qddialog.confirm_button.clicked.connect(self.confirmPressed)
         self.qddialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.software = self.qddialog.software_text.text()
         self.SN = self.qddialog.SN_text.text()
         self.EPcable = self.qddialog.EPcable_text.text()
         self.infoList = [self.software, self.SN, self.EPcable]
+
     def fillFields(self, clip):
         self.qddialog.software_text.setText(clip[0])
         self.qddialog.SN_text.setText(clip[1])
         self.qddialog.EPcable_text.setText(clip[2])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class epu_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(epu_Dialog, self).__init__()
@@ -2324,23 +2446,29 @@ class epu_Dialog(QtWidgets.QDialog):
         self.epdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.epdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.unitSN = self.epdialog.unitSN_text.text()
         self.unitV = self.epdialog.unitV_text.text()
         self.infoList = [self.unitSN, self.unitV]
+
     def fillFields(self, clip):
         self.epdialog.unitSN_text.setText(clip[0])
         self.epdialog.unitV_text.setText(clip[1])
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 class Demo_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Demo_Dialog, self).__init__()
@@ -2349,15 +2477,18 @@ class Demo_Dialog(QtWidgets.QDialog):
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox() #By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
+
     def verification(self):
         notimplemented = QtWidgets.QMessageBox()
         notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
         notimplemented.setText('To be implemented...')
         notimplemented.setWindowTitle("Work in Progress")
         notimplemented.exec_()
+
     def infoBox(self):
         self.wsType = self.pdialog.wsType_text.text()
         self.SW = self.pdialog.SW_text.text()
@@ -2367,6 +2498,7 @@ class Demo_Dialog(QtWidgets.QDialog):
         self.surpoint = self.pdialog.surpoint_checkbox.isChecked()
         self.infoList = [self.wsType, self.SW,self.dsp,self.imageV,self.serviceTag,str(self.surpoint)]
         self.infoListwithoutSurpoint = [self.wsType, self.SW,self.dsp,self.imageV,self.serviceTag]
+
     def fillFields(self, clip):
         self.pdialog.wsType_text.setText(clip[0])
         self.pdialog.SW_text.setText(clip[1])
@@ -2378,6 +2510,8 @@ class Demo_Dialog(QtWidgets.QDialog):
         else:
            self.pdialog.surpoint_checkbox.setChecked(False)
         self.infoBox() #After filling fields also apply values to self.values.
+
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())

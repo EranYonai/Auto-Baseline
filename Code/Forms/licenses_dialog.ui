@@ -804,6 +804,46 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>comboBox</tabstop>
+  <tabstop>merge</tabstop>
+  <tabstop>sound</tabstop>
+  <tabstop>paso</tabstop>
+  <tabstop>cafe_2</tabstop>
+  <tabstop>rmt</tabstop>
+  <tabstop>smarttouch</tabstop>
+  <tabstop>nivu</tabstop>
+  <tabstop>visitag</tabstop>
+  <tabstop>activation3</tabstop>
+  <tabstop>segct</tabstop>
+  <tabstop>replay</tabstop>
+  <tabstop>ripple</tabstop>
+  <tabstop>famdx</tabstop>
+  <tabstop>qdotmicro</tabstop>
+  <tabstop>visitagepu</tabstop>
+  <tabstop>sia</tabstop>
+  <tabstop>complex</tabstop>
+  <tabstop>hdcolor</tabstop>
+  <tabstop>prime</tabstop>
+  <tabstop>helios</tabstop>
+  <tabstop>dualmonitor</tabstop>
+  <tabstop>confidense</tabstop>
+  <tabstop>finder</tabstop>
+  <tabstop>visitagsur</tabstop>
+  <tabstop>activationv7sp2</tabstop>
+  <tabstop>activationv7</tabstop>
+  <tabstop>activationv8</tabstop>
+  <tabstop>soundfam</tabstop>
+  <tabstop>activationv7p3</tabstop>
+  <tabstop>baloon</tabstop>
+  <tabstop>segmr</tabstop>
+  <tabstop>ManualLine</tabstop>
+  <tabstop>sp_helios</tabstop>
+  <tabstop>sp_lasso</tabstop>
+  <tabstop>sp_qdot</tabstop>
+  <tabstop>sp_spu</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

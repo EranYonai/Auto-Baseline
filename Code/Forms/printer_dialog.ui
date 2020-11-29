@@ -117,6 +117,12 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>unitSN_text</tabstop>
+  <tabstop>unitV_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

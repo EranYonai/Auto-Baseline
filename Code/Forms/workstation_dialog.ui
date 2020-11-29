@@ -387,6 +387,21 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>softwarever_text</tabstop>
+  <tabstop>upgradefrom_text</tabstop>
+  <tabstop>dspver_text</tabstop>
+  <tabstop>imagever_text</tabstop>
+  <tabstop>servicetag_text</tabstop>
+  <tabstop>wsconf_text</tabstop>
+  <tabstop>wsmodel_text</tabstop>
+  <tabstop>gpu_text</tabstop>
+  <tabstop>solios_check</tabstop>
+  <tabstop>performance_check</tabstop>
+  <tabstop>licenses</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

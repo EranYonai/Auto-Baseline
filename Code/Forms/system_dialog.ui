@@ -291,6 +291,18 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>system_text</tabstop>
+  <tabstop>piu_text</tabstop>
+  <tabstop>lp_text</tabstop>
+  <tabstop>patchunit_text</tabstop>
+  <tabstop>mm_text</tabstop>
+  <tabstop>ecg_text</tabstop>
+  <tabstop>aquanum_text</tabstop>
+  <tabstop>aquamax_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

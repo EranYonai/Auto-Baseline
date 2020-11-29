@@ -100,6 +100,13 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        Dialog.setTabOrder(self.ultrasound_combo, self.softwarever_text)
+        Dialog.setTabOrder(self.softwarever_text, self.serialnum_text)
+        Dialog.setTabOrder(self.serialnum_text, self.applicationver_text)
+        Dialog.setTabOrder(self.applicationver_text, self.videocable_text)
+        Dialog.setTabOrder(self.videocable_text, self.ethernet_text)
+        Dialog.setTabOrder(self.ethernet_text, self.check_button)
+        Dialog.setTabOrder(self.check_button, self.confirm_button)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate

@@ -693,6 +693,37 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>sn_text</tabstop>
+  <tabstop>pn_text</tabstop>
+  <tabstop>swver_text</tabstop>
+  <tabstop>mainfwver_text</tabstop>
+  <tabstop>secfwver_text</tabstop>
+  <tabstop>frontloc_text</tabstop>
+  <tabstop>frontloc_text_rev</tabstop>
+  <tabstop>ledbo_text</tabstop>
+  <tabstop>ledbo_text_rev</tabstop>
+  <tabstop>motherbo_text</tabstop>
+  <tabstop>motherbo_text_rev</tabstop>
+  <tabstop>backbo_text</tabstop>
+  <tabstop>backbo_text_rev</tabstop>
+  <tabstop>powerb_text</tabstop>
+  <tabstop>powerb_text_rev</tabstop>
+  <tabstop>upbo_text</tabstop>
+  <tabstop>upbo_text_rev</tabstop>
+  <tabstop>pacingbo_text</tabstop>
+  <tabstop>pacingbo_text_rev</tabstop>
+  <tabstop>tpibo_text</tabstop>
+  <tabstop>tpibo_text_rev</tabstop>
+  <tabstop>digibo_text</tabstop>
+  <tabstop>digibo_text_rev</tabstop>
+  <tabstop>ecgbo_text</tabstop>
+  <tabstop>ecgbo_text_rev</tabstop>
+  <tabstop>spuprobo_text</tabstop>
+  <tabstop>spuprobo_text_rev</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

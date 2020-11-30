@@ -78,7 +78,7 @@ class Ui_Dialog(object):
         self.label_3.setText(_translate("Dialog", "Description:"))
         self.label_4.setText(_translate("Dialog", "Family:"))
         self.pushButton.setText(_translate("Dialog", "Add to Extenders"))
-        self.pushButton_2.setText(_translate("Dialog", "Add to Catheres"))
+        self.pushButton_2.setText(_translate("Dialog", "Add to Catheters"))
 
 
 if __name__ == "__main__":

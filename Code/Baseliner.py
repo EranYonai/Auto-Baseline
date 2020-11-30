@@ -1674,7 +1674,6 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             return result
         except:
             driver.close()
-            drive.quit()
             return False
 
     def oneCatalog(self):

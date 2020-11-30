@@ -2,6 +2,7 @@ import PyQt5
 import qdarkstyle
 import sys
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import xml.etree.ElementTree as ET
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtWidgets import QListWidget
@@ -1655,7 +1656,9 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
         try:
             #This function uses selenium to open Chrome -> go to catheter catalog, enter 'part' into the search bar
             #Presses search and returns list of mfgpart, description, family, catalog in this order if it doesn't find, returns False
-            driver = webdriver.Chrome() #driver is a webdriver (chromedriver.exe at root folder)
+            options = Options()
+            options.headless = True
+            driver = webdriver.Chrome(chrome_options=options) #driver is a webdriver (chromedriver.exe at root folder)
             driver.get('http://itsusrawsp10939.jnj.com/partnolookup/Default.aspx') #Sents to web address
             searchbox = driver.find_element_by_xpath('//*[@id="txtPartNo"]') #searches for the element xpath of searchbox
             searchbox.send_keys(part) #Enters the input it gets to the search bar
@@ -1671,6 +1674,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             return result
         except:
             driver.close()
+            drive.quit()
             return False
 
     def oneCatalog(self):

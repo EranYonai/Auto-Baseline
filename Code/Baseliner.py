@@ -112,7 +112,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.spu_win.clicked.connect(lambda: self.open_SPUDialog(0))
         self.ui.export_button.clicked.connect(self.exportTXT) #Upon pressing "export" the program will append it's current content to a .txt file
         self.ui.import_button.clicked.connect(self.importButton) #This is the next step of the program, upon importing txt file
-        self.experimentalWarning("beta")
+        #self.experimentalWarning("beta") Not beta anymore :)
 
     def hideThings(self):
         self.ui.workstation_win_1.hide()
@@ -672,7 +672,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if number == 6:
                 self.ui.work_bar_7.setValue(count)
             if number == 7:
-                 self.ui.work_bar_8.setValue(count)
+                self.ui.work_bar_8.setValue(count)
         if (type == "us"):
             count = 0
             for x in self.ultraList_info[number]:
@@ -1160,13 +1160,13 @@ class MainWindow(QtWidgets.QMainWindow):
             #End of stockert export
             #Start of SmartAblate export
             countOpenWin = 0
-            count_ = 0 
+            count_ = 0
             for tf in (self.smartablateOpened):
                 if tf:
                     countOpenWin += 1
             title_sma = ET.SubElement(root, "SmartAblates", {"count":str(countOpenWin)})
-            fieldofSMA = ['SystemSW', 'SerialNumber', 'Cables']
-            for x in range (self.smartablateCount):
+            fieldofSMA = ['SystemSW', 'SerialNumber', 'gentoPIU', 'gentoWS', 'footPadel']
+            for x in range(self.smartablateCount):
                 if (self.smartablateOpened[x]):
                     child_sma = ET.SubElement(title_sma, "SmartAblate_"+str(count_))
                     for y in range(len(fieldofSMA)):
@@ -1176,7 +1176,7 @@ class MainWindow(QtWidgets.QMainWindow):
             #End of SmartAblate export
             #Start of nGEN export
             countOpenWin = 0
-            count_ = 0 
+            count_ = 0
             for tf in (self.ngenOpened):
                 if tf:
                     countOpenWin += 1
@@ -1372,7 +1372,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if type == "stockert":
             return 'Stockert GmbH SMARTABLATE System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O Sys to Carto:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\n-------------------\n' %(position+1,self.stockertList_info[position][0],self.stockertList_info[position][1],self.stockertList_info[position][2],self.stockertList_info[position][3],self.stockertList_info[position][4])
         if type == "smartablate":
-            return 'SMARTABLATE RF Generator #%d:\nSystem Software:\t%s\nSerial Number:\t\t%s\nCables:\t\t\t%s\n-------------------\n' % (position+1,self.smartablate_info[position][0],self.smartablate_info[position][1],self.smartablate_info[position][2])
+            if len(self.smartablate_info[position][4]) > 0:
+                return 'SMARTABLATE RF Generator #%d:\nSystem Software:\t%s\nSerial Number:\t\t%s\nGenerator to PIU cable:\t%s\nGenerator to WS cable:\t%s\nFoot Pedal:\t\t%s\n-------------------\n' % (position+1,self.smartablate_info[position][0],self.smartablate_info[position][1], self.smartablate_info[position][2], self.smartablate_info[position][3], self.smartablate_info[position][4])
+            else:  #without footPedal
+                return 'SMARTABLATE RF Generator #%d:\nSystem Software:\t%s\nSerial Number:\t\t%s\nGenerator to PIU cable:\t%s\nGenerator to WS cable:\t%s\n-------------------\n' % (position+1,self.smartablate_info[position][0],self.smartablate_info[position][1], self.smartablate_info[position][2], self.smartablate_info[position][3])
         if type == "ngen":
             return 'nGEN RF Generator #%d:\nnGEN Console S.N:\t\t%s\nnGEN Console P.N:\t\t%s\nnGEN Console Version:\t\t%s\nnGEN PSU S.N:\t\t\t%s\nnGEN PSU P.N:\t\t\t%s\nnGEN PSU Cable:\t\t\t%s\nRF Generator to PIU Cable:\t%s\nnGEN Monitor #1 S.N:\t\t%s\nnGEN Monitor #1 P.N:\t\t%s\nnGEN Monitor  #1 Version:\t%s\nnGEN Monitor Hub #1 S.N:\t%s\nnGEN Monitor Hub #1 P.N:\t%s\nnGEN Monitor PSU #1 S.N:\t%s\nnGEN Monitor PSU #1 P.N:\t%s\nnGEN Monitor #2 S.N:\t\t%s\nnGEN Monitor #2 P.N:\t\t%s\nnGEN Monitor #2 Version:\t%s\nnGEN Monitor Hub #2 S.N:\t%s\nnGEN Monitor Hub #2 P.N:\t%s\nnGEN Monitor PSU #2 S.N:\t%s\nnGEN Monitor PSU #2 P.N:\t%s\nnGEN Pump S.N:\t\t\t%s\nnGEN Pump P.N:\t\t\t%s\nnGEN Pump Version:\t\t%s\nnGEN Pump to Console cable:\t%s\n-------------------\n' % (position+1,self.ngenlist_info[position][0],self.ngenlist_info[position][1],self.ngenlist_info[position][2],self.ngenlist_info[position][3],self.ngenlist_info[position][4],self.ngenlist_info[position][5],self.ngenlist_info[position][6],self.ngenlist_info[position][7],self.ngenlist_info[position][8],self.ngenlist_info[position][9],self.ngenlist_info[position][10],self.ngenlist_info[position][11],self.ngenlist_info[position][12],self.ngenlist_info[position][13],self.ngenlist_info[position][14],self.ngenlist_info[position][15],self.ngenlist_info[position][16],self.ngenlist_info[position][17],self.ngenlist_info[position][18],self.ngenlist_info[position][19],self.ngenlist_info[position][20],self.ngenlist_info[position][21],self.ngenlist_info[position][22],self.ngenlist_info[position][23],self.ngenlist_info[position][24])
         if type == "nmarq":
@@ -1384,11 +1387,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 soliosState = "No"
             return 'Demo Laptop #%d:\nWS Type:\t\t%s\nSoftware Version:\t%s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nService Tag:\t\t%s\nAll licenses are activated by default but:\nVisitag Surpoint:\t%s\n-------------------\n' % (position + 1,self.demolist_info[position][0],self.demolist_info[position][1],self.demolist_info[position][2],self.demolist_info[position][3],self.demolist_info[position][4], soliosState)
         if type == "pacer":
-            return 'Pacer:\nPacer Type:\t\t%s\nSerial Number:\t\t%s\n-------------------\n' % (self.pacerlist_info[position][0],self.pacerlist_info[position][1])
+            return 'Pacer:\nPacer Type:\t\t%s\nSerial Number:\t\t%s\n-------------------\n' % (self.pacerlist_info[position][0], self.pacerlist_info[position][1])
         if type == "printer":
-            return 'Printer:\nPrinter Model:\t\t%s\nSerial Number:\t\t%s\n-------------------\n' % (self.printerlist_info[position][0],self.printerlist_info[position][1])
+            return 'Printer:\nPrinter Model:\t\t%s\nSerial Number:\t\t%s\n-------------------\n' % (self.printerlist_info[position][0], self.printerlist_info[position][1])
         if type == "epu":
-            return 'EPU Device:\nUnit Serial Number:\t%s\nUnit Version:\t\t%s\n-------------------\n' % (self.epulist_info[position][0],self.epulist_info[position][1])
+            return 'EPU Device:\nUnit Serial Number:\t%s\nUnit Version:\t\t%s\n-------------------\n' % (self.epulist_info[position][0], self.epulist_info[position][1])
         if type == "qdot":
             return 'qDOT Dongle:\nSerial Number:\t\t%s\nSoftware Version:\t%s\nHardware Version:\t%s\n-------------------\n' % (self.qdotdonglelist_info[position][0],self.qdotdonglelist_info[position][1],self.qdotdonglelist_info[position][2])
         if type == "spu":
@@ -1458,11 +1461,11 @@ class MainWindow(QtWidgets.QMainWindow):
         importedroot = imported_xml.getroot()
         for child in importedroot:
             if (child.tag != 'Catheters' and child.tag != 'Extenders' and child.tag != 'Workstations'):
-                for childx2 in child: #Ultrasound_0
+                for childx2 in child:  #Ultrasound_0
                     listofValues = []
                     for childx3 in childx2:
-                        if childx3.text == None: #Crash when Object is None. (because somewhere it tries to len() it)
-                            listofValues.append("") 
+                        if childx3.text is None:  #Crash when Object is None. (because somewhere it tries to len() it)
+                            listofValues.append("")
                         else:
                             listofValues.append(childx3.text)
                     self.importaddtoInfoCount(child.tag, listofValues)
@@ -1473,13 +1476,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 for childx2 in child:
                     self.importaddtoInfoCount(child.tag, childx2.text)
             elif (child.tag == 'Workstations'):
-                for childx2 in child: #Workstation_0
+                for childx2 in child:  #Workstation_0
                     listofValues = []
                     for childx3 in childx2:
-                        if childx3.text == None: #Crash when Object is None. (because somewhere it tries to len() it)
-                            listofValues.append("") 
+                        if childx3.text is None:  #Crash when Object is None. (because somewhere it tries to len() it)
+                            listofValues.append("")
                         else:
-                            listofValues.append([childx3.tag,childx3.text])
+                            listofValues.append([childx3.tag, childx3.text])
                     self.importaddtoInfoCount(child.tag, listofValues)
 
     def importaddtoInfoCount(self, type, listValues):
@@ -2214,14 +2217,18 @@ class SmartAblate_Dialog(QtWidgets.QDialog):
     def infoBox(self):
         self.sysSW = self.sadialog.software_text.text()
         self.sn = self.sadialog.SN_text.text()
-        self.cables = self.sadialog.cables_text.text()
-        self.infoList = [self.sysSW, self.sn, self.cables]
+        self.gen_to_piu = self.sadialog.gen_to_piu_text.text()
+        self.gen_to_ws = self.sadialog.gen_to_ws_text.text()
+        self.footPedal = self.sadialog.footPedal_text.text()
+        self.infoList = [self.sysSW, self.sn, self.gen_to_piu, self.gen_to_ws, self.footPedal]
 
     def fillFields(self, clip):
         self.sadialog.software_text.setText(clip[0])
         self.sadialog.SN_text.setText(clip[1])
-        self.sadialog.cables_text.setText(clip[2])
-        self.infoBox() #After filling fields also apply values to self.values.
+        self.sadialog.gen_to_piu_text.setText(clip[2])
+        self.sadialog.gen_to_ws_text.setText(clip[3])
+        self.sadialog.footPedal_text.setText(clip[4])
+        self.infoBox()  #After filling fields also apply values to self.values.
 
 
 class nGEN_Dialog(QtWidgets.QDialog):

@@ -23,10 +23,10 @@ class Ui_Dialog(object):
         self.title.setFont(font)
         self.title.setObjectName("title")
         self.confirm_button = QtWidgets.QPushButton(Dialog)
-        self.confirm_button.setGeometry(QtCore.QRect(600, 480, 93, 28))
+        self.confirm_button.setGeometry(QtCore.QRect(600, 490, 93, 28))
         self.confirm_button.setObjectName("confirm_button")
         self.check_button = QtWidgets.QPushButton(Dialog)
-        self.check_button.setGeometry(QtCore.QRect(440, 480, 93, 28))
+        self.check_button.setGeometry(QtCore.QRect(440, 490, 93, 28))
         self.check_button.setObjectName("check_button")
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(20, 100, 151, 21))
@@ -278,6 +278,17 @@ class Ui_Dialog(object):
         font.setPointSize(9)
         self.label_25.setFont(font)
         self.label_25.setObjectName("label_25")
+        self.foot_pedal_text = QtWidgets.QLineEdit(Dialog)
+        self.foot_pedal_text.setGeometry(QtCore.QRect(560, 450, 191, 22))
+        self.foot_pedal_text.setText("")
+        self.foot_pedal_text.setObjectName("foot_pedal_text")
+        self.label_26 = QtWidgets.QLabel(Dialog)
+        self.label_26.setGeometry(QtCore.QRect(390, 450, 101, 21))
+        font = QtGui.QFont()
+        font.setFamily("Product Sans Light")
+        font.setPointSize(9)
+        self.label_26.setFont(font)
+        self.label_26.setObjectName("label_26")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -305,7 +316,8 @@ class Ui_Dialog(object):
         Dialog.setTabOrder(self.ngenPumpSN_text, self.ngenPumpPN_text)
         Dialog.setTabOrder(self.ngenPumpPN_text, self.ngenPumpV_text)
         Dialog.setTabOrder(self.ngenPumpV_text, self.pumptoConsoleCable_text)
-        Dialog.setTabOrder(self.pumptoConsoleCable_text, self.check_button)
+        Dialog.setTabOrder(self.pumptoConsoleCable_text, self.foot_pedal_text)
+        Dialog.setTabOrder(self.foot_pedal_text, self.check_button)
         Dialog.setTabOrder(self.check_button, self.confirm_button)
 
     def retranslateUi(self, Dialog):
@@ -339,6 +351,7 @@ class Ui_Dialog(object):
         self.label_23.setText(_translate("Dialog", "Monitor #2 PSU P.N:"))
         self.label_24.setText(_translate("Dialog", "nGEN Pump Version:"))
         self.label_25.setText(_translate("Dialog", "Pump to Console Cable:"))
+        self.label_26.setText(_translate("Dialog", "Foot Pedal:"))
 
 
 if __name__ == "__main__":

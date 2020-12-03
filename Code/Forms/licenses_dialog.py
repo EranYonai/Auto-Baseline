@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_licenses_Dialog(object):
     def setupUi(self, licenses_Dialog):
         licenses_Dialog.setObjectName("licenses_Dialog")
-        licenses_Dialog.resize(696, 520)
+        licenses_Dialog.resize(696, 558)
         self.title = QtWidgets.QLabel(licenses_Dialog)
         self.title.setGeometry(QtCore.QRect(270, 0, 151, 41))
         font = QtGui.QFont()
@@ -256,7 +256,7 @@ class Ui_licenses_Dialog(object):
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.confirm_button = QtWidgets.QPushButton(licenses_Dialog)
-        self.confirm_button.setGeometry(QtCore.QRect(290, 480, 93, 28))
+        self.confirm_button.setGeometry(QtCore.QRect(290, 510, 93, 28))
         self.confirm_button.setObjectName("confirm_button")
         self.cafe_2 = QtWidgets.QCheckBox(licenses_Dialog)
         self.cafe_2.setGeometry(QtCore.QRect(10, 180, 171, 20))
@@ -300,6 +300,25 @@ class Ui_licenses_Dialog(object):
         font.setPointSize(9)
         self.sp_spu.setFont(font)
         self.sp_spu.setObjectName("sp_spu")
+        self.helios_ver_text = QtWidgets.QLineEdit(licenses_Dialog)
+        self.helios_ver_text.setGeometry(QtCore.QRect(180, 470, 71, 22))
+        self.helios_ver_text.setObjectName("helios_ver_text")
+        self.lasso_ver_text = QtWidgets.QLineEdit(licenses_Dialog)
+        self.lasso_ver_text.setGeometry(QtCore.QRect(310, 470, 71, 22))
+        self.lasso_ver_text.setObjectName("lasso_ver_text")
+        self.qdot_ver_text = QtWidgets.QLineEdit(licenses_Dialog)
+        self.qdot_ver_text.setGeometry(QtCore.QRect(440, 470, 71, 22))
+        self.qdot_ver_text.setObjectName("qdot_ver_text")
+        self.spu_ver_text = QtWidgets.QLineEdit(licenses_Dialog)
+        self.spu_ver_text.setGeometry(QtCore.QRect(540, 470, 71, 22))
+        self.spu_ver_text.setObjectName("spu_ver_text")
+        self.label_3 = QtWidgets.QLabel(licenses_Dialog)
+        self.label_3.setGeometry(QtCore.QRect(80, 470, 71, 21))
+        font = QtGui.QFont()
+        font.setFamily("Product Sans Light")
+        font.setPointSize(10)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
 
         self.retranslateUi(licenses_Dialog)
         self.comboBox.setCurrentIndex(0)
@@ -387,6 +406,7 @@ class Ui_licenses_Dialog(object):
         self.sp_lasso.setText(_translate("licenses_Dialog", "LASSOSTARNav"))
         self.sp_qdot.setText(_translate("licenses_Dialog", "QDOT"))
         self.sp_spu.setText(_translate("licenses_Dialog", "SPU"))
+        self.label_3.setText(_translate("licenses_Dialog", "Versions:"))
 
 
 if __name__ == "__main__":

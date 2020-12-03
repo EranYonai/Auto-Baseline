@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>366</width>
-    <height>248</height>
+    <width>365</width>
+    <height>310</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>200</y>
+     <y>270</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -84,12 +84,12 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="cables_text">
+  <widget class="QLineEdit" name="gen_to_piu_text">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>200</x>
      <y>150</y>
-     <width>191</width>
+     <width>141</width>
      <height>22</height>
     </rect>
    </property>
@@ -98,7 +98,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>200</y>
+     <y>270</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -129,9 +129,9 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>10</x>
      <y>150</y>
-     <width>71</width>
+     <width>181</width>
      <height>31</height>
     </rect>
    </property>
@@ -142,14 +142,74 @@
     </font>
    </property>
    <property name="text">
-    <string>Cables:</string>
+    <string>Generator to PIU cable:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gen_to_ws_text">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>190</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>190</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Generator to WS cable:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="footPedal_text">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>220</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>220</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Foot Pedal:</string>
    </property>
   </widget>
  </widget>
  <tabstops>
   <tabstop>software_text</tabstop>
   <tabstop>SN_text</tabstop>
-  <tabstop>cables_text</tabstop>
+  <tabstop>gen_to_piu_text</tabstop>
+  <tabstop>gen_to_ws_text</tabstop>
+  <tabstop>footPedal_text</tabstop>
   <tabstop>check_button</tabstop>
   <tabstop>confirm_button</tabstop>
  </tabstops>

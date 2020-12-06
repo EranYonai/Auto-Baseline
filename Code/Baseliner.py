@@ -1181,7 +1181,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if tf:
                     countOpenWin += 1
             title_ngen = ET.SubElement(root, "nGENs", {"count":str(countOpenWin)})
-            fieldofNgen = ['ConsoleSN', 'ConsolePN', 'ConsoleVer','psuSN', 'psuPN', 'psuCable','GentoPiuCable','Monitor1SN','Monitor1PN','Monitor1Ver','Monitor1HubSN','Monitor1HubPN','Monitor1PsuSN','Monitor1PsuPN','Monitor2SN','Monitor2PN','Monitor2Ver','Monitor2HubSN','Monitor2HubPN','Monitor2PsuSN','Monitor2PsuPN','PumpSN','PumpPN','PumpVersion','PumptoConsoleCable']
+            fieldofNgen = ['ConsoleSN', 'ConsolePN', 'ConsoleVer','psuSN', 'psuPN', 'psuCable','GentoPiuCable','Monitor1SN','Monitor1PN','Monitor1Ver','Monitor1HubSN','Monitor1HubPN','Monitor1PsuSN','Monitor1PsuPN','Monitor2SN','Monitor2PN','Monitor2Ver','Monitor2HubSN','Monitor2HubPN','Monitor2PsuSN','Monitor2PsuPN','PumpSN','PumpPN','PumpVersion','PumptoConsoleCable', 'footPedal']
             for x in range (self.ngenCount):
                 if (self.ngenOpened[x]):
                     child_ngen = ET.SubElement(title_ngen, "nGEN_"+str(count_))
@@ -1377,7 +1377,7 @@ class MainWindow(QtWidgets.QMainWindow):
             else:  #without footPedal
                 return 'SMARTABLATE RF Generator #%d:\nSystem Software:\t%s\nSerial Number:\t\t%s\nGenerator to PIU cable:\t%s\nGenerator to WS cable:\t%s\n-------------------\n' % (position+1,self.smartablate_info[position][0],self.smartablate_info[position][1], self.smartablate_info[position][2], self.smartablate_info[position][3])
         if type == "ngen":
-            return 'nGEN RF Generator #%d:\nnGEN Console S.N:\t\t%s\nnGEN Console P.N:\t\t%s\nnGEN Console Version:\t\t%s\nnGEN PSU S.N:\t\t\t%s\nnGEN PSU P.N:\t\t\t%s\nnGEN PSU Cable:\t\t\t%s\nRF Generator to PIU Cable:\t%s\nnGEN Monitor #1 S.N:\t\t%s\nnGEN Monitor #1 P.N:\t\t%s\nnGEN Monitor  #1 Version:\t%s\nnGEN Monitor Hub #1 S.N:\t%s\nnGEN Monitor Hub #1 P.N:\t%s\nnGEN Monitor PSU #1 S.N:\t%s\nnGEN Monitor PSU #1 P.N:\t%s\nnGEN Monitor #2 S.N:\t\t%s\nnGEN Monitor #2 P.N:\t\t%s\nnGEN Monitor #2 Version:\t%s\nnGEN Monitor Hub #2 S.N:\t%s\nnGEN Monitor Hub #2 P.N:\t%s\nnGEN Monitor PSU #2 S.N:\t%s\nnGEN Monitor PSU #2 P.N:\t%s\nnGEN Pump S.N:\t\t\t%s\nnGEN Pump P.N:\t\t\t%s\nnGEN Pump Version:\t\t%s\nnGEN Pump to Console cable:\t%s\n-------------------\n' % (position+1,self.ngenlist_info[position][0],self.ngenlist_info[position][1],self.ngenlist_info[position][2],self.ngenlist_info[position][3],self.ngenlist_info[position][4],self.ngenlist_info[position][5],self.ngenlist_info[position][6],self.ngenlist_info[position][7],self.ngenlist_info[position][8],self.ngenlist_info[position][9],self.ngenlist_info[position][10],self.ngenlist_info[position][11],self.ngenlist_info[position][12],self.ngenlist_info[position][13],self.ngenlist_info[position][14],self.ngenlist_info[position][15],self.ngenlist_info[position][16],self.ngenlist_info[position][17],self.ngenlist_info[position][18],self.ngenlist_info[position][19],self.ngenlist_info[position][20],self.ngenlist_info[position][21],self.ngenlist_info[position][22],self.ngenlist_info[position][23],self.ngenlist_info[position][24])
+            return 'nGEN RF Generator #%d:\nnGEN Console S.N:\t\t%s\nnGEN Console P.N:\t\t%s\nnGEN Console Version:\t\t%s\nnGEN PSU S.N:\t\t\t%s\nnGEN PSU P.N:\t\t\t%s\nnGEN PSU Cable:\t\t\t%s\nRF Generator to PIU Cable:\t%s\nnGEN Monitor #1 S.N:\t\t%s\nnGEN Monitor #1 P.N:\t\t%s\nnGEN Monitor  #1 Version:\t%s\nnGEN Monitor Hub #1 S.N:\t%s\nnGEN Monitor Hub #1 P.N:\t%s\nnGEN Monitor PSU #1 S.N:\t%s\nnGEN Monitor PSU #1 P.N:\t%s\nnGEN Monitor #2 S.N:\t\t%s\nnGEN Monitor #2 P.N:\t\t%s\nnGEN Monitor #2 Version:\t%s\nnGEN Monitor Hub #2 S.N:\t%s\nnGEN Monitor Hub #2 P.N:\t%s\nnGEN Monitor PSU #2 S.N:\t%s\nnGEN Monitor PSU #2 P.N:\t%s\nnGEN Pump S.N:\t\t\t%s\nnGEN Pump P.N:\t\t\t%s\nnGEN Pump Version:\t\t%s\nnGEN Pump to Console cable:\t%s\nFoot Pedal:\t\t\t%s\n-------------------\n' % (position+1,self.ngenlist_info[position][0],self.ngenlist_info[position][1],self.ngenlist_info[position][2],self.ngenlist_info[position][3],self.ngenlist_info[position][4],self.ngenlist_info[position][5],self.ngenlist_info[position][6],self.ngenlist_info[position][7],self.ngenlist_info[position][8],self.ngenlist_info[position][9],self.ngenlist_info[position][10],self.ngenlist_info[position][11],self.ngenlist_info[position][12],self.ngenlist_info[position][13],self.ngenlist_info[position][14],self.ngenlist_info[position][15],self.ngenlist_info[position][16],self.ngenlist_info[position][17],self.ngenlist_info[position][18],self.ngenlist_info[position][19],self.ngenlist_info[position][20],self.ngenlist_info[position][21],self.ngenlist_info[position][22],self.ngenlist_info[position][23],self.ngenlist_info[position][24], self.ngenlist_info[position][25])
         if type == "nmarq":
             return 'nMARQ Multi Channel RF Generator #%d:\nSW Version:\t\t\t%s\nSerial Number:\t\t\t%s\nnMARQ to CARTO Cable:\t\t%s\nEthernet cable:\t\t\t%s\nnMARQ to COOLFLOW Pump Cable:\t%s\nGenerator to Monitor:\t\t%s\nCOOLFLOW pump S.N:\t\t%s\nCOOLFLOW pump Model:\t\t%s\nFoot Pedal:\t\t\t%s\n-------------------\n' % (position+1,self.nmarqlist_info[position][0],self.nmarqlist_info[position][1],self.nmarqlist_info[position][2],self.nmarqlist_info[position][3],self.nmarqlist_info[position][4],self.nmarqlist_info[position][5],self.nmarqlist_info[position][6],self.nmarqlist_info[position][7],self.nmarqlist_info[position][8])
         if type == "demo":
@@ -2068,7 +2068,6 @@ class Licenses_Dialog(QtWidgets.QDialog):
         if customValue is not None:
             self.ldialog.ManualLine.setText(customValue[0])
 
-
 class Workstation_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Workstation_Dialog, self).__init__()
@@ -2175,7 +2174,6 @@ class Workstation_Dialog(QtWidgets.QDialog):
             if spLicenses[i][1] != 'False':
                 toExportSP += spLicenses[i][0] + ' ver: ' + spLicenses[i][1] + ', '
         self.spToExport = toExportSP[:-2]
-
 
 class Catheters_Dialog(QtWidgets.QDialog):
     def __init__(self):
@@ -2324,7 +2322,8 @@ class nGEN_Dialog(QtWidgets.QDialog):
         self.ngenPumpPN = self.ngdialog.ngenPumpPN_text.text()
         self.ngenPumpV = self.ngdialog.ngenPumpV_text.text()
         self.pumptoConsoleCable = self.ngdialog.pumptoConsoleCable_text.text()
-        self.infoList = [self.consoleSN,self.consolePN,self.consoleV,self.psuSN,self.psuPN,self.psuCable,self.genToPiu,self.monitor1SN,self.monitor1PN,self.monitor1V,self.monitor1HubSN,self.monitor1HubPN,self.monitor1PsuSN,self.monitor1PsuPN,self.monitor2SN,self.monitor2PN,self.monitor2V,self.monitor2HubSN,self.monitor2HubPN,self.monitor2PsuSN,self.monitor2PsuPN,self.ngenPumpSN,self.ngenPumpPN,self.ngenPumpV,self.pumptoConsoleCable]
+        self.footPedal = self.ngdialog.foot_pedal_text.text()
+        self.infoList = [self.consoleSN,self.consolePN,self.consoleV,self.psuSN,self.psuPN,self.psuCable,self.genToPiu,self.monitor1SN,self.monitor1PN,self.monitor1V,self.monitor1HubSN,self.monitor1HubPN,self.monitor1PsuSN,self.monitor1PsuPN,self.monitor2SN,self.monitor2PN,self.monitor2V,self.monitor2HubSN,self.monitor2HubPN,self.monitor2PsuSN,self.monitor2PsuPN,self.ngenPumpSN,self.ngenPumpPN,self.ngenPumpV,self.pumptoConsoleCable, self.footPedal]
 
     def fillFields(self, clip):
         self.ngdialog.consoleSN_text.setText(clip[0])
@@ -2352,6 +2351,7 @@ class nGEN_Dialog(QtWidgets.QDialog):
         self.ngdialog.ngenPumpPN_text.setText(clip[22])
         self.ngdialog.ngenPumpV_text.setText(clip[23])
         self.ngdialog.pumptoConsoleCable_text.setText(clip[24])
+        self.ngdialog.foot_pedal_text.setText(clip[25])
         self.infoBox() #After filling fields also apply values to self.values.
 
 

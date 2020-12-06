@@ -1852,6 +1852,8 @@ class Licenses_Dialog(QtWidgets.QDialog):
         self.ldialog = Ui_licenses_Dialog()
         self.ldialog.setupUi(self)
         self.licenseClip = []
+        self.licenseClip = []
+        self.spClip = []
         self.ldialog.comboBox.currentTextChanged.connect(self.presets)
         self.ldialog.confirm_button.clicked.connect(self.grabcheckboxes)
         if (len(parentWin.importedLicenses) > 1):

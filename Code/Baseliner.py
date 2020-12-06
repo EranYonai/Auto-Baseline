@@ -1149,7 +1149,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if tf:
                     countOpenWin += 1
             title_sto = ET.SubElement(root, "Stockerts", {"count":str(countOpenWin)})
-            fieldofSto = ['SystemSoftware', 'SerialNumber', 'EPIOinterfaceCable','AbaAdaCable', 'EPIOboxSN', 'EPIOConnectionCable']
+            fieldofSto = ['SystemSoftware', 'SerialNumber', 'EPIOinterfaceCable','AbaAdaCable', 'EPIOboxSN', 'EPIOConnectionCable', 'EP_to_PIU', 'GlobalPort', 'GEN_to_WS', 'PatchCable', 'footPedal']
             for x in range (self.stockertCount):
                 if (self.stockertOpened[x]):
                     child_sto = ET.SubElement(title_sto, "Stockert_"+str(count_))
@@ -1370,16 +1370,25 @@ class MainWindow(QtWidgets.QMainWindow):
                 extToReturn += '%s\n' % (items[x].text())
             return extToReturn
         if type == "stockert":
-            return 'Stockert GmbH SMARTABLATE System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O Sys to Carto:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\n-------------------\n' %(position+1,self.stockertList_info[position][0],self.stockertList_info[position][1],self.stockertList_info[position][2],self.stockertList_info[position][3],self.stockertList_info[position][4])
+            if len(self.stockertList_info[position][10]) > 0:
+                return 'Stockert GmbH SMARTABLATE System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O to Carto Cable:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\nEP to PIU cable:\t%s\nEP Shuttle to PIU:\t%s\nGlobal Port:\t\t%s\nGenerator to WS cable:\t%s\nPatch elect Cable:\t%s\nFoot Pedal:\t\t%s\n-------------------\n' %(position+1,self.stockertList_info[position][0],self.stockertList_info[position][1],self.stockertList_info[position][2],self.stockertList_info[position][3],self.stockertList_info[position][4],self.stockertList_info[position][5], self.stockertList_info[position][6],self.stockertList_info[position][7],self.stockertList_info[position][8],self.stockertList_info[position][9], self.stockertList_info[position][10])
+            else:  #Without footPedal
+                return 'Stockert GmbH SMARTABLATE System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O to Carto Cable:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\nEP to PIU cable:\t%s\nEP Shuttle to PIU:\t%s\nGlobal Port:\t\t%s\nGenerator to WS cable:\t%s\nPatch elect Cable:\t%s\n-------------------\n' %(position+1,self.stockertList_info[position][0],self.stockertList_info[position][1],self.stockertList_info[position][2],self.stockertList_info[position][3],self.stockertList_info[position][4],self.stockertList_info[position][5], self.stockertList_info[position][6],self.stockertList_info[position][7],self.stockertList_info[position][8],self.stockertList_info[position][9])
         if type == "smartablate":
             if len(self.smartablate_info[position][4]) > 0:
                 return 'SMARTABLATE RF Generator #%d:\nSystem Software:\t%s\nSerial Number:\t\t%s\nGenerator to PIU cable:\t%s\nGenerator to WS cable:\t%s\nFoot Pedal:\t\t%s\n-------------------\n' % (position+1,self.smartablate_info[position][0],self.smartablate_info[position][1], self.smartablate_info[position][2], self.smartablate_info[position][3], self.smartablate_info[position][4])
             else:  #without footPedal
                 return 'SMARTABLATE RF Generator #%d:\nSystem Software:\t%s\nSerial Number:\t\t%s\nGenerator to PIU cable:\t%s\nGenerator to WS cable:\t%s\n-------------------\n' % (position+1,self.smartablate_info[position][0],self.smartablate_info[position][1], self.smartablate_info[position][2], self.smartablate_info[position][3])
         if type == "ngen":
-            return 'nGEN RF Generator #%d:\nnGEN Console S.N:\t\t%s\nnGEN Console P.N:\t\t%s\nnGEN Console Version:\t\t%s\nnGEN PSU S.N:\t\t\t%s\nnGEN PSU P.N:\t\t\t%s\nnGEN PSU Cable:\t\t\t%s\nRF Generator to PIU Cable:\t%s\nnGEN Monitor #1 S.N:\t\t%s\nnGEN Monitor #1 P.N:\t\t%s\nnGEN Monitor  #1 Version:\t%s\nnGEN Monitor Hub #1 S.N:\t%s\nnGEN Monitor Hub #1 P.N:\t%s\nnGEN Monitor PSU #1 S.N:\t%s\nnGEN Monitor PSU #1 P.N:\t%s\nnGEN Monitor #2 S.N:\t\t%s\nnGEN Monitor #2 P.N:\t\t%s\nnGEN Monitor #2 Version:\t%s\nnGEN Monitor Hub #2 S.N:\t%s\nnGEN Monitor Hub #2 P.N:\t%s\nnGEN Monitor PSU #2 S.N:\t%s\nnGEN Monitor PSU #2 P.N:\t%s\nnGEN Pump S.N:\t\t\t%s\nnGEN Pump P.N:\t\t\t%s\nnGEN Pump Version:\t\t%s\nnGEN Pump to Console cable:\t%s\nFoot Pedal:\t\t\t%s\n-------------------\n' % (position+1,self.ngenlist_info[position][0],self.ngenlist_info[position][1],self.ngenlist_info[position][2],self.ngenlist_info[position][3],self.ngenlist_info[position][4],self.ngenlist_info[position][5],self.ngenlist_info[position][6],self.ngenlist_info[position][7],self.ngenlist_info[position][8],self.ngenlist_info[position][9],self.ngenlist_info[position][10],self.ngenlist_info[position][11],self.ngenlist_info[position][12],self.ngenlist_info[position][13],self.ngenlist_info[position][14],self.ngenlist_info[position][15],self.ngenlist_info[position][16],self.ngenlist_info[position][17],self.ngenlist_info[position][18],self.ngenlist_info[position][19],self.ngenlist_info[position][20],self.ngenlist_info[position][21],self.ngenlist_info[position][22],self.ngenlist_info[position][23],self.ngenlist_info[position][24], self.ngenlist_info[position][25])
+            if len(self.ngenlist_info[position][25]) > 0:
+                return 'nGEN RF Generator #%d:\nnGEN Console S.N:\t\t%s\nnGEN Console P.N:\t\t%s\nnGEN Console Version:\t\t%s\nnGEN PSU S.N:\t\t\t%s\nnGEN PSU P.N:\t\t\t%s\nnGEN PSU Cable:\t\t\t%s\nRF Generator to PIU Cable:\t%s\nnGEN Monitor #1 S.N:\t\t%s\nnGEN Monitor #1 P.N:\t\t%s\nnGEN Monitor  #1 Version:\t%s\nnGEN Monitor Hub #1 S.N:\t%s\nnGEN Monitor Hub #1 P.N:\t%s\nnGEN Monitor PSU #1 S.N:\t%s\nnGEN Monitor PSU #1 P.N:\t%s\nnGEN Monitor #2 S.N:\t\t%s\nnGEN Monitor #2 P.N:\t\t%s\nnGEN Monitor #2 Version:\t%s\nnGEN Monitor Hub #2 S.N:\t%s\nnGEN Monitor Hub #2 P.N:\t%s\nnGEN Monitor PSU #2 S.N:\t%s\nnGEN Monitor PSU #2 P.N:\t%s\nnGEN Pump S.N:\t\t\t%s\nnGEN Pump P.N:\t\t\t%s\nnGEN Pump Version:\t\t%s\nnGEN Pump to Console cable:\t%s\nFoot Pedal:\t\t\t%s\n-------------------\n' % (position+1,self.ngenlist_info[position][0],self.ngenlist_info[position][1],self.ngenlist_info[position][2],self.ngenlist_info[position][3],self.ngenlist_info[position][4],self.ngenlist_info[position][5],self.ngenlist_info[position][6],self.ngenlist_info[position][7],self.ngenlist_info[position][8],self.ngenlist_info[position][9],self.ngenlist_info[position][10],self.ngenlist_info[position][11],self.ngenlist_info[position][12],self.ngenlist_info[position][13],self.ngenlist_info[position][14],self.ngenlist_info[position][15],self.ngenlist_info[position][16],self.ngenlist_info[position][17],self.ngenlist_info[position][18],self.ngenlist_info[position][19],self.ngenlist_info[position][20],self.ngenlist_info[position][21],self.ngenlist_info[position][22],self.ngenlist_info[position][23],self.ngenlist_info[position][24], self.ngenlist_info[position][25])
+            else:  #Without footPedal
+                return 'nGEN RF Generator #%d:\nnGEN Console S.N:\t\t%s\nnGEN Console P.N:\t\t%s\nnGEN Console Version:\t\t%s\nnGEN PSU S.N:\t\t\t%s\nnGEN PSU P.N:\t\t\t%s\nnGEN PSU Cable:\t\t\t%s\nRF Generator to PIU Cable:\t%s\nnGEN Monitor #1 S.N:\t\t%s\nnGEN Monitor #1 P.N:\t\t%s\nnGEN Monitor  #1 Version:\t%s\nnGEN Monitor Hub #1 S.N:\t%s\nnGEN Monitor Hub #1 P.N:\t%s\nnGEN Monitor PSU #1 S.N:\t%s\nnGEN Monitor PSU #1 P.N:\t%s\nnGEN Monitor #2 S.N:\t\t%s\nnGEN Monitor #2 P.N:\t\t%s\nnGEN Monitor #2 Version:\t%s\nnGEN Monitor Hub #2 S.N:\t%s\nnGEN Monitor Hub #2 P.N:\t%s\nnGEN Monitor PSU #2 S.N:\t%s\nnGEN Monitor PSU #2 P.N:\t%s\nnGEN Pump S.N:\t\t\t%s\nnGEN Pump P.N:\t\t\t%s\nnGEN Pump Version:\t\t%s\nnGEN Pump to Console cable:\t%s\n-------------------\n' % (position+1,self.ngenlist_info[position][0],self.ngenlist_info[position][1],self.ngenlist_info[position][2],self.ngenlist_info[position][3],self.ngenlist_info[position][4],self.ngenlist_info[position][5],self.ngenlist_info[position][6],self.ngenlist_info[position][7],self.ngenlist_info[position][8],self.ngenlist_info[position][9],self.ngenlist_info[position][10],self.ngenlist_info[position][11],self.ngenlist_info[position][12],self.ngenlist_info[position][13],self.ngenlist_info[position][14],self.ngenlist_info[position][15],self.ngenlist_info[position][16],self.ngenlist_info[position][17],self.ngenlist_info[position][18],self.ngenlist_info[position][19],self.ngenlist_info[position][20],self.ngenlist_info[position][21],self.ngenlist_info[position][22],self.ngenlist_info[position][23],self.ngenlist_info[position][24])
         if type == "nmarq":
-            return 'nMARQ Multi Channel RF Generator #%d:\nSW Version:\t\t\t%s\nSerial Number:\t\t\t%s\nnMARQ to CARTO Cable:\t\t%s\nEthernet cable:\t\t\t%s\nnMARQ to COOLFLOW Pump Cable:\t%s\nGenerator to Monitor:\t\t%s\nCOOLFLOW pump S.N:\t\t%s\nCOOLFLOW pump Model:\t\t%s\nFoot Pedal:\t\t\t%s\n-------------------\n' % (position+1,self.nmarqlist_info[position][0],self.nmarqlist_info[position][1],self.nmarqlist_info[position][2],self.nmarqlist_info[position][3],self.nmarqlist_info[position][4],self.nmarqlist_info[position][5],self.nmarqlist_info[position][6],self.nmarqlist_info[position][7],self.nmarqlist_info[position][8])
+            if len(self.nmarqlist_info[position][8]) > 0:
+                return 'nMARQ Multi Channel RF Generator #%d:\nSW Version:\t\t\t%s\nSerial Number:\t\t\t%s\nnMARQ to CARTO Cable:\t\t%s\nEthernet cable:\t\t\t%s\nnMARQ to COOLFLOW Pump Cable:\t%s\nGenerator to Monitor:\t\t%s\nCOOLFLOW pump S.N:\t\t%s\nCOOLFLOW pump Model:\t\t%s\nFoot Pedal:\t\t\t%s\n-------------------\n' % (position+1,self.nmarqlist_info[position][0],self.nmarqlist_info[position][1],self.nmarqlist_info[position][2],self.nmarqlist_info[position][3],self.nmarqlist_info[position][4],self.nmarqlist_info[position][5],self.nmarqlist_info[position][6],self.nmarqlist_info[position][7],self.nmarqlist_info[position][8])
+            else:
+                return 'nMARQ Multi Channel RF Generator #%d:\nSW Version:\t\t\t%s\nSerial Number:\t\t\t%s\nnMARQ to CARTO Cable:\t\t%s\nEthernet cable:\t\t\t%s\nnMARQ to COOLFLOW Pump Cable:\t%s\nGenerator to Monitor:\t\t%s\nCOOLFLOW pump S.N:\t\t%s\nCOOLFLOW pump Model:\t\t%s\n-------------------\n' % (position+1,self.nmarqlist_info[position][0],self.nmarqlist_info[position][1],self.nmarqlist_info[position][2],self.nmarqlist_info[position][3],self.nmarqlist_info[position][4],self.nmarqlist_info[position][5],self.nmarqlist_info[position][6],self.nmarqlist_info[position][7])
         if type == "demo":
             if (self.demolist_info[position][5] == "True"):
                 soliosState = "Yes"
@@ -2227,7 +2236,12 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.abaadaCable = self.stdialog.abaadaCable_text.text()
         self.epboxSN = self.stdialog.epboxSN_text.text()
         self.epioCable = self.stdialog.epioCable_text.text()
-        self.infoList = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable]
+        self.ep_to_piu = self.stdialog.ep_to_piu_text.text()
+        self.global_port = self.stdialog.global_port_text.text()
+        self.gen_to_ws = self.stdialog.gen_to_ws_text.text()
+        self.patch_cable = self.stdialog.patch_cable_text.text()
+        self.foot_pedal = self.stdialog.footPedal_text.text()
+        self.infoList = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable, self.ep_to_piu, self.global_port, self.gen_to_ws, self.patch_cable, self.foot_pedal]
 
     def fillFields(self, clip):
         self.stdialog.software_text.setText(clip[0])
@@ -2236,6 +2250,11 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.stdialog.abaadaCable_text.setText(clip[3])
         self.stdialog.epboxSN_text.setText(clip[4])
         self.stdialog.epioCable_text.setText(clip[5])
+        self.stdialog.ep_to_piu_text.setText(clip[6])
+        self.stdialog.global_port_text.setText(clip[7])
+        self.stdialog.gen_to_ws_text.setText(clip[8])
+        self.stdialog.patch_cable_text.setText(clip[9])
+        self.stdialog.footPedal_text.setText(clip[10])
         self.infoBox()  #After filling fields also apply values to self.values.
 
 

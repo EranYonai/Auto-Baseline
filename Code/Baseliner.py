@@ -1089,7 +1089,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if tf:
                     countOpenWin += 1
             title_ws = ET.SubElement(root, "Workstations", {"count":str(countOpenWin)}) #Sub element - "Workstations" count: workcount
-            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios', 'Performance', 'GraphicsCard'] #in order to print a good looking xml
+            fieldsofWS = ['SoftwareVer', 'Upgradefrom', 'DSPver','Imagever', 'ServiceTag', 'WsConf', 'WsModel', 'Solios', 'Performance', 'GraphicsCard']  #in order to print a good looking xml
             for x in range (self.workCount): #for each opened workcount window because if he opened the first and the third
                 if (self.workstationOpened[x]): #If workstation window was really opened and not just shown
                     child_ws = ET.SubElement(title_ws, "Workstation_"+str(count_)) #Creating a child <Workstation_x> 
@@ -1523,6 +1523,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.wsList[self.workCount-1].importedLicenses = listLicenses
                 self.wsList[self.workCount-1].importedSP = listSP
                 self.wsList[self.workCount-1].importedManual = costumValue
+                self.wsList[self.workCount-1].licensesToImport = listLicenses
+                self.wsList[self.workCount-1].licensesSPtoImport = listSP
+                self.wsList[self.workCount-1].staticToExport()
                 self.updateProgressbars("ws", self.workCount-1)
         if (type == "Systems"):
             self.showThings("system")
@@ -1895,7 +1898,6 @@ class Licenses_Dialog(QtWidgets.QDialog):
         if len(self.ldialog.ManualLine.text()) > 1:
             manualline = self.ldialog.ManualLine.text()#because those chars breaks the XML
             manualline = manualline.replace('!', '').replace('@','').replace('#','').replace('$','').replace('%','').replace('^','').replace('&','').replace('*','').replace('(','').replace(')','')
-            print(manualline)
             licensesclip.append([manualline, True])
         self.licenseClip = licensesclip
         self.spClip = spclip
@@ -2049,10 +2051,10 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.licensesToExport = ""
         self.spToExport = ""
         self.licensesToImport = []
+        self.licensesSPtoImport = []
         self.importedLicenses = []
         self.importedSP = []
         self.importedManual = ""
-        self.licensesSPtoImport = []
         self.LicensesOpened = False
         self.wdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.wdialog.check_button.clicked.connect(self.verification)
@@ -2109,6 +2111,25 @@ class Workstation_Dialog(QtWidgets.QDialog):
 
         self.infoBox() #After filling fields also apply values to self.values.
 
+    def staticToExport(self):
+        Licenses = self.importedLicenses
+        toExportLicenses = ""
+        for i in range(len(Licenses)):
+            Licenses[i][0] = Licenses[i][0].replace('1', '®')
+            Licenses[i][0] = Licenses[i][0].replace('2', '™')
+            Licenses[i][0] = Licenses[i][0].replace('_', ' ')
+        for i in range(len(Licenses)):
+            if Licenses[i][1] == 'True':
+                toExportLicenses += Licenses[i][0] + ', '
+        self.licensesToExport = toExportLicenses[:-2]  #Deletes the , 
+        toExportSP = ""
+        spLicenses = self.importedSP
+        self.licensesSPtoImport = spLicenses
+        for i in range(len(spLicenses)):
+            if spLicenses[i][1] == 'True':
+                toExportSP += spLicenses[i][0]+', '
+        self.spToExport = toExportSP[:-2]
+
     def open_workstationDialog_licenses(self):
         if not self.LicensesOpened:
             self.licenseDialog = Licenses_Dialog(self)
@@ -2117,10 +2138,10 @@ class Workstation_Dialog(QtWidgets.QDialog):
         Licenses = self.licenseDialog.licenseClip
         self.licensesToImport = Licenses
         toExportLicenses = ""
-        for i in range (len(Licenses)):
+        for i in range(len(Licenses)):
             if Licenses[i][1]:
-                toExportLicenses += Licenses[i][0]+', '
-        self.licensesToExport = toExportLicenses[:-2] #Deletes the , 
+                toExportLicenses += Licenses[i][0] + ', '
+        self.licensesToExport = toExportLicenses[:-2]  #Deletes the , 
         toExportSP = ""
         spLicenses = self.licenseDialog.spClip
         self.licensesSPtoImport = spLicenses

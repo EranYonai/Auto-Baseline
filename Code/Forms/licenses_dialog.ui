@@ -804,6 +804,9 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="helios_ver_text">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>180</x>
@@ -814,6 +817,9 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="lasso_ver_text">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>310</x>
@@ -824,6 +830,9 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="qdot_ver_text">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -834,6 +843,9 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="spu_ver_text">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>540</x>

@@ -1852,10 +1852,13 @@ class Licenses_Dialog(QtWidgets.QDialog):
         self.ldialog = Ui_licenses_Dialog()
         self.ldialog.setupUi(self)
         self.licenseClip = []
-        self.licenseClip = []
         self.spClip = []
         self.ldialog.comboBox.currentTextChanged.connect(self.presets)
         self.ldialog.confirm_button.clicked.connect(self.grabcheckboxes)
+        self.ldialog.sp_helios.toggled.connect(self.ldialog.helios_ver_text.setEnabled)
+        self.ldialog.sp_lasso.toggled.connect(self.ldialog.lasso_ver_text.setEnabled)
+        self.ldialog.sp_qdot.toggled.connect(self.ldialog.qdot_ver_text.setEnabled)
+        self.ldialog.sp_spu.toggled.connect(self.ldialog.spu_ver_text.setEnabled)
         if (len(parentWin.importedLicenses) > 1):
             self.fillFields(parentWin.importedLicenses, parentWin.importedSP, parentWin.importedManual)
 
@@ -1893,12 +1896,13 @@ class Licenses_Dialog(QtWidgets.QDialog):
         licensesclip.append([self.ldialog.soundfam.text(),self.ldialog.soundfam.isChecked()])
         licensesclip.append([self.ldialog.activationv7p3.text(), self.ldialog.activationv7p3.isChecked()])
         licensesclip.append([self.ldialog.activationv7sp2.text(), self.ldialog.activationv7sp2.isChecked()])
+
         spclip.append([self.ldialog.sp_helios.text(), self.ldialog.sp_helios.isChecked()])
         spclip.append([self.ldialog.sp_lasso.text(), self.ldialog.sp_lasso.isChecked()])
         spclip.append([self.ldialog.sp_qdot.text(), self.ldialog.sp_qdot.isChecked()])
         spclip.append([self.ldialog.sp_spu.text(), self.ldialog.sp_spu.isChecked()])
-        if len(self.ldialog.ManualLine.text()) > 1:
-            manualline = self.ldialog.ManualLine.text()#because those chars breaks the XML
+        if len(self.ldialog.ManualLine.text()) > 1:  #If manual line has unsupport XML char it breaks the XML.
+            manualline = self.ldialog.ManualLine.text()  #because those chars breaks the XML
             manualline = manualline.replace('!', '').replace('@','').replace('#','').replace('$','').replace('%','').replace('^','').replace('&','').replace('*','').replace('(','').replace(')','')
             licensesclip.append([manualline, True])
         self.licenseClip = licensesclip
@@ -1970,6 +1974,10 @@ class Licenses_Dialog(QtWidgets.QDialog):
 
     def fillFields(self, LicenseClip, spClip, customValue):
         for i in range(len(LicenseClip)):
+            LicenseClip[i][0] = LicenseClip[i][0].replace('®', '1')
+            LicenseClip[i][0] = LicenseClip[i][0].replace('™', '2')
+            LicenseClip[i][0] = LicenseClip[i][0].replace(' ', '_')
+        for i in range(len(LicenseClip)):
             if ("CARTOMERGE" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
                 self.ldialog.merge.setChecked(True)
             if ("CARTOSOUND" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
@@ -2032,7 +2040,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
                 self.ldialog.activationv7p3.setChecked(True)
             if ("CARTO_3_V7_Phase_2_SP_Activation" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
                 self.ldialog.activationv7sp2.setChecked(True)
-        for i in range (len(spClip)):
+        for i in range(len(spClip)):
             if ("HELIOSTAR" in spClip[i][0] and spClip[i][1] == "True"):
                 self.ldialog.sp_helios.setChecked(True)
             if ("LASSOSTARNav" in spClip[i][0] and spClip[i][1] == "True"):
@@ -2041,7 +2049,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
                 self.ldialog.sp_qdot.setChecked(True)
             if ("SPU" in spClip[i][0] and spClip[i][1] == "True"):
                 self.ldialog.sp_spu.setChecked(True)
-        if customValue != None:
+        if customValue is not None:
             self.ldialog.ManualLine.setText(customValue[0])
 
 

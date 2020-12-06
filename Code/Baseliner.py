@@ -1897,10 +1897,22 @@ class Licenses_Dialog(QtWidgets.QDialog):
         licensesclip.append([self.ldialog.activationv7p3.text(), self.ldialog.activationv7p3.isChecked()])
         licensesclip.append([self.ldialog.activationv7sp2.text(), self.ldialog.activationv7sp2.isChecked()])
 
-        spclip.append([self.ldialog.sp_helios.text(), self.ldialog.sp_helios.isChecked()])
-        spclip.append([self.ldialog.sp_lasso.text(), self.ldialog.sp_lasso.isChecked()])
-        spclip.append([self.ldialog.sp_qdot.text(), self.ldialog.sp_qdot.isChecked()])
-        spclip.append([self.ldialog.sp_spu.text(), self.ldialog.sp_spu.isChecked()])
+        if (self.ldialog.sp_helios.isChecked() and len(self.ldialog.helios_ver_text.text()) > 0):
+            spclip.append([self.ldialog.sp_helios.text(), self.ldialog.helios_ver_text.text()])
+        else:
+            spclip.append([self.ldialog.sp_helios.text(), 'False'])
+        if (self.ldialog.sp_lasso.isChecked() and len(self.ldialog.lasso_ver_text.text()) > 0):
+            spclip.append([self.ldialog.sp_lasso.text(), self.ldialog.lasso_ver_text.text()])
+        else:
+            spclip.append([self.ldialog.sp_lasso.text(), 'False'])
+        if (self.ldialog.sp_qdot.isChecked() and len(self.ldialog.qdot_ver_text.text()) > 0):
+            spclip.append([self.ldialog.sp_qdot.text(), self.ldialog.qdot_ver_text.text()])
+        else:
+            spclip.append([self.ldialog.sp_qdot.text(), 'False'])
+        if (self.ldialog.sp_spu.isChecked() and len(self.ldialog.spu_ver_text.text()) > 0):
+            spclip.append([self.ldialog.sp_spu.text(), self.ldialog.spu_ver_text.text()])
+        else:
+            spclip.append([self.ldialog.sp_spu.text(), 'False'])
         if len(self.ldialog.ManualLine.text()) > 1:  #If manual line has unsupport XML char it breaks the XML.
             manualline = self.ldialog.ManualLine.text()  #because those chars breaks the XML
             manualline = manualline.replace('!', '').replace('@','').replace('#','').replace('$','').replace('%','').replace('^','').replace('&','').replace('*','').replace('(','').replace(')','')
@@ -2041,14 +2053,18 @@ class Licenses_Dialog(QtWidgets.QDialog):
             if ("CARTO_3_V7_Phase_2_SP_Activation" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
                 self.ldialog.activationv7sp2.setChecked(True)
         for i in range(len(spClip)):
-            if ("HELIOSTAR" in spClip[i][0] and spClip[i][1] == "True"):
+            if ("HELIOSTAR" in spClip[i][0] and spClip[i][1] != "False"):
                 self.ldialog.sp_helios.setChecked(True)
-            if ("LASSOSTARNav" in spClip[i][0] and spClip[i][1] == "True"):
+                self.ldialog.helios_ver_text.setText(spClip[i][1])
+            if ("LASSOSTARNav" in spClip[i][0] and spClip[i][1] != "False"):
                 self.ldialog.sp_lasso.setChecked(True)
-            if ("QDOT" in spClip[i][0] and spClip[i][1] == "True"):
+                self.ldialog.lasso_ver_text.setText(spClip[i][1])
+            if ("QDOT" in spClip[i][0] and spClip[i][1] != "False"):
                 self.ldialog.sp_qdot.setChecked(True)
-            if ("SPU" in spClip[i][0] and spClip[i][1] == "True"):
+                self.ldialog.qdot_ver_text.setText(spClip[i][1])
+            if ("SPU" in spClip[i][0] and spClip[i][1] != "False"):
                 self.ldialog.sp_spu.setChecked(True)
+                self.ldialog.spu_ver_text.setText(spClip[i][1])
         if customValue is not None:
             self.ldialog.ManualLine.setText(customValue[0])
 
@@ -2136,8 +2152,8 @@ class Workstation_Dialog(QtWidgets.QDialog):
         spLicenses = self.importedSP
         self.licensesSPtoImport = spLicenses
         for i in range(len(spLicenses)):
-            if spLicenses[i][1] == 'True':
-                toExportSP += spLicenses[i][0]+', '
+            if spLicenses[i][1] != 'False':
+                toExportSP += spLicenses[i][0] + ' ver: ' + spLicenses[i][1] + ', '
         self.spToExport = toExportSP[:-2]
 
     def open_workstationDialog_licenses(self):
@@ -2156,8 +2172,8 @@ class Workstation_Dialog(QtWidgets.QDialog):
         spLicenses = self.licenseDialog.spClip
         self.licensesSPtoImport = spLicenses
         for i in range(len(spLicenses)):
-            if spLicenses[i][1]:
-                toExportSP += spLicenses[i][0]+', '
+            if spLicenses[i][1] != 'False':
+                toExportSP += spLicenses[i][0] + ' ver: ' + spLicenses[i][1] + ', '
         self.spToExport = toExportSP[:-2]
 
 

@@ -3,10 +3,6 @@
 	• Export the baseline to a txt file  
 	• Import a baseline  
 	• Quick access to BW product catalog   (won't work outside BW network)
-**installation:**  
-	1. If you're connect to Biosense Webster local network, just launch the program from here  
-	Or create a shortcut on your desktop  
-	2. If not connected to the local network, use the setup here and follow instructions.  
 **How to use:**  
 	1. When first opening the program, you'll be greeted by the header tab  
 	Header tab: In this tab the user may enter the 'header' part of the baseline, Instructions and example is already in this tab.  

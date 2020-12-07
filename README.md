@@ -2,7 +2,7 @@
 	• Create baseline  
 	• Export the baseline to a txt file  
 	• Import a baseline  
-	• Quick access to BW product catalog  
+	• Quick access to BW product catalog   (won't work outside BW network)
 **installation:**  
 	1. If you're connect to Biosense Webster local network, just launch the program from here  
 	Or create a shortcut on your desktop  

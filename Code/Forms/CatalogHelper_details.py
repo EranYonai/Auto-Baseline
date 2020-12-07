@@ -64,6 +64,11 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        Dialog.setTabOrder(self.catalog_text, self.mfg_text)
+        Dialog.setTabOrder(self.mfg_text, self.description_text)
+        Dialog.setTabOrder(self.description_text, self.family_text)
+        Dialog.setTabOrder(self.family_text, self.pushButton)
+        Dialog.setTabOrder(self.pushButton, self.pushButton_2)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -73,7 +78,7 @@ class Ui_Dialog(object):
         self.label_3.setText(_translate("Dialog", "Description:"))
         self.label_4.setText(_translate("Dialog", "Family:"))
         self.pushButton.setText(_translate("Dialog", "Add to Extenders"))
-        self.pushButton_2.setText(_translate("Dialog", "Add to Catheres"))
+        self.pushButton_2.setText(_translate("Dialog", "Add to Catheters"))
 
 
 if __name__ == "__main__":

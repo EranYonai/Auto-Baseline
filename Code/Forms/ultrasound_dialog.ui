@@ -278,6 +278,16 @@
    </item>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>ultrasound_combo</tabstop>
+  <tabstop>softwarever_text</tabstop>
+  <tabstop>serialnum_text</tabstop>
+  <tabstop>applicationver_text</tabstop>
+  <tabstop>videocable_text</tabstop>
+  <tabstop>ethernet_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

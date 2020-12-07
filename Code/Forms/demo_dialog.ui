@@ -257,6 +257,16 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>wsType_text</tabstop>
+  <tabstop>SW_text</tabstop>
+  <tabstop>dsp_text</tabstop>
+  <tabstop>imageV_text</tabstop>
+  <tabstop>serviceTag_text</tabstop>
+  <tabstop>surpoint_checkbox</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -130,6 +130,16 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        Dialog.setTabOrder(self.software_text, self.SN_text)
+        Dialog.setTabOrder(self.SN_text, self.GtoCable_text)
+        Dialog.setTabOrder(self.GtoCable_text, self.ethernetCable_text)
+        Dialog.setTabOrder(self.ethernetCable_text, self.gToPumpCable_text)
+        Dialog.setTabOrder(self.gToPumpCable_text, self.gToM_text)
+        Dialog.setTabOrder(self.gToM_text, self.pumpSN_text)
+        Dialog.setTabOrder(self.pumpSN_text, self.pumpModel_text)
+        Dialog.setTabOrder(self.pumpModel_text, self.footPadel_text)
+        Dialog.setTabOrder(self.footPadel_text, self.check_button)
+        Dialog.setTabOrder(self.check_button, self.confirm_button)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate

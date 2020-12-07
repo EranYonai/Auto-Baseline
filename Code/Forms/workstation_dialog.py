@@ -143,6 +143,18 @@ class Ui_workstation_Dialog(object):
 
         self.retranslateUi(workstation_Dialog)
         QtCore.QMetaObject.connectSlotsByName(workstation_Dialog)
+        workstation_Dialog.setTabOrder(self.softwarever_text, self.upgradefrom_text)
+        workstation_Dialog.setTabOrder(self.upgradefrom_text, self.dspver_text)
+        workstation_Dialog.setTabOrder(self.dspver_text, self.imagever_text)
+        workstation_Dialog.setTabOrder(self.imagever_text, self.servicetag_text)
+        workstation_Dialog.setTabOrder(self.servicetag_text, self.wsconf_text)
+        workstation_Dialog.setTabOrder(self.wsconf_text, self.wsmodel_text)
+        workstation_Dialog.setTabOrder(self.wsmodel_text, self.gpu_text)
+        workstation_Dialog.setTabOrder(self.gpu_text, self.solios_check)
+        workstation_Dialog.setTabOrder(self.solios_check, self.performance_check)
+        workstation_Dialog.setTabOrder(self.performance_check, self.licenses)
+        workstation_Dialog.setTabOrder(self.licenses, self.check_button)
+        workstation_Dialog.setTabOrder(self.check_button, self.confirm_button)
 
     def retranslateUi(self, workstation_Dialog):
         _translate = QtCore.QCoreApplication.translate

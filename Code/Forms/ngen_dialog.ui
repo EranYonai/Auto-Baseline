@@ -36,7 +36,7 @@
    <property name="geometry">
     <rect>
      <x>600</x>
-     <y>480</y>
+     <y>490</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -49,7 +49,7 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>480</y>
+     <y>490</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -783,7 +783,69 @@
     <string>Pump to Console Cable:</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="foot_pedal_text">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>450</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_26">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>450</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Foot Pedal:</string>
+   </property>
+  </widget>
  </widget>
+ <tabstops>
+  <tabstop>consoleSN_text</tabstop>
+  <tabstop>consolePN_text</tabstop>
+  <tabstop>consoleV_text</tabstop>
+  <tabstop>psuSN_text</tabstop>
+  <tabstop>psuPN_text</tabstop>
+  <tabstop>psuCable_text</tabstop>
+  <tabstop>genToPiu_text</tabstop>
+  <tabstop>monitor1SN_text</tabstop>
+  <tabstop>monitor1PN_text</tabstop>
+  <tabstop>monitor1V_text</tabstop>
+  <tabstop>monitor1HubSN_text</tabstop>
+  <tabstop>monitor1HubPN_text</tabstop>
+  <tabstop>monitor1PsuSN_text</tabstop>
+  <tabstop>monitor1PsuPN_text</tabstop>
+  <tabstop>monitor2SN_text</tabstop>
+  <tabstop>monitor2PN_text</tabstop>
+  <tabstop>monitor2V_text</tabstop>
+  <tabstop>monitor2HubSN_text</tabstop>
+  <tabstop>monitor2HubPN_text</tabstop>
+  <tabstop>monitor2PsuSN_text</tabstop>
+  <tabstop>monitor2PsuPN_text</tabstop>
+  <tabstop>ngenPumpSN_text</tabstop>
+  <tabstop>ngenPumpPN_text</tabstop>
+  <tabstop>ngenPumpV_text</tabstop>
+  <tabstop>pumptoConsoleCable_text</tabstop>
+  <tabstop>foot_pedal_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>447</width>
-    <height>358</height>
+    <height>503</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>310</y>
+     <y>450</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -62,7 +62,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>150</y>
+     <y>210</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -94,7 +94,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>150</y>
+     <y>210</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -145,7 +145,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>310</y>
+     <y>450</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -158,7 +158,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>190</y>
+     <y>300</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -177,7 +177,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>190</y>
+     <y>300</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -190,7 +190,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>225</y>
+     <y>145</y>
      <width>181</width>
      <height>31</height>
     </rect>
@@ -209,7 +209,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>230</y>
+     <y>150</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -222,7 +222,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>265</y>
+     <y>175</y>
      <width>191</width>
      <height>31</height>
     </rect>
@@ -241,6 +241,38 @@
    <property name="geometry">
     <rect>
      <x>210</x>
+     <y>180</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>270</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Global Port:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="global_port_text">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
      <y>270</y>
      <width>191</width>
      <height>22</height>
@@ -250,7 +282,150 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>240</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>EP shuttle to PIU:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ep_to_piu_text">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>240</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>330</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Generator to WS cable:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gen_to_ws_text">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>330</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="patch_cable_text">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>360</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>360</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Patch electrode cable:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="footPedal_text">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>390</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>390</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Foot Pedal:</string>
+   </property>
+  </widget>
  </widget>
+ <tabstops>
+  <tabstop>software_text</tabstop>
+  <tabstop>SN_text</tabstop>
+  <tabstop>epboxSN_text</tabstop>
+  <tabstop>epioCable_text</tabstop>
+  <tabstop>EPcable_text</tabstop>
+  <tabstop>ep_to_piu_text</tabstop>
+  <tabstop>global_port_text</tabstop>
+  <tabstop>abaadaCable_text</tabstop>
+  <tabstop>gen_to_ws_text</tabstop>
+  <tabstop>patch_cable_text</tabstop>
+  <tabstop>footPedal_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -152,10 +152,18 @@
     </rect>
    </property>
    <property name="text">
-    <string>Add to Catheres</string>
+    <string>Add to Catheters</string>
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>catalog_text</tabstop>
+  <tabstop>mfg_text</tabstop>
+  <tabstop>description_text</tabstop>
+  <tabstop>family_text</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>pushButton_2</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -40,7 +40,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>350</y>
+     <y>385</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -97,7 +97,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>305</y>
+     <y>340</y>
      <width>181</width>
      <height>21</height>
     </rect>
@@ -116,7 +116,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>350</y>
+     <y>385</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -126,7 +126,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>395</y>
+     <y>430</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -137,7 +137,7 @@
     <rect>
      <x>10</x>
      <y>260</y>
-     <width>151</width>
+     <width>201</width>
      <height>31</height>
     </rect>
    </property>
@@ -148,14 +148,14 @@
     </font>
    </property>
    <property name="text">
-    <string>Monitors model:</string>
+    <string>Monitor #1 model and size:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>395</y>
+     <y>430</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -235,7 +235,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>305</y>
+     <y>340</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -283,14 +283,77 @@
   <widget class="QLineEdit" name="mm_text">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>220</x>
      <y>260</y>
-     <width>191</width>
+     <width>161</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
+  <widget class="QLineEdit" name="mm2_text">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>300</y>
+     <width>161</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>300</y>
+     <width>211</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Product Sans Light</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Monitor #2 model and size:</string>
+   </property>
+  </widget>
+  <zorder>check_button</zorder>
+  <zorder>lp_text</zorder>
+  <zorder>label_7</zorder>
+  <zorder>label_4</zorder>
+  <zorder>title</zorder>
+  <zorder>label_6</zorder>
+  <zorder>aquanum_text</zorder>
+  <zorder>aquamax_text</zorder>
+  <zorder>label_5</zorder>
+  <zorder>label_8</zorder>
+  <zorder>label</zorder>
+  <zorder>piu_text</zorder>
+  <zorder>label_3</zorder>
+  <zorder>confirm_button</zorder>
+  <zorder>ecg_text</zorder>
+  <zorder>patchunit_text</zorder>
+  <zorder>label_2</zorder>
+  <zorder>system_text</zorder>
+  <zorder>mm_text</zorder>
+  <zorder>label_9</zorder>
+  <zorder>mm2_text</zorder>
  </widget>
+ <tabstops>
+  <tabstop>system_text</tabstop>
+  <tabstop>piu_text</tabstop>
+  <tabstop>lp_text</tabstop>
+  <tabstop>patchunit_text</tabstop>
+  <tabstop>mm_text</tabstop>
+  <tabstop>mm2_text</tabstop>
+  <tabstop>ecg_text</tabstop>
+  <tabstop>aquanum_text</tabstop>
+  <tabstop>aquamax_text</tabstop>
+  <tabstop>check_button</tabstop>
+  <tabstop>confirm_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

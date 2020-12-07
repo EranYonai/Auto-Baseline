@@ -23,7 +23,6 @@ class Ui_Dialog(object):
         self.getCatalog_B.setAutoDefault(True)
         self.getCatalog_B.setDefault(True)
         self.getCatalog_B.setObjectName("getCatalog_B")
-        #self.signelCatalog_Text.returnPressed.connect(self.getCatalog_B.click)
         self.title = QtWidgets.QLabel(Dialog)
         self.title.setGeometry(QtCore.QRect(80, 20, 231, 41))
         font = QtGui.QFont()

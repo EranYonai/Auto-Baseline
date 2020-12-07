@@ -137,7 +137,7 @@
     <rect>
      <x>10</x>
      <y>260</y>
-     <width>221</width>
+     <width>201</width>
      <height>31</height>
     </rect>
    </property>
@@ -305,8 +305,8 @@
     <rect>
      <x>10</x>
      <y>300</y>
-     <width>221</width>
-     <height>31</height>
+     <width>211</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
@@ -319,6 +319,27 @@
     <string>Monitor #2 model and size:</string>
    </property>
   </widget>
+  <zorder>check_button</zorder>
+  <zorder>lp_text</zorder>
+  <zorder>label_7</zorder>
+  <zorder>label_4</zorder>
+  <zorder>title</zorder>
+  <zorder>label_6</zorder>
+  <zorder>aquanum_text</zorder>
+  <zorder>aquamax_text</zorder>
+  <zorder>label_5</zorder>
+  <zorder>label_8</zorder>
+  <zorder>label</zorder>
+  <zorder>piu_text</zorder>
+  <zorder>label_3</zorder>
+  <zorder>confirm_button</zorder>
+  <zorder>ecg_text</zorder>
+  <zorder>patchunit_text</zorder>
+  <zorder>label_2</zorder>
+  <zorder>system_text</zorder>
+  <zorder>mm_text</zorder>
+  <zorder>label_9</zorder>
+  <zorder>mm2_text</zorder>
  </widget>
  <tabstops>
   <tabstop>system_text</tabstop>

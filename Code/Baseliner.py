@@ -1073,7 +1073,8 @@ class MainWindow(QtWidgets.QMainWindow):
 			export_file.close()
 			self.exportXML(self.exportfilelocation)
 			self.filePath_configured = False # This way the user can save as many times as he wants, without appending toText again to the same file.
-
+		else:
+			self.filePath_configured = False # Added this else in order to return the filePath_configured var to false if the user pressed cancel.
 	def exportXML(self, fileLocation):
 		try:
 			fileLocation = fileLocation[:-4]

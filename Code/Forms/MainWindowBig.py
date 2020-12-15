@@ -530,7 +530,7 @@ class Ui_MainWindow(object):
         self.import_button.setObjectName("import_button")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 698, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 698, 21))
         self.menubar.setObjectName("menubar")
         self.menuAdd_Device = QtWidgets.QMenu(self.menubar)
         self.menuAdd_Device.setObjectName("menuAdd_Device")
@@ -660,9 +660,9 @@ class Ui_MainWindow(object):
         self.header_text.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#709dca;\">&lt;STD Name&gt;</span><span style=\" font-size:10pt;\"> STD Baseline After V&amp;V </span><span style=\" font-size:10pt; color:#709dca;\">&lt;Project, Phase and Cycle&gt;</span><span style=\" font-size:10pt; color:#000000;\">. </span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">Performed by: </span><span style=\" font-size:10pt; color:#709dca;\">&lt;Full Name&gt;</span><span style=\" font-size:10pt;\">. </span></p></body></html>"))
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#709dca;\">&lt;STD Name&gt;</span><span style=\" font-size:10pt;\"> STD Baseline After V&amp;V </span><span style=\" font-size:10pt; color:#709dca;\">&lt;Project, Phase and Cycle&gt;</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">Performed by: </span><span style=\" font-size:10pt; color:#709dca;\">&lt;Full Name&gt;</span></p></body></html>"))
         self.label.setText(_translate("MainWindow", "Baseline header most include:"))
         self.label_2.setText(_translate("MainWindow", "1. STD Name"))
         self.label_3.setText(_translate("MainWindow", "2. Project (e.g. V7)"))

@@ -946,7 +946,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		if (cat_ext == 1):
 			item = self.ui.extender_list_2.takeItem(self.ui.extender_list_2.currentRow())
 			item = None
-
+			
 	def exportTXT(self):
 		#self.experimentalWarning("wslicenses") In experimental branch i fixed this issue.
 		if not self.filePath_configured:
@@ -1075,6 +1075,7 @@ class MainWindow(QtWidgets.QMainWindow):
 			self.filePath_configured = False # This way the user can save as many times as he wants, without appending toText again to the same file.
 		else:
 			self.filePath_configured = False # Added this else in order to return the filePath_configured var to false if the user pressed cancel.
+
 	def exportXML(self, fileLocation):
 		try:
 			fileLocation = fileLocation[:-4]

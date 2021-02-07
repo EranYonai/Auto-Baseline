@@ -2014,7 +2014,7 @@ class Licenses_Dialog(QtWidgets.QDialog):
 				self.ldialog.sound.setChecked(True)
 			if ("PASO" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
 				self.ldialog.paso.setChecked(True)
-			if ("CAFE" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
+			if ("CFAE" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
 				self.ldialog.cafe_2.setChecked(True)
 			if ("SMARTTOUCH" in LicenseClip[i][0] and LicenseClip[i][1] == "True"):
 				self.ldialog.smarttouch.setChecked(True)

@@ -705,7 +705,7 @@
     </font>
    </property>
    <property name="text">
-    <string>CAFE</string>
+    <string>CFAE</string>
    </property>
   </widget>
   <widget class="QLabel" name="title_2">

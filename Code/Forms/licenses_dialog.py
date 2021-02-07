@@ -404,20 +404,10 @@ class Ui_licenses_Dialog(object):
         self.activationv7sp2.setText(_translate("licenses_Dialog", "CARTO 3 V7 Phase 2 SP Activation"))
         self.label_2.setText(_translate("licenses_Dialog", "Manually add:"))
         self.confirm_button.setText(_translate("licenses_Dialog", "Confirm"))
-        self.cafe_2.setText(_translate("licenses_Dialog", "CAFE"))
+        self.cafe_2.setText(_translate("licenses_Dialog", "CFAE"))
         self.title_2.setText(_translate("licenses_Dialog", "Service Packs:"))
         self.sp_helios.setText(_translate("licenses_Dialog", "HELIOSTAR"))
         self.sp_lasso.setText(_translate("licenses_Dialog", "LASSOSTARNav"))
         self.sp_qdot.setText(_translate("licenses_Dialog", "QDOT"))
         self.sp_spu.setText(_translate("licenses_Dialog", "SPU"))
         self.label_3.setText(_translate("licenses_Dialog", "Versions:"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    licenses_Dialog = QtWidgets.QDialog()
-    ui = Ui_licenses_Dialog()
-    ui.setupUi(licenses_Dialog)
-    licenses_Dialog.show()
-    sys.exit(app.exec_())

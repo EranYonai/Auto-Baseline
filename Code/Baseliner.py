@@ -386,7 +386,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		return state #if any window opened return False, if not, return True.
 
 	def catalogHelp(self):
-		self.experimentalWarning("experimental")
+		self.experimentalWarning("experimental_chrome")
 		catWin = CatalogHelper_Dialog(self) #Inheritance -> Passing MainWindow (self) as an argument
 		catWin.exec_()
 
@@ -946,7 +946,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		if (cat_ext == 1):
 			item = self.ui.extender_list_2.takeItem(self.ui.extender_list_2.currentRow())
 			item = None
-			
+
 	def exportTXT(self):
 		#self.experimentalWarning("wslicenses") In experimental branch i fixed this issue.
 		if not self.filePath_configured:
@@ -1422,6 +1422,11 @@ class MainWindow(QtWidgets.QMainWindow):
 			warning.setText("This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.")
 			warning.setWindowTitle("Warning")
 			warning.exec_()
+		if (kind == "experimental_chrome"):
+			warning = QtWidgets.QMessageBox()
+			warning.setText("This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.\nSupports Chrome version 89.")
+			warning.setWindowTitle("Warning")
+			warning.exec_()
 		if (kind == "beta"):
 			warning = QtWidgets.QMessageBox()
 			warning.setText("This program is in beta, please use in care.\nIf you see an issue please contact Eran.")
@@ -1695,13 +1700,12 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
 			driver.quit()
 			return result
 		except:
-			driver.close()
 			return False
 
 	def oneCatalog(self):
 		cat = self.getMFG_selenium(self.ui.signelCatalog_Text.text())
 		if (cat != False):
-			singleCat = SingleCatheter(cat,self)
+			singleCat = SingleCatheter(cat, self)
 			singleCat.exec_()
 		else:
 			notimplemented = QtWidgets.QMessageBox()

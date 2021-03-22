@@ -16,11 +16,11 @@ class MainWindow(QtWidgets.QMainWindow):
 		connection = sqlite3.connect("equipment.db")
 		cur = connection.cursor()
 		# constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
-		workstation = ("workstations", self.ws_table, 8)
+		workstation = ("workstations", self.ws_table, 8) 
 		system = ("systems", self.system_table, 11)
-		tabs = [workstation, system]
-		# machines = ["workstations", "systems"]
-		# machine_obj = [self.ws_table, self.system_table]
+		ultrasound = ("ultrasounds", self.us_table, 7)
+		stockert = ("stockerts", self.stockert_table, 13)
+		tabs = [workstation, system, ultrasound, stockert]
 		for tab in tabs:
 			sqlquery = "SELECT * FROM " + tab[0]  # tab[0] = db name
 			cur.execute(sqlquery)

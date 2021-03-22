@@ -10,7 +10,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		super(MainWindow, self).__init__()
 		loadUi("inventory.ui", self)
 		self.loaddata()
-
+		self.actionRefresh.triggered.connect(self.refresh)
 
 	def loaddata(self):
 		connection = sqlite3.connect("equipment.db")
@@ -32,7 +32,18 @@ class MainWindow(QtWidgets.QMainWindow):
 					column += 1
 				tablerow += 1
 
-
+	def refresh(self):
+		# refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().
+		rows = 300
+		self.ws_table.setRowCount(0)
+		self.system_table.setRowCount(0)
+		self.us_table.setRowCount(0)
+		self.stockert_table.setRowCount(0)
+		self.ws_table.setRowCount(rows)
+		self.system_table.setRowCount(rows)
+		self.us_table.setRowCount(rows)
+		self.stockert_table.setRowCount(rows)
+		self.loaddata()
 
 if __name__ == '__main__':
 	app = QtWidgets.QApplication(sys.argv)

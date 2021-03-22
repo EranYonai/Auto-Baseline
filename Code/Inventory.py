@@ -15,21 +15,23 @@ class MainWindow(QtWidgets.QMainWindow):
 	def loaddata(self):
 		connection = sqlite3.connect("equipment.db")
 		cur = connection.cursor()
-		sqlquery = "SELECT * FROM workstations"
-		cur.execute(sqlquery)
-		tablerow = 0
-		for row in cur.execute(sqlquery):
-			print(row)
-			print(QtWidgets.QTableWidgetItem(row[0]).text())
-			self.ws_table.setItem(tablerow, 0, QtWidgets.QTableWidgetItem(row[0]))
-			self.ws_table.setItem(tablerow, 1, QtWidgets.QTableWidgetItem(row[1]))
-			self.ws_table.setItem(tablerow, 2, QtWidgets.QTableWidgetItem(row[2]))
-			self.ws_table.setItem(tablerow, 3, QtWidgets.QTableWidgetItem(row[3]))
-			self.ws_table.setItem(tablerow, 4, QtWidgets.QTableWidgetItem(row[4]))
-			self.ws_table.setItem(tablerow, 5, QtWidgets.QTableWidgetItem(row[5]))
-			self.ws_table.setItem(tablerow, 6, QtWidgets.QTableWidgetItem(row[6]))
-			self.ws_table.setItem(tablerow, 7, QtWidgets.QTableWidgetItem(row[7]))
-			tablerow += 1
+		# constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
+		workstation = ("workstations", self.ws_table, 8)
+		system = ("systems", self.system_table, 11)
+		tabs = [workstation, system]
+		# machines = ["workstations", "systems"]
+		# machine_obj = [self.ws_table, self.system_table]
+		for tab in tabs:
+			sqlquery = "SELECT * FROM " + tab[0]  # tab[0] = db name
+			cur.execute(sqlquery)
+			tablerow = 0
+			for row in cur.execute(sqlquery):
+				column = 0
+				for i in range(0, tab[2]):
+					tab[1].setItem(tablerow, column, QtWidgets.QTableWidgetItem(str(row[column])))
+					column += 1
+				tablerow += 1
+
 
 
 if __name__ == '__main__':

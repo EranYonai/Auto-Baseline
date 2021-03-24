@@ -18,13 +18,13 @@ class MainWindow(QtWidgets.QMainWindow):
 	def create_tabs_tuples(self):
 		ws_db_fields = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
 		system_db_fields = ["system_number", "piu_configuration", "lp_number", "patch_unit", "monitor_1", "monitor_2", "ecg_phantom", "aquarium_number", "aquarium_maximo", "approved", "used"]
-		us_db_fields = ["machine", "software_version", "serial_number", "application_version", "video_cable", "ethernet_cable", "approved", "used"]
+		us_db_fields = ["serial_number", "machine", "software_version", "application_version", "video_cable", "ethernet_cable", "approved", "used"]
 		stockert_db_fields = ["software_version", "serial_number", "epio_box_sn", "epio_connection_cable", "epio_interface_cable", "epushuttle_piu", "global_port", "ablation_adaptor_cable", "gen_to_ws_cable", "patch_elect_cable", "footpedal", "approved", "used"]
 		workstation = ("workstations", self.ws_table, 8, ws_db_fields)
 		system = ("systems", self.system_table, 11, system_db_fields)
 		ultrasound = ("ultrasounds", self.us_table, 7, us_db_fields)
 		stockert = ("stockerts", self.stockert_table, 13, stockert_db_fields)
-		return [workstation, system, ultrasound, stockert]
+		return [system, workstation, ultrasound, stockert]
 
 	def loaddata(self):
 		connection = sqlite3.connect("equipment.db")
@@ -85,38 +85,37 @@ class MainWindow(QtWidgets.QMainWindow):
 			tab[1].blockSignals(True)  # disable signals from the specific widget
 
 	def onItemChange(self):
-		whichTable = "workstations"
-		print("signal from "+whichTable)
+		#  self.machines.currentIndex() - 0 systems, 1 workstations, 3 ultrasounds..
+		whichTable = self.machines.currentIndex()
+		print("signal from " + str(whichTable))
 		tabs = self.create_tabs_tuples()
 		try:
-			if (whichTable == "workstations"):
-				item = tabs[0][1].item(tabs[0][1].currentRow(), tabs[0][1].currentColumn())  # gets the item = QTableWidgetItem
-				itemKey = tabs[0][1].item(tabs[0][1].currentRow(), 0)
-				print("Cell: %s/%s changed to- %s" % (item.row(), item.column(), item.text()))
-				self.updateItemSQL(item, itemKey.text())
-		except:
-			print("bad")
+			item = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(), tabs[whichTable][1].currentColumn())  # gets the item = QTableWidgetItem
+			itemKey = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(), 0)
+			self.updateItemSQL(item, itemKey.text(), whichTable)
+		except Exception as e:
+			print(e)
 
-	def update_sql_get_string(self, table, col, text, key):
-		wsTable = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
-		query = """UPDATE %s SET %s = '%s' WHERE %s = '%s'; """ % (table, wsTable[col], text, "service_tag", key)
+	def update_sql_get_string(self, col, text, key, whichTable):
+		tabs = self.create_tabs_tuples()
+		query = """UPDATE %s SET %s = '%s' WHERE %s = '%s'; """ % (tabs[whichTable][0], tabs[whichTable][3][col], text, tabs[whichTable][3][0], key)
 		return query
 
-	def updateItemSQL(self, item, itemKey):
-		print("itemAt: %s/%s, text: %s" % (item.row(), item.column(), item.text()))
-		print("primary key is: "+itemKey)
+	def updateItemSQL(self, item, itemKey, whichTable):
+		print("itemAt: %s/%s, text: %s, primarykey: %s" % (item.row(), item.column(), item.text(), itemKey))
 		try:
 			connection = sqlite3.connect("equipment.db")
 			cur = connection.cursor()
-			sqlquery = self.update_sql_get_string("workstations", item.column(), item.text(), itemKey)
+			sqlquery = self.update_sql_get_string(item.column(), item.text(), itemKey, whichTable)
 			cur.execute(sqlquery)
 			print(sqlquery)
 			cur.close()
 			connection.commit()
 			connection.close()
-			print("db should update")
-		except:
-			print("can't send query")
+			print("Update command was sent to DB! DB should've updated!")
+		except Exception as e:
+			print("Exception at updateItemSQL:")
+			print(e)
 
 
 if __name__ == '__main__':

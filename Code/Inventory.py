@@ -2,25 +2,35 @@ import sys
 import qdarkstyle
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QListWidget
 import sqlite3
 
 class MainWindow(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(MainWindow, self).__init__()
 		loadUi("inventory.ui", self)
+		self.resize(1050, 1070)
 		self.loaddata()
 		self.actionRefresh.triggered.connect(self.refresh)
+		self.actionUpload.triggered.connect(self.upload)
+		self.search_button.clicked.connect(self.search)
+		self.editMode_button.clicked.connect(self.editMode_button_function)
+
+	def create_tabs_tuples(self):
+		ws_db_fields = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
+		system_db_fields = ["system_number", "piu_configuration", "lp_number", "patch_unit", "monitor_1", "monitor_2", "ecg_phantom", "aquarium_number", "aquarium_maximo", "approved", "used"]
+		us_db_fields = ["machine", "software_version", "serial_number", "application_version", "video_cable", "ethernet_cable", "approved", "used"]
+		stockert_db_fields = ["software_version", "serial_number", "epio_box_sn", "epio_connection_cable", "epio_interface_cable", "epushuttle_piu", "global_port", "ablation_adaptor_cable", "gen_to_ws_cable", "patch_elect_cable", "footpedal", "approved", "used"]
+		workstation = ("workstations", self.ws_table, 8, ws_db_fields)
+		system = ("systems", self.system_table, 11, system_db_fields)
+		ultrasound = ("ultrasounds", self.us_table, 7, us_db_fields)
+		stockert = ("stockerts", self.stockert_table, 13, stockert_db_fields)
+		return [workstation, system, ultrasound, stockert]
 
 	def loaddata(self):
 		connection = sqlite3.connect("equipment.db")
 		cur = connection.cursor()
 		# constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
-		workstation = ("workstations", self.ws_table, 8) 
-		system = ("systems", self.system_table, 11)
-		ultrasound = ("ultrasounds", self.us_table, 7)
-		stockert = ("stockerts", self.stockert_table, 13)
-		tabs = [workstation, system, ultrasound, stockert]
+		tabs = self.create_tabs_tuples()
 		for tab in tabs:
 			sqlquery = "SELECT * FROM " + tab[0]  # tab[0] = db name
 			cur.execute(sqlquery)
@@ -31,9 +41,13 @@ class MainWindow(QtWidgets.QMainWindow):
 					tab[1].setItem(tablerow, column, QtWidgets.QTableWidgetItem(str(row[column])))
 					column += 1
 				tablerow += 1
+		connection.close()
 
 	def refresh(self):
 		# refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().
+		self.stop_edit_listener()  # stops listener before refreshing lists.
+		self.editMode_button.setChecked(False)  # exits edit mode
+		#  maybe pop notification here?
 		rows = 300
 		self.ws_table.setRowCount(0)
 		self.system_table.setRowCount(0)
@@ -44,6 +58,66 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.us_table.setRowCount(rows)
 		self.stockert_table.setRowCount(rows)
 		self.loaddata()
+
+	def search(self):
+		pass
+
+	def upload(self):
+		pass
+
+	def editMode_button_function(self):
+		if (self.editMode_button.isChecked()):
+			print("editModeEnabled")
+			self.start_edit_listener()
+		else:
+			print("editModeDisabled")
+			self.stop_edit_listener()
+
+	def start_edit_listener(self):
+		tabs = self.create_tabs_tuples()
+		for tab in tabs:
+			tab[1].blockSignals(False)  # enable signals from the specific widget
+			tab[1].cellChanged.connect(self.onItemChange)
+
+	def stop_edit_listener(self):
+		tabs = self.create_tabs_tuples()
+		for tab in tabs:
+			tab[1].blockSignals(True)  # disable signals from the specific widget
+
+	def onItemChange(self):
+		whichTable = "workstations"
+		print("signal from "+whichTable)
+		tabs = self.create_tabs_tuples()
+		try:
+			if (whichTable == "workstations"):
+				item = tabs[0][1].item(tabs[0][1].currentRow(), tabs[0][1].currentColumn())  # gets the item = QTableWidgetItem
+				itemKey = tabs[0][1].item(tabs[0][1].currentRow(), 0)
+				print("Cell: %s/%s changed to- %s" % (item.row(), item.column(), item.text()))
+				self.updateItemSQL(item, itemKey.text())
+		except:
+			print("bad")
+
+	def update_sql_get_string(self, table, col, text, key):
+		wsTable = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
+		query = """UPDATE %s SET %s = '%s' WHERE %s = '%s'; """ % (table, wsTable[col], text, "service_tag", key)
+		return query
+
+	def updateItemSQL(self, item, itemKey):
+		print("itemAt: %s/%s, text: %s" % (item.row(), item.column(), item.text()))
+		print("primary key is: "+itemKey)
+		try:
+			connection = sqlite3.connect("equipment.db")
+			cur = connection.cursor()
+			sqlquery = self.update_sql_get_string("workstations", item.column(), item.text(), itemKey)
+			cur.execute(sqlquery)
+			print(sqlquery)
+			cur.close()
+			connection.commit()
+			connection.close()
+			print("db should update")
+		except:
+			print("can't send query")
+
 
 if __name__ == '__main__':
 	app = QtWidgets.QApplication(sys.argv)

@@ -49,14 +49,10 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.editMode_button.setChecked(False)  # exits edit mode
 		#  maybe pop notification here?
 		rows = 300
-		self.ws_table.setRowCount(0)
-		self.system_table.setRowCount(0)
-		self.us_table.setRowCount(0)
-		self.stockert_table.setRowCount(0)
-		self.ws_table.setRowCount(rows)
-		self.system_table.setRowCount(rows)
-		self.us_table.setRowCount(rows)
-		self.stockert_table.setRowCount(rows)
+		tabs = self.create_tabs_tuples()
+		for tab in tabs:
+			tab[1].setRowCount(0)
+			tab[1].setRowCount(rows)
 		self.loaddata()
 
 	def search(self):
@@ -94,6 +90,7 @@ class MainWindow(QtWidgets.QMainWindow):
 			itemKey = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(), 0)
 			self.updateItemSQL(item, itemKey.text(), whichTable)
 		except Exception as e:
+			print("Exception at onItemChange:")
 			print(e)
 
 	def update_sql_get_string(self, col, text, key, whichTable):
@@ -125,3 +122,7 @@ if __name__ == '__main__':
 	win.show()
 	win.setFocus()
 	sys.exit(app.exec_())
+
+	#need to create a special function and button from the top menu (file menu) that create a new db
+	#need to choose on statup which db to use
+	#need to change position of refresh button - maybe think of a better logic? every x sec?

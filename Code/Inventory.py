@@ -61,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		for i in range(0, 10):
 			self.refresh_button.setText("Refresh " + str(i))
 			time.sleep(1)
-			#https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
+			#  https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
 
 	def search(self):
 		pass
@@ -98,8 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
 			itemKey = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(), 0)
 			self.updateItemSQL(item, itemKey.text(), whichTable)
 		except Exception as e:
-			print("Exception at onItemChange:")
-			print(e)
+			print("Exception at onItemChange: " + str(e))
 
 	def update_sql_get_string(self, col, text, key, whichTable):
 		tabs = self.create_tabs_tuples()
@@ -119,8 +118,7 @@ class MainWindow(QtWidgets.QMainWindow):
 			connection.close()
 			print("Update command was sent to DB! DB should've updated!")
 		except Exception as e:
-			print("Exception at updateItemSQL:")
-			print(e)
+			print("Exception at updateItemSQL: " + str(e))
 
 
 if __name__ == '__main__':
@@ -131,10 +129,10 @@ if __name__ == '__main__':
 	win.setFocus()
 	sys.exit(app.exec_())
 
-	#need to create a special function and button from the top menu (file menu) that create a new db
-	#need to choose on statup which db to use
-	#need to change position of refresh button - maybe think of a better logic? every x sec?
-	#intersting articles:
-	#https://www.programmersought.com/article/35244519297/
-	#https://forum.qt.io/topic/87141/while-retrieving-data-from-qtablewidget-the-type-appears-to-be-unicode-how-can-i-convert-it-to-number/5
-	#https://stackoverflow.com/questions/40188267/how-to-update-qtableview-when-database-updated
+	#  need to create a special function and button from the top menu (file menu) that create a new db
+	#  need to choose on statup which db to use
+	#  need to change position of refresh button - maybe think of a better logic? every x sec?
+	#  intersting articles:
+	#  https://www.programmersought.com/article/35244519297/
+	#  https://forum.qt.io/topic/87141/while-retrieving-data-from-qtablewidget-the-type-appears-to-be-unicode-how-can-i-convert-it-to-number/5
+	#  https://stackoverflow.com/questions/40188267/how-to-update-qtableview-when-database-updated

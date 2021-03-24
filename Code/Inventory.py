@@ -1,8 +1,7 @@
-import sys
+import sys, sqlite3, time
 import qdarkstyle
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
-import sqlite3
 
 class MainWindow(QtWidgets.QMainWindow):
 	def __init__(self):
@@ -10,10 +9,10 @@ class MainWindow(QtWidgets.QMainWindow):
 		loadUi("inventory.ui", self)
 		self.resize(1050, 1070)
 		self.loaddata()
-		self.actionRefresh.triggered.connect(self.refresh)
-		self.actionUpload.triggered.connect(self.upload)
 		self.search_button.clicked.connect(self.search)
 		self.editMode_button.clicked.connect(self.editMode_button_function)
+		self.refresh_button.clicked.connect(self.refresh)
+		self.auto_refresh()
 
 	def create_tabs_tuples(self):
 		ws_db_fields = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
@@ -54,6 +53,15 @@ class MainWindow(QtWidgets.QMainWindow):
 			tab[1].setRowCount(0)
 			tab[1].setRowCount(rows)
 		self.loaddata()
+
+	def auto_refresh(self):
+		# while True:
+		# 	self.refresh()
+		# 	print("Refreshed db")
+		for i in range(0, 10):
+			self.refresh_button.setText("Refresh " + str(i))
+			time.sleep(1)
+			#https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
 
 	def search(self):
 		pass
@@ -126,3 +134,7 @@ if __name__ == '__main__':
 	#need to create a special function and button from the top menu (file menu) that create a new db
 	#need to choose on statup which db to use
 	#need to change position of refresh button - maybe think of a better logic? every x sec?
+	#intersting articles:
+	#https://www.programmersought.com/article/35244519297/
+	#https://forum.qt.io/topic/87141/while-retrieving-data-from-qtablewidget-the-type-appears-to-be-unicode-how-can-i-convert-it-to-number/5
+	#https://stackoverflow.com/questions/40188267/how-to-update-qtableview-when-database-updated

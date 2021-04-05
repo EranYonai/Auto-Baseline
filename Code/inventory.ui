@@ -1797,7 +1797,6 @@
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
     <addaction name="actionUpload"/>
-    <addaction name="actionChoose_Database"/>
    </widget>
    <addaction name="menuActions"/>
   </widget>

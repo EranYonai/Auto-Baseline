@@ -1,4 +1,4 @@
-import sys, sqlite3, time
+import sys, sqlite3, time, os
 import qdarkstyle
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
@@ -8,15 +8,19 @@ class MainWindow(QtWidgets.QMainWindow):
 		super(MainWindow, self).__init__()
 		loadUi("inventory.ui", self)
 		self.resize(1050, 1070)
+
 		# Global attributes:
-		self.currentDB = "db\equipment.db"  # default db
+		self.db_current = "db\\equipment.db"  # default db
+		self.db_location = "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
+		self.action_db = self.menuActions.addMenu('Databases')
 		# Triggeres and connections:
 		self.loaddata()
 		self.search_button.clicked.connect(self.search)
 		self.editMode_button.clicked.connect(self.editMode_button_function)
 		self.refresh_button.clicked.connect(self.refresh)
-
-		
+		self.action_db.triggered.connect(self.choose_database)
+		# Function calls:
+		self.find_database()
 
 	def create_tabs_tuples(self):
 		ws_db_fields = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
@@ -30,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		return [system, workstation, ultrasound, stockert]
 
 	def loaddata(self):
-		connection = sqlite3.connect(self.currentDB)
+		connection = sqlite3.connect(self.db_current)
 		cur = connection.cursor()
 		# constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
 		tabs = self.create_tabs_tuples()
@@ -73,6 +77,26 @@ class MainWindow(QtWidgets.QMainWindow):
 	def upload(self):
 		pass
 
+	def find_database(self):
+		db_list = os.listdir(self.db_location)
+		# db_list = ['V7', 'V8', 'Test']  # Test, ^uncomment above line for real usage.
+		print(db_list)
+		for db in db_list:
+			action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
+			# action = self.action_db.addAction(db)  # Test, ^uncomment above line for real usage.
+			action.setCheckable(True)
+
+	def choose_database(self, action):
+		database_name = action.text()
+		database_bool = action.isChecked()
+		if (database_bool):  # If true, turn all other menus to false
+			for action in self.action_db.actions():
+				if action.text() != database_name:
+					action.setChecked(False)
+		self.db_current = 'db\\' + database_name + '.db'  # changes db_current to the selected db and runs refresh function
+		self.refresh()
+		self.experimentalWarning('table_refreshed')
+
 	def editMode_button_function(self):
 		if (self.editMode_button.isChecked()):
 			print("editModeEnabled")
@@ -110,7 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 	def updateItemSQL(self, item, itemKey, whichTable):
 		try:
-			connection = sqlite3.connect("equipment.db")
+			connection = sqlite3.connect(self.db_current)
 			cur = connection.cursor()
 			sqlquery = self.update_sql_get_string(item.column(), item.text(), itemKey, whichTable)
 			cur.execute(sqlquery)
@@ -121,6 +145,15 @@ class MainWindow(QtWidgets.QMainWindow):
 		except Exception as e:
 			print("Exception at updateItemSQL: " + str(e))
 
+	# experimentalWarning is a function that takes (self, kind) as arguments.
+	# Pops the appropriate error or notification
+	# :param kind - 'table_refreshed' will print an "Database changed!" notification.
+	def experimentalWarning(self, kind):
+		if (kind == "table_refreshed"):
+			warning = QtWidgets.QMessageBox()
+			warning.setText("Database changed!")
+			warning.setWindowTitle("Noticication")
+			warning.exec_()
 
 if __name__ == '__main__':
 	app = QtWidgets.QApplication(sys.argv)

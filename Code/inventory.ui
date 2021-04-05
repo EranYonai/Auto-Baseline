@@ -1797,6 +1797,7 @@
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
     <addaction name="actionUpload"/>
+    <addaction name="actionChoose_Database"/>
    </widget>
    <addaction name="menuActions"/>
   </widget>
@@ -1809,6 +1810,11 @@
   <action name="actionUpload">
    <property name="text">
     <string>Upload</string>
+   </property>
+  </action>
+  <action name="actionChoose_Database">
+   <property name="text">
+    <string>Choose Database</string>
    </property>
   </action>
  </widget>

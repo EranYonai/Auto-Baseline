@@ -8,10 +8,15 @@ class MainWindow(QtWidgets.QMainWindow):
 		super(MainWindow, self).__init__()
 		loadUi("inventory.ui", self)
 		self.resize(1050, 1070)
+		# Global attributes:
+		self.currentDB = "db\equipment.db"  # default db
+		# Triggeres and connections:
 		self.loaddata()
 		self.search_button.clicked.connect(self.search)
 		self.editMode_button.clicked.connect(self.editMode_button_function)
 		self.refresh_button.clicked.connect(self.refresh)
+
+		
 
 	def create_tabs_tuples(self):
 		ws_db_fields = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
@@ -25,7 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		return [system, workstation, ultrasound, stockert]
 
 	def loaddata(self):
-		connection = sqlite3.connect("equipment.db")
+		connection = sqlite3.connect(self.currentDB)
 		cur = connection.cursor()
 		# constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
 		tabs = self.create_tabs_tuples()
@@ -132,3 +137,4 @@ if __name__ == '__main__':
 	#  https://www.programmersought.com/article/35244519297/
 	#  https://forum.qt.io/topic/87141/while-retrieving-data-from-qtablewidget-the-type-appears-to-be-unicode-how-can-i-convert-it-to-number/5
 	#  https://stackoverflow.com/questions/40188267/how-to-update-qtableview-when-database-updated
+	#  https://realpython.com/python-pyqt-qthread/

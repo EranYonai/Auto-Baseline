@@ -87,7 +87,6 @@ class MainWindow(QtWidgets.QMainWindow):
 	def find_database(self):
 		db_list = os.listdir(self.db_location)
 		# db_list = ['V7', 'V8', 'Test']  # Test, ^uncomment above line for real usage.
-		print(db_list)
 		for db in db_list:
 			action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
 			# action = self.action_db.addAction(db)  # Test, ^uncomment above line for real usage.

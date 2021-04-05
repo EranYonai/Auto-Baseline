@@ -878,7 +878,7 @@
          <number>300</number>
         </property>
         <property name="columnCount">
-         <number>7</number>
+         <number>8</number>
         </property>
         <row/>
         <row/>
@@ -1198,6 +1198,11 @@
         <column>
          <property name="text">
           <string>Application Version</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Video Cable</string>
          </property>
         </column>
         <column>

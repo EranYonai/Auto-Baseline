@@ -12,7 +12,6 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.search_button.clicked.connect(self.search)
 		self.editMode_button.clicked.connect(self.editMode_button_function)
 		self.refresh_button.clicked.connect(self.refresh)
-		self.auto_refresh()
 
 	def create_tabs_tuples(self):
 		ws_db_fields = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card", "approved", "used"]
@@ -21,7 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		stockert_db_fields = ["software_version", "serial_number", "epio_box_sn", "epio_connection_cable", "epio_interface_cable", "epushuttle_piu", "global_port", "ablation_adaptor_cable", "gen_to_ws_cable", "patch_elect_cable", "footpedal", "approved", "used"]
 		workstation = ("workstations", self.ws_table, 8, ws_db_fields)
 		system = ("systems", self.system_table, 11, system_db_fields)
-		ultrasound = ("ultrasounds", self.us_table, 7, us_db_fields)
+		ultrasound = ("ultrasounds", self.us_table, 8, us_db_fields)
 		stockert = ("stockerts", self.stockert_table, 13, stockert_db_fields)
 		return [system, workstation, ultrasound, stockert]
 
@@ -53,15 +52,15 @@ class MainWindow(QtWidgets.QMainWindow):
 			tab[1].setRowCount(0)
 			tab[1].setRowCount(rows)
 		self.loaddata()
+		print("Tables refreshed!")
 
-	def auto_refresh(self):
-		# while True:
-		# 	self.refresh()
-		# 	print("Refreshed db")
-		for i in range(0, 10):
-			self.refresh_button.setText("Refresh " + str(i))
-			time.sleep(1)
-			#  https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
+	# def auto_refresh(self):
+	# 	while True:
+	# 		for i in range(0, 10):
+	# 			self.refresh_button.setText("Refresh " + str(i))
+	# 			time.sleep(1)
+	# 			self.refresh()
+	# 		#  https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
 
 	def search(self):
 		pass
@@ -91,7 +90,6 @@ class MainWindow(QtWidgets.QMainWindow):
 	def onItemChange(self):
 		#  self.machines.currentIndex() - 0 systems, 1 workstations, 3 ultrasounds..
 		whichTable = self.machines.currentIndex()
-		print("signal from " + str(whichTable))
 		tabs = self.create_tabs_tuples()
 		try:
 			item = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(), tabs[whichTable][1].currentColumn())  # gets the item = QTableWidgetItem
@@ -106,17 +104,15 @@ class MainWindow(QtWidgets.QMainWindow):
 		return query
 
 	def updateItemSQL(self, item, itemKey, whichTable):
-		print("itemAt: %s/%s, text: %s, primarykey: %s" % (item.row(), item.column(), item.text(), itemKey))
 		try:
 			connection = sqlite3.connect("equipment.db")
 			cur = connection.cursor()
 			sqlquery = self.update_sql_get_string(item.column(), item.text(), itemKey, whichTable)
 			cur.execute(sqlquery)
-			print(sqlquery)
 			cur.close()
 			connection.commit()
 			connection.close()
-			print("Update command was sent to DB! DB should've updated!")
+			print(sqlquery)
 		except Exception as e:
 			print("Exception at updateItemSQL: " + str(e))
 
@@ -129,7 +125,7 @@ if __name__ == '__main__':
 	win.setFocus()
 	sys.exit(app.exec_())
 
-	#  need to create a special function and button from the top menu (file menu) that create a new db
+	#  need to create a special function and button from the top menu (file menu) that creates a new db
 	#  need to choose on statup which db to use
 	#  need to change position of refresh button - maybe think of a better logic? every x sec?
 	#  intersting articles:

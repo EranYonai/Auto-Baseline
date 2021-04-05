@@ -19,6 +19,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.editMode_button.clicked.connect(self.editMode_button_function)
 		self.refresh_button.clicked.connect(self.refresh)
 		self.action_db.triggered.connect(self.choose_database)
+		self.actionCreateDB.triggered.connect(self.create_database)
 		# Function calls:
 		self.find_database()
 
@@ -74,8 +75,14 @@ class MainWindow(QtWidgets.QMainWindow):
 	def search(self):
 		pass
 
-	def upload(self):
-		pass
+	def create_database(self):
+		# Starts by asking for password, not everyone can create a new db. Password: 'dbManager'
+		pressed_ok = False
+		input_password, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Admin Password', 'Enter Admin password:')
+		if (pressed_ok and input_password == "dbManager"):
+			print("ADMIN! can create dbs!")
+		else:
+			self.experimentalWarning('admin_wrong')
 
 	def find_database(self):
 		db_list = os.listdir(self.db_location)
@@ -148,12 +155,21 @@ class MainWindow(QtWidgets.QMainWindow):
 	# experimentalWarning is a function that takes (self, kind) as arguments.
 	# Pops the appropriate error or notification
 	# :param kind - 'table_refreshed' will print an "Database changed!" notification.
+	# :param kind - 'admin_wrong' will print an "Admin Password is wrong" warning.
 	def experimentalWarning(self, kind):
 		if (kind == "table_refreshed"):
 			warning = QtWidgets.QMessageBox()
 			warning.setText("Database changed!")
+			warning.setIcon(1)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
 			warning.setWindowTitle("Noticication")
 			warning.exec_()
+		if (kind == "admin_wrong"):
+			warning = QtWidgets.QMessageBox()
+			warning.setText("Admin password is wrong.")
+			warning.setIcon(2)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
+			warning.setWindowTitle("Warning")
+			warning.exec_()
+
 
 if __name__ == '__main__':
 	app = QtWidgets.QApplication(sys.argv)

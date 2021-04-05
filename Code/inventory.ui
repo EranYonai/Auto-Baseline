@@ -1795,15 +1795,14 @@
      <string>Actions</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionRefresh"/>
-    <addaction name="actionUpload"/>
+    <addaction name="actionCreateDB"/>
    </widget>
    <addaction name="menuActions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionRefresh">
+  <action name="actionCreateDB">
    <property name="text">
-    <string>Refresh</string>
+    <string>Create Database</string>
    </property>
   </action>
   <action name="actionUpload">

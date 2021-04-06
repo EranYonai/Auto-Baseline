@@ -21,6 +21,12 @@ def experimental_warning(kind):
         warning.setIcon(2)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
         warning.setWindowTitle("Warning")
         warning.exec_()
+    if kind == "exited_edit_mode":
+        warning = QtWidgets.QMessageBox()
+        warning.setText("Exited edit mode!")
+        warning.setIcon(2)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
+        warning.setWindowTitle("Notification")
+        warning.exec_()
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -34,14 +40,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.db_location = "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
         self.action_db = self.menuActions.addMenu('Databases')
         # Triggeres and connections:
-        self.load_data()
         self.search_button.clicked.connect(self.search)
         self.editMode_button.clicked.connect(self.editmode_button_function)
         self.refresh_button.clicked.connect(self.refresh)
         self.action_db.triggered.connect(self.choose_database)
         self.actionCreateDB.triggered.connect(self.manage_database)
         # Function calls:
-        self.find_database()
+        self.load_db_menu()
+        self.load_data()  # First load of data - current_db is the default
 
     def create_tabs_tuples(self):
         ws_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
@@ -131,7 +137,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             connection = sqlite3.connect(self.db_current)
             cur = connection.cursor()
-            # constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
+            # tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
             tabs = self.create_tabs_tuples()
             for tab in tabs:
                 sqlquery = "SELECT * FROM " + tab[0]  # tab[0] = db name
@@ -151,7 +157,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().
         self.stop_edit_listener()  # stops listener before refreshing lists.
         self.editMode_button.setChecked(False)  # exits edit mode
-        #  maybe pop notification here?
+        experimental_warning("exited_edit_mode")
         rows = 300
         tabs = self.create_tabs_tuples()
         for tab in tabs:
@@ -199,9 +205,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 cur.execute(sql_command)  # Executes the command
             connection.commit()  # Commits the changes
             connection.close()  # Closes connection to db.
-            self.find_database()  # Refreshes the menu
+            self.load_db_menu()  # Refreshes the menu
 
-    def find_database(self):
+    def load_db_menu(self):
         db_list = os.listdir(self.db_location)
         # db_list = ['V7', 'V8', 'Test']  # Test, ^uncomment above line for real usage.
         # Need to remove all actions first::
@@ -223,10 +229,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def editmode_button_function(self):
         if self.editMode_button.isChecked():
-            print("editModeEnabled")
+            print("edit_mode: Enabled")
             self.start_edit_listener()
         else:
-            print("editModeDisabled")
+            print("edit_mode: Disabled")
             self.stop_edit_listener()
 
     def start_edit_listener(self):
@@ -248,25 +254,30 @@ class MainWindow(QtWidgets.QMainWindow):
             item = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(),
                                             tabs[whichTable][1].currentColumn())  # gets the item = QTableWidgetItem
             itemKey = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(), 0)
-            self.update_sql_item(item, itemKey.text(), whichTable)
+            if itemKey is not None:  # If itemKey is none, it means the user tried to change empty row, do nothing.
+                self.update_sql_item(item, itemKey.text(), whichTable)
+            else:  # For debug purposes, delete this else on release.
+                print("User is editing empty row.")
         except Exception as e:
             print("Exception at on_item_change: " + str(e))
 
     def update_sql_get_string(self, col, text, key, whichTable):
         tabs = self.create_tabs_tuples()
-        query = f"UPDATE {tabs[whichTable][0]} SET {tabs[whichTable][3][col][0]} = '{text}' WHERE {tabs[whichTable][3][0][0]} = '{key}'; "
+        query = f"UPDATE {tabs[whichTable][0]} " \
+                f"SET {tabs[whichTable][3][col][0]} = '{text}' " \
+                f"WHERE {tabs[whichTable][3][0][0]} = '{key}'; "
         return query
 
     def update_sql_item(self, item, itemKey, whichTable):
         try:
             connection = sqlite3.connect(self.db_current)
             cur = connection.cursor()
-            sqlquery = self.update_sql_get_string(item.column(), item.text(), itemKey, whichTable)
-            cur.execute(sqlquery)
+            sql_query = self.update_sql_get_string(item.column(), item.text(), itemKey, whichTable)
+            cur.execute(sql_query)
             cur.close()
             connection.commit()
             connection.close()
-            print(sqlquery)
+            print(sql_query)
         except Exception as e:
             print("Exception at update_sql_item: " + str(e))
 

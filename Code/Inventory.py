@@ -30,7 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.resize(1050, 1070)
 
         # Global attributes:
-        self.db_current = "db\\equipment.db"  # default db
+        self.db_current = "db\\V8.db"  # default db
         self.db_location = "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
         self.action_db = self.menuActions.addMenu('Databases')
         # Triggeres and connections:
@@ -56,32 +56,96 @@ class MainWindow(QtWidgets.QMainWindow):
                         ["ethernet_cable", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
         stockert_db_fields = [["software_version", "STRING PRIMARY KEY"], ["serial_number", "STRING"],
                               ["epio_box_sn", "STRING"], ["epio_connection_cable", "STRING"],
-                              ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"], ["global_port", "STRING"],
+                              ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"],
+                              ["global_port", "STRING"],
                               ["ablation_adaptor_cable", "STRING"], ["gen_to_ws_cable", "STRING"],
-                              ["patch_elect_cable", "STRING"], ["footpedal", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-
+                              ["patch_elect_cable", "STRING"], ["footpedal", "STRING"], ["approved", "BOOLEAN"],
+                              ["used", "INTEGER"]]
+        ngen_db_fields = [["console_sn", "STRING PRIMARY KEY"], ["console_pn", "STRING"],
+                          ["console_version", "STRING"], ["psu_sn", "STRING"],
+                          ["psu_pn", "STRING"], ["psu_cable", "STRING"],
+                          ["gen_to_piu", "STRING"], ["monitor1_sn", "STRING"], ["monitor1_pn", "STRING"],
+                          ["monitor1_ver", "STRING"], ["monitor1_hubsn", "STRING"], ["monitor1_hubpn", "STRING"],
+                          ["monitor1_psusn", "STRING"],
+                          ["monitor1_psupn", "STRING"], ["monitor2_sn", "STRING"],
+                          ["monitor2_pn", "STRING"], ["monitor2_version", "STRING"], ["monitor2_hubsn", "STRING"],
+                          ["monitor2_hubpn", "STRING"], ["monitor2_psusn", "STRING"], ["monitor2_psupn", "STRING"],
+                          ["pump_sn", "STRING"], ["pump_pn", "STRING"], ["pump_version", "STRING"],
+                          ["pump_to_console", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
+                          ["used", "INTEGER"]]
+        nmarq_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
+                           ["gen_to_carto", "STRING"], ["ethernet", "STRING"],
+                           ["gen_to_pump", "STRING"], ["gen_to_monitor", "STRING"],
+                           ["pump_sn", "STRING"],
+                           ["pump_model", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
+                           ["used", "INTEGER"]]
+        smartablate_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
+                                 ["gen_to_piu", "STRING"], ["gen_to_ws", "STRING"],
+                                 ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
+                                 ["used", "INTEGER"]]
+        pacer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["type", "STRING"], ["approved", "BOOLEAN"],
+                           ["used", "INTEGER"]]
+        dongle_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
+                            ["hardware_version", "STRING"], ["approved", "BOOLEAN"],
+                            ["used", "INTEGER"]]
+        epu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["version", "STRING"], ["approved", "BOOLEAN"],
+                         ["used", "INTEGER"]]
+        printer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["model", "STRING"], ["approved", "BOOLEAN"],
+                             ["used", "INTEGER"]]
+        spu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["pn", "STRING"],
+                         ["software_version", "STRING"], ["main_fw_version", "STRING"],
+                         ["secondary_fw_version", "STRING"], ["front_board_location", "STRING"],
+                         ["front_board_location_rev", "STRING"],
+                         ["led_board", "STRING"], ["led_board_rev", "STRING"], ["mother_board", "STRING"],
+                         ["mother_board_rev", "STRING"],
+                         ["back_board", "STRING"], ["back_board_rev", "STRING"], ["power_board", "STRING"],
+                         ["power_board_rev", "STRING"],
+                         ["upper_board", "STRING"], ["upper_board_rev", "STRING"], ["pacing_board", "STRING"],
+                         ["pacing_board_rev", "STRING"],
+                         ["tpi_board", "STRING"], ["tpi_board_rev", "STRING"], ["digital_board", "STRING"],
+                         ["digital_board_rev", "STRING"],
+                         ["ecg_board", "STRING"], ["ecg_board_rev", "STRING"], ["spu_pro", "STRING"],
+                         ["spu_pro_rev", "STRING"], ["approved", "BOOLEAN"],
+                         ["used", "INTEGER"]]
+        demo_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["ws_type", "STRING"],
+                          ["sw_version", "STRING"], ["dsp_version", "STRING"],
+                          ["image_version", "STRING"], ["approved", "BOOLEAN"],
+                          ["used", "INTEGER"]]
         workstation = ("workstations", self.ws_table, 8, ws_db_fields)
         system = ("systems", self.system_table, 11, system_db_fields)
         ultrasound = ("ultrasounds", self.us_table, 8, us_db_fields)
         stockert = ("stockerts", self.stockert_table, 13, stockert_db_fields)
-        return [system, workstation, ultrasound, stockert]
+        ngen = ("ngens", self.ngen_table, 27, ngen_db_fields)
+        nmarq = ("nmarqs", self.nmarq_table, 11, nmarq_db_fields)
+        smartablate = ("smartablates", self.smartablate_table, 7, smartablate_db_fields)
+        pacer = ("pacers", self.pacer_table, 4, pacer_db_fields)
+        dongle = ("dongles", self.dongles_table, 5, dongle_db_fields)
+        epu = ("epus", self.epu_table, 4, epu_db_fields)
+        printer = ("printers", self.printer_table, 4, printer_db_fields)
+        spu = ("spus", self.spu_table, 29, spu_db_fields)
+        demo = ("demos", self.demo_table, 7, demo_db_fields)
+        return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
+                demo]
 
     def load_data(self):
-        connection = sqlite3.connect(self.db_current)
-        cur = connection.cursor()
-        # constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
-        tabs = self.create_tabs_tuples()
-        for tab in tabs:
-            sqlquery = "SELECT * FROM " + tab[0]  # tab[0] = db name
-            cur.execute(sqlquery)
-            tablerow = 0
-            for row in cur.execute(sqlquery):
-                column = 0
-                for i in range(0, tab[2]):
-                    tab[1].setItem(tablerow, column, QtWidgets.QTableWidgetItem(str(row[column])))
-                    column += 1
-                tablerow += 1
-        connection.close()
+        try:
+            connection = sqlite3.connect(self.db_current)
+            cur = connection.cursor()
+            # constructs tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
+            tabs = self.create_tabs_tuples()
+            for tab in tabs:
+                sqlquery = "SELECT * FROM " + tab[0]  # tab[0] = db name
+                cur.execute(sqlquery)
+                tablerow = 0
+                for row in cur.execute(sqlquery):
+                    column = 0
+                    for i in range(0, tab[2]):
+                        tab[1].setItem(tablerow, column, QtWidgets.QTableWidgetItem(str(row[column])))
+                        column += 1
+                    tablerow += 1
+            connection.close()
+        except Exception as e:
+            print("Exception at load_data: " + str(e))
 
     def refresh(self):
         # refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().
@@ -103,6 +167,7 @@ class MainWindow(QtWidgets.QMainWindow):
     # 			time.sleep(1)
     # 			self.refresh()
     # 		#  https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
+    #       #  https://realpython.com/python-pyqt-qthread/
 
     def search(self):
         pass
@@ -205,6 +270,7 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print("Exception at update_sql_item: " + str(e))
 
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
@@ -216,7 +282,7 @@ if __name__ == '__main__':
 #  need to create a special function and button from the top menu (file menu) that creates a new db
 #  need to choose on statup which db to use
 #  need to change position of refresh button - maybe think of a better logic? every x sec?
-#  intersting articles:
+#  interesting articles:
 #  https://www.programmersought.com/article/35244519297/
 #  https://forum.qt.io/topic/87141/while-retrieving-data-from-qtablewidget-the-type-appears-to-be-unicode-how-can-i-convert-it-to-number/5
 #  https://stackoverflow.com/questions/40188267/how-to-update-qtableview-when-database-updated

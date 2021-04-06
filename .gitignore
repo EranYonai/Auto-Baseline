@@ -1,15 +1,5 @@
 
 *.db
-.idea/workspace.xml
-.idea/Baseliner.iml
-.idea/inspectionProfiles/profiles_settings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
+.idea/*
 Code/__pycache__/Inventory.cpython-36.pyc
-.idea/dataSources.local.xml
-.idea/dataSources.xml
-.idea/dataSources/57209ed9-8848-4c1e-91f8-59947b46cc95.xml
-.idea/dataSources/ac9132f1-193a-4cb8-976e-78b749882e45.xml
-.idea/sqldialects.xml
-*.db
+

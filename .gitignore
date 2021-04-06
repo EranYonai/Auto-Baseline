@@ -1,2 +1,9 @@
 
 *.db
+.idea/workspace.xml
+.idea/Baseliner.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+Code/__pycache__/Inventory.cpython-36.pyc

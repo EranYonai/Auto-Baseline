@@ -39,20 +39,27 @@ class MainWindow(QtWidgets.QMainWindow):
         self.editMode_button.clicked.connect(self.editmode_button_function)
         self.refresh_button.clicked.connect(self.refresh)
         self.action_db.triggered.connect(self.choose_database)
-        self.actionCreateDB.triggered.connect(self.create_database)
+        self.actionCreateDB.triggered.connect(self.manage_database)
         # Function calls:
         self.find_database()
 
     def create_tabs_tuples(self):
-        ws_db_fields = ["service_tag", "dsp_version", "image_version", "configuration", "model", "graphics_card",
-                        "approved", "used"]
-        system_db_fields = ["system_number", "piu_configuration", "lp_number", "patch_unit", "monitor_1", "monitor_2",
-                            "ecg_phantom", "aquarium_number", "aquarium_maximo", "approved", "used"]
-        us_db_fields = ["serial_number", "machine", "software_version", "application_version", "video_cable",
-                        "ethernet_cable", "approved", "used"]
-        stockert_db_fields = ["software_version", "serial_number", "epio_box_sn", "epio_connection_cable",
-                              "epio_interface_cable", "epushuttle_piu", "global_port", "ablation_adaptor_cable",
-                              "gen_to_ws_cable", "patch_elect_cable", "footpedal", "approved", "used"]
+        ws_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
+                        ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],
+                        ["approved", "BOOLEAN"], ["used", "INTEGER"]]
+        system_db_fields = [["system_number", "STRING PRIMARY KEY"], ["piu_configuration", "STRING"],
+                            ["lp_number", "STRING"], ["patch_unit", "STRING"], ["monitor_1", "STRING"],
+                            ["monitor_2", "STRING"], ["ecg_phantom", "STRING"], ["aquarium_number", "STRING"],
+                            ["aquarium_maximo", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
+        us_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["machine", "STRING"], ["software_version", "STRING"],
+                        ["application_version", "STRING"], ["video_cable", "STRING"],
+                        ["ethernet_cable", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
+        stockert_db_fields = [["software_version", "STRING PRIMARY KEY"], ["serial_number", "STRING"],
+                              ["epio_box_sn", "STRING"], ["epio_connection_cable", "STRING"],
+                              ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"], ["global_port", "STRING"],
+                              ["ablation_adaptor_cable", "STRING"], ["gen_to_ws_cable", "STRING"],
+                              ["patch_elect_cable", "STRING"], ["footpedal", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
+
         workstation = ("workstations", self.ws_table, 8, ws_db_fields)
         system = ("systems", self.system_table, 11, system_db_fields)
         ultrasound = ("ultrasounds", self.us_table, 8, us_db_fields)
@@ -100,18 +107,39 @@ class MainWindow(QtWidgets.QMainWindow):
     def search(self):
         pass
 
-    def create_database(self):
+    def manage_database(self):
         # Starts by asking for password, not everyone can create a new db. Password: 'dbManager'
         pressed_ok = False
         input_password, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Admin Password', 'Enter Admin password:')
         if pressed_ok and input_password == "dbManager":
-            print("ADMIN! can create dbs!")
+            self.create_database()
         else:
             experimental_warning('admin_wrong')
+
+    def create_database(self):
+        db_path = self.db_location
+        # Solution for db name will be a popup window for now:
+        db_name, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Database Name', 'Enter database name:')
+        if not pressed_ok:
+            db_name = ""
+        if db_name != "" and len(db_name) < 10:  # Some verification for db name value.
+            connection = sqlite3.connect('db\\' + db_name + '.db')
+            cur = connection.cursor()  # Opens connection to db (creates a new db file)
+            equipment_tuple = self.create_tabs_tuples()
+            for machine in equipment_tuple:  # for each element in equipment tuple
+                sql_command = f"CREATE TABLE {machine[0]} ("
+                for column in machine[3]:
+                    sql_command += f"[{column[0]}] {column[1]}, "
+                sql_command = sql_command[:-2] + ')'  # Removes the ', ' at the end and adds ')'
+                cur.execute(sql_command)  # Executes the command
+            connection.commit()  # Commits the changes
+            connection.close()  # Closes connection to db.
+            self.find_database()  # Refreshes the menu
 
     def find_database(self):
         db_list = os.listdir(self.db_location)
         # db_list = ['V7', 'V8', 'Test']  # Test, ^uncomment above line for real usage.
+        # Need to remove all actions first::
         for db in db_list:
             action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
             # action = self.action_db.addAction(db)  # Test, ^uncomment above line for real usage.
@@ -161,7 +189,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def update_sql_get_string(self, col, text, key, whichTable):
         tabs = self.create_tabs_tuples()
-        query = f"""UPDATE {tabs[whichTable][0]} SET {tabs[whichTable][3][col]} = '{text}' WHERE {tabs[whichTable][3][0]} = '{key}'; """
+        query = f"UPDATE {tabs[whichTable][0]} SET {tabs[whichTable][3][col][0]} = '{text}' WHERE {tabs[whichTable][3][0][0]} = '{key}'; "
         return query
 
     def update_sql_item(self, item, itemKey, whichTable):
@@ -176,7 +204,6 @@ class MainWindow(QtWidgets.QMainWindow):
             print(sqlquery)
         except Exception as e:
             print("Exception at update_sql_item: " + str(e))
-
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

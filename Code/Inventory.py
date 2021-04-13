@@ -156,8 +156,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def refresh(self):
         # refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().
         self.stop_edit_listener()  # stops listener before refreshing lists.
-        self.editMode_button.setChecked(False)  # exits edit mode
-        experimental_warning("exited_edit_mode")
+        if self.editMode_button.isChecked():
+            experimental_warning("exited_edit_mode")
+            self.editMode_button.setChecked(False)  # exits edit mode
+
         rows = 300
         tabs = self.create_tabs_tuples()
         for tab in tabs:
@@ -211,6 +213,7 @@ class MainWindow(QtWidgets.QMainWindow):
         db_list = os.listdir(self.db_location)
         # db_list = ['V7', 'V8', 'Test']  # Test, ^uncomment above line for real usage.
         # Need to remove all actions first::
+        # https://stackoverflow.com/questions/51333771/removing-dynamically-created-qmenu-items
         for db in db_list:
             action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
             # action = self.action_db.addAction(db)  # Test, ^uncomment above line for real usage.

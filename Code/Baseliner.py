@@ -1786,6 +1786,138 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.extender_list_2.addItem(listValues)
 
 
+def create_tabs_tuples():
+    ws_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
+                    ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],
+                    ["approved", "BOOLEAN"], ["used", "INTEGER"]]
+    system_db_fields = [["system_number", "STRING PRIMARY KEY"], ["piu_configuration", "STRING"],
+                        ["lp_number", "STRING"], ["patch_unit", "STRING"], ["monitor_1", "STRING"],
+                        ["monitor_2", "STRING"], ["ecg_phantom", "STRING"], ["aquarium_number", "STRING"],
+                        ["aquarium_maximo", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
+    us_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["machine", "STRING"], ["software_version", "STRING"],
+                    ["application_version", "STRING"], ["video_cable", "STRING"],
+                    ["ethernet_cable", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
+    stockert_db_fields = [["software_version", "STRING PRIMARY KEY"], ["serial_number", "STRING"],
+                          ["epio_box_sn", "STRING"], ["epio_connection_cable", "STRING"],
+                          ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"],
+                          ["global_port", "STRING"],
+                          ["ablation_adaptor_cable", "STRING"], ["gen_to_ws_cable", "STRING"],
+                          ["patch_elect_cable", "STRING"], ["footpedal", "STRING"], ["approved", "BOOLEAN"],
+                          ["used", "INTEGER"]]
+    ngen_db_fields = [["console_sn", "STRING PRIMARY KEY"], ["console_pn", "STRING"],
+                      ["console_version", "STRING"], ["psu_sn", "STRING"],
+                      ["psu_pn", "STRING"], ["psu_cable", "STRING"],
+                      ["gen_to_piu", "STRING"], ["monitor1_sn", "STRING"], ["monitor1_pn", "STRING"],
+                      ["monitor1_ver", "STRING"], ["monitor1_hubsn", "STRING"], ["monitor1_hubpn", "STRING"],
+                      ["monitor1_psusn", "STRING"],
+                      ["monitor1_psupn", "STRING"], ["monitor2_sn", "STRING"],
+                      ["monitor2_pn", "STRING"], ["monitor2_version", "STRING"], ["monitor2_hubsn", "STRING"],
+                      ["monitor2_hubpn", "STRING"], ["monitor2_psusn", "STRING"], ["monitor2_psupn", "STRING"],
+                      ["pump_sn", "STRING"], ["pump_pn", "STRING"], ["pump_version", "STRING"],
+                      ["pump_to_console", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
+                      ["used", "INTEGER"]]
+    nmarq_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
+                       ["gen_to_carto", "STRING"], ["ethernet", "STRING"],
+                       ["gen_to_pump", "STRING"], ["gen_to_monitor", "STRING"],
+                       ["pump_sn", "STRING"],
+                       ["pump_model", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
+                       ["used", "INTEGER"]]
+    smartablate_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
+                             ["gen_to_piu", "STRING"], ["gen_to_ws", "STRING"],
+                             ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
+                             ["used", "INTEGER"]]
+    pacer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["type", "STRING"], ["approved", "BOOLEAN"],
+                       ["used", "INTEGER"]]
+    dongle_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
+                        ["hardware_version", "STRING"], ["approved", "BOOLEAN"],
+                        ["used", "INTEGER"]]
+    epu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["version", "STRING"], ["approved", "BOOLEAN"],
+                     ["used", "INTEGER"]]
+    printer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["model", "STRING"], ["approved", "BOOLEAN"],
+                         ["used", "INTEGER"]]
+    spu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["pn", "STRING"],
+                     ["software_version", "STRING"], ["main_fw_version", "STRING"],
+                     ["secondary_fw_version", "STRING"], ["front_board_location", "STRING"],
+                     ["front_board_location_rev", "STRING"],
+                     ["led_board", "STRING"], ["led_board_rev", "STRING"], ["mother_board", "STRING"],
+                     ["mother_board_rev", "STRING"],
+                     ["back_board", "STRING"], ["back_board_rev", "STRING"], ["power_board", "STRING"],
+                     ["power_board_rev", "STRING"],
+                     ["upper_board", "STRING"], ["upper_board_rev", "STRING"], ["pacing_board", "STRING"],
+                     ["pacing_board_rev", "STRING"],
+                     ["tpi_board", "STRING"], ["tpi_board_rev", "STRING"], ["digital_board", "STRING"],
+                     ["digital_board_rev", "STRING"],
+                     ["ecg_board", "STRING"], ["ecg_board_rev", "STRING"], ["spu_pro", "STRING"],
+                     ["spu_pro_rev", "STRING"], ["approved", "BOOLEAN"],
+                     ["used", "INTEGER"]]
+    demo_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["ws_type", "STRING"],
+                      ["sw_version", "STRING"], ["dsp_version", "STRING"],
+                      ["image_version", "STRING"], ["approved", "BOOLEAN"],
+                      ["used", "INTEGER"]]
+    workstation = ("workstations", 8, ws_db_fields)
+    system = ("systems", 11, system_db_fields)
+    ultrasound = ("ultrasounds", 8, us_db_fields)
+    stockert = ("stockerts", 13, stockert_db_fields)
+    ngen = ("ngens", 27, ngen_db_fields)
+    nmarq = ("nmarqs", 11, nmarq_db_fields)
+    smartablate = ("smartablates", 7, smartablate_db_fields)
+    pacer = ("pacers", 4, pacer_db_fields)
+    dongle = ("dongles", 5, dongle_db_fields)
+    epu = ("epus", 4, epu_db_fields)
+    printer = ("printers", 4, printer_db_fields)
+    spu = ("spus", 29, spu_db_fields)
+    demo = ("demos", 7, demo_db_fields)
+    return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
+            demo]
+
+
+def insert_sql_get_string(equipment_list, table):
+    try:
+        tabs = create_tabs_tuples()
+        table_name = tabs[table][0]
+        query = f"INSERT INTO {table_name}("
+        for part in tabs[table][2]:
+            query += part[0] + ','
+        query = query[:-1] + ') '
+        query += "VALUES("
+        for part in equipment_list:
+            query += "\'" + part + '\','
+        query += "\'0\',\'0\');"
+        return query
+    except Exception as e:
+        print("Exception at insert_sql_get_string: " + str(e))
+
+
+def find_table_in_tabs(kind):
+    tabs = create_tabs_tuples()
+    for i in range(len(tabs)):
+        if kind == tabs[i][0]:
+            return i
+    return None
+
+
+def choose_db():
+    pass
+    # It is infurstracture for choosing DBs by a messagebox
+
+
+def send_db(kind, equipment_list):
+    tabs = create_tabs_tuples()
+    kind = find_table_in_tabs(kind)
+    current_db = "db\\V8.db"
+    try:
+        connection = sqlite3.connect(current_db)
+        cur = connection.cursor()
+        sql_query = insert_sql_get_string(equipment_list, kind)
+        print(sql_query)
+        cur.execute(sql_query)
+        cur.close()
+        connection.commit()
+        connection.close()
+        print("Sucess!")
+    except Exception as e:
+        print("Exception at send_db: " + str(e))
+
 class Ultrasound_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Ultrasound_Dialog, self).__init__()
@@ -1997,139 +2129,6 @@ class SingleCatheter(QtWidgets.QDialog):
         item = self.dialog.description_text.text() + ': ' + self.dialog.mfg_text.text()
         self.parent_win.mainWin.ui.catheter_list.addItem(item)
         self.close()
-
-
-def create_tabs_tuples():
-    ws_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
-                    ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],
-                    ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-    system_db_fields = [["system_number", "STRING PRIMARY KEY"], ["piu_configuration", "STRING"],
-                        ["lp_number", "STRING"], ["patch_unit", "STRING"], ["monitor_1", "STRING"],
-                        ["monitor_2", "STRING"], ["ecg_phantom", "STRING"], ["aquarium_number", "STRING"],
-                        ["aquarium_maximo", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-    us_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["machine", "STRING"], ["software_version", "STRING"],
-                    ["application_version", "STRING"], ["video_cable", "STRING"],
-                    ["ethernet_cable", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-    stockert_db_fields = [["software_version", "STRING PRIMARY KEY"], ["serial_number", "STRING"],
-                          ["epio_box_sn", "STRING"], ["epio_connection_cable", "STRING"],
-                          ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"],
-                          ["global_port", "STRING"],
-                          ["ablation_adaptor_cable", "STRING"], ["gen_to_ws_cable", "STRING"],
-                          ["patch_elect_cable", "STRING"], ["footpedal", "STRING"], ["approved", "BOOLEAN"],
-                          ["used", "INTEGER"]]
-    ngen_db_fields = [["console_sn", "STRING PRIMARY KEY"], ["console_pn", "STRING"],
-                      ["console_version", "STRING"], ["psu_sn", "STRING"],
-                      ["psu_pn", "STRING"], ["psu_cable", "STRING"],
-                      ["gen_to_piu", "STRING"], ["monitor1_sn", "STRING"], ["monitor1_pn", "STRING"],
-                      ["monitor1_ver", "STRING"], ["monitor1_hubsn", "STRING"], ["monitor1_hubpn", "STRING"],
-                      ["monitor1_psusn", "STRING"],
-                      ["monitor1_psupn", "STRING"], ["monitor2_sn", "STRING"],
-                      ["monitor2_pn", "STRING"], ["monitor2_version", "STRING"], ["monitor2_hubsn", "STRING"],
-                      ["monitor2_hubpn", "STRING"], ["monitor2_psusn", "STRING"], ["monitor2_psupn", "STRING"],
-                      ["pump_sn", "STRING"], ["pump_pn", "STRING"], ["pump_version", "STRING"],
-                      ["pump_to_console", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                      ["used", "INTEGER"]]
-    nmarq_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                       ["gen_to_carto", "STRING"], ["ethernet", "STRING"],
-                       ["gen_to_pump", "STRING"], ["gen_to_monitor", "STRING"],
-                       ["pump_sn", "STRING"],
-                       ["pump_model", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                       ["used", "INTEGER"]]
-    smartablate_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                             ["gen_to_piu", "STRING"], ["gen_to_ws", "STRING"],
-                             ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                             ["used", "INTEGER"]]
-    pacer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["type", "STRING"], ["approved", "BOOLEAN"],
-                       ["used", "INTEGER"]]
-    dongle_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                        ["hardware_version", "STRING"], ["approved", "BOOLEAN"],
-                        ["used", "INTEGER"]]
-    epu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["version", "STRING"], ["approved", "BOOLEAN"],
-                     ["used", "INTEGER"]]
-    printer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["model", "STRING"], ["approved", "BOOLEAN"],
-                         ["used", "INTEGER"]]
-    spu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["pn", "STRING"],
-                     ["software_version", "STRING"], ["main_fw_version", "STRING"],
-                     ["secondary_fw_version", "STRING"], ["front_board_location", "STRING"],
-                     ["front_board_location_rev", "STRING"],
-                     ["led_board", "STRING"], ["led_board_rev", "STRING"], ["mother_board", "STRING"],
-                     ["mother_board_rev", "STRING"],
-                     ["back_board", "STRING"], ["back_board_rev", "STRING"], ["power_board", "STRING"],
-                     ["power_board_rev", "STRING"],
-                     ["upper_board", "STRING"], ["upper_board_rev", "STRING"], ["pacing_board", "STRING"],
-                     ["pacing_board_rev", "STRING"],
-                     ["tpi_board", "STRING"], ["tpi_board_rev", "STRING"], ["digital_board", "STRING"],
-                     ["digital_board_rev", "STRING"],
-                     ["ecg_board", "STRING"], ["ecg_board_rev", "STRING"], ["spu_pro", "STRING"],
-                     ["spu_pro_rev", "STRING"], ["approved", "BOOLEAN"],
-                     ["used", "INTEGER"]]
-    demo_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["ws_type", "STRING"],
-                      ["sw_version", "STRING"], ["dsp_version", "STRING"],
-                      ["image_version", "STRING"], ["approved", "BOOLEAN"],
-                      ["used", "INTEGER"]]
-    workstation = ("workstations", 8, ws_db_fields)
-    system = ("systems", 11, system_db_fields)
-    ultrasound = ("ultrasounds", 8, us_db_fields)
-    stockert = ("stockerts", 13, stockert_db_fields)
-    ngen = ("ngens", 27, ngen_db_fields)
-    nmarq = ("nmarqs", 11, nmarq_db_fields)
-    smartablate = ("smartablates", 7, smartablate_db_fields)
-    pacer = ("pacers", 4, pacer_db_fields)
-    dongle = ("dongles", 5, dongle_db_fields)
-    epu = ("epus", 4, epu_db_fields)
-    printer = ("printers", 4, printer_db_fields)
-    spu = ("spus", 29, spu_db_fields)
-    demo = ("demos", 7, demo_db_fields)
-    return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
-            demo]
-
-
-def insert_sql_get_string(equipment_list, table):
-    try:
-        tabs = create_tabs_tuples()
-        table_name = tabs[table][0]
-        query = f"INSERT INTO {table_name}("
-        for part in tabs[table][2]:
-            query += part[0] + ','
-        query = query[:-1] + ') '
-        query += "VALUES("
-        for part in equipment_list:
-            query += "\'" + part + '\','
-        query += "\'0\',\'0\');"
-        return query
-    except Exception as e:
-        print("Exception at insert_sql_get_string: " + str(e))
-
-
-def find_table_in_tabs(kind):
-    tabs = create_tabs_tuples()
-    for i in range(len(tabs)):
-        if kind == tabs[i][0]:
-            return i
-    return None
-
-
-def choose_db():
-    pass
-    # It is infurstracture for choosing DBs by a messagebox
-
-
-def send_db(kind, equipment_list):
-    tabs = create_tabs_tuples()
-    kind = find_table_in_tabs(kind)
-    current_db = "db\\V8.db"
-    try:
-        connection = sqlite3.connect(current_db)
-        cur = connection.cursor()
-        sql_query = insert_sql_get_string(equipment_list, kind)
-        print(sql_query)
-        cur.execute(sql_query)
-        cur.close()
-        connection.commit()
-        connection.close()
-        print("Sucess!")
-    except Exception as e:
-        print("Exception at send_db: " + str(e))
 
 
 class System_Dialog(QtWidgets.QDialog):

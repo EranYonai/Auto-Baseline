@@ -2,9 +2,10 @@ import PyQt5
 import qdarkstyle
 import sys
 import sqlite3
+import os
+import xml.etree.ElementTree as ET
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import xml.etree.ElementTree as ET
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtWidgets import QListWidget
 from Forms.MainWindowBig import Ui_MainWindow
@@ -1893,30 +1894,62 @@ def find_table_in_tabs(kind):
     for i in range(len(tabs)):
         if kind == tabs[i][0]:
             return i
+    print("find_table_in_tabs: couldn't find table.")
     return None
 
 
 def choose_db():
-    pass
-    # It is infurstracture for choosing DBs by a messagebox
+    db_location = "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
+    db_list = os.listdir(db_location)
+    print(db_list)
+    # class db_select(QtWidgets.QWidget):
+    #     def __init__(self):
+    #         super().__init__()
+    #         self.initUI()
+    # 
+    #     def initUI(self):
+    #         self.setWindowTitle("Database")
+    #         self.setGeometry(10,10,320,200)
+    #         ok_button = QtWidgets.QPushButton('OK', self)
+    #         ok_button.move(100, 70)
+    #         ok_button.clicked.connect(self.on_ok)
+    #         self.show()
+    #     def on_ok(self):
+    #         print("ok")
+
+    try:
+        # w = QtWidgets.QWidget()
+        # w.resize(250, 150)
+        # w.move(300, 300)
+        # w.setWindowTitle('Simple')
+        # w.show()
+    # Need to think how to implement this annoying QDialog, tried using QMessagebox, but you can't add multiple QRadios to it.
+    # https://stackoverflow.com/questions/57564935/pyqt5-display-qmessagebox-and-qinputdialog-immediately
+    # https://www.tutorialspoint.com/pyqt/pyqt_qradiobutton_widget.htm
+    # Docs: https://doc.qt.io/archives/qtforpython-5.12/PySide2/QtWidgets/QWidget.html
+    # Not helpful: https://stackoverflow.com/questions/35130673/qmessagebox-with-a-do-not-show-this-again-checkbox
+    except Exception as e:
+        print("Exception at choose_db: "+str(e))
+
 
 
 def send_db(kind, equipment_list):
     tabs = create_tabs_tuples()
     kind = find_table_in_tabs(kind)
+    choose_db()
     current_db = "db\\V8.db"
-    try:
-        connection = sqlite3.connect(current_db)
-        cur = connection.cursor()
-        sql_query = insert_sql_get_string(equipment_list, kind)
-        print(sql_query)
-        cur.execute(sql_query)
-        cur.close()
-        connection.commit()
-        connection.close()
-        print("Sucess!")
-    except Exception as e:
-        print("Exception at send_db: " + str(e))
+    # try:
+    #     connection = sqlite3.connect(current_db)
+    #     cur = connection.cursor()
+    #     sql_query = insert_sql_get_string(equipment_list, kind)
+    #     print(sql_query)
+    #     cur.execute(sql_query)
+    #     cur.close()
+    #     connection.commit()
+    #     connection.close()
+    #     print("send_db: Success!")
+    # except Exception as e:
+    #     print("Exception at send_db: " + str(e))
 
 class Ultrasound_Dialog(QtWidgets.QDialog):
     def __init__(self):

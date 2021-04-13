@@ -13,7 +13,7 @@ def experimental_warning(kind):
         warning = QtWidgets.QMessageBox()
         warning.setText("Database changed!")
         warning.setIcon(1)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
-        warning.setWindowTitle("Noticication")
+        warning.setWindowTitle("Notification")
         warning.exec_()
     if kind == "admin_wrong":
         warning = QtWidgets.QMessageBox()

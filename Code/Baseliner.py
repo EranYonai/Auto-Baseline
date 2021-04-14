@@ -210,6 +210,54 @@ Function that sends the data recevied to the specific table in a specific db.
         print("Exception at send_db: " + str(e))
 
 
+def db_item_exists(kind, equipment_list, db):
+    """
+Checks if the item exists in a specific db according to its PRIME KEY.
+    :param kind: String- the name of the table in the data base, e.g. "systems"
+    :param equipment_list: the fields in need of verification
+    :param db: full path to the specific db in question.
+    """
+    tabs = create_tabs_tuples()
+    table = find_table_in_tabs(kind)
+    #  First I want to pull the information if existed in the db.
+    try:
+        connection = sqlite3.connect(db)
+        cur = connection.cursor()
+        sql_query = select_sql_query(equipment_list[0], table)
+        print('db_item_exists: ' + sql_query)
+        cur.execute(sql_query)
+        rows = cur.fetchall()
+        print('db_item_exists found: '+str(rows))
+        cur.close()
+        connection.commit()
+        connection.close()
+        if len(rows) > 0:  # Found rows value in table
+            pass
+            # Basically write a function that checks rows[i] == equipement_list[i]
+            # if all ==, verified!
+            # if some fields are not ==, throw them into another array (tuples, {[equipement_list[i], rows[i]...}
+            # loop through it, and ask, by equipement_list[i] you meant: rows[i]? - not verified!
+            # I want to change the color of the wrong field in the baseline dialog + throw a popup that shows diffs.
+    except Exception as e:
+        print("Exception at db_item_exists: " + str(e))
+
+
+def select_sql_query(prime_key, table):
+    """
+Returns SELECT SQL command according to given parameters
+    :param prime_key: PRIME KEY value in the db
+    :param table: the name of the table as int ("systems" = 0...)
+    :return: SELECT SQL command as string
+    """
+    try:
+        tabs = create_tabs_tuples()
+        table_name = tabs[table][0]
+        query = f"SELECT * FROM {table_name} WHERE {tabs[table][2][0][0]}=\'{prime_key}\'"
+        return query
+    except Exception as e:
+        print("Exception at select_sql_query: " + str(e))
+
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__(parent=None)
@@ -2198,7 +2246,9 @@ class System_Dialog(QtWidgets.QDialog):
         self.infoBox()
         equipment_list = [self.Systemnumber, self.PIUconf, self.Lposition, self.PUnumber, self.Monitormodel,
                           self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
-        send_info_to_db("systems", equipment_list)
+        # send_info_to_db("systems", equipment_list)
+        db = choose_db()
+        db_item_exists("systems", equipment_list, db)
 
     def infoBox(self):
         self.Systemnumber = self.sdialog.system_text.text()

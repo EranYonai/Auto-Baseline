@@ -208,6 +208,7 @@ class MainWindow(QtWidgets.QMainWindow):
             connection.commit()  # Commits the changes
             connection.close()  # Closes connection to db.
             self.load_db_menu()  # Refreshes the menu
+            print("mange_database: new database created! " + db_name)
 
     def load_db_menu(self):
         db_list = os.listdir(self.db_location)

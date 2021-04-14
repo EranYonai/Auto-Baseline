@@ -232,14 +232,36 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         connection.commit()
         connection.close()
         if len(rows) > 0:  # Found rows value in table
-            pass
-            # Basically write a function that checks rows[i] == equipement_list[i]
-            # if all ==, verified!
-            # if some fields are not ==, throw them into another array (tuples, {[equipement_list[i], rows[i]...}
-            # loop through it, and ask, by equipement_list[i] you meant: rows[i]? - not verified!
-            # I want to change the color of the wrong field in the baseline dialog + throw a popup that shows diffs.
+            verified, diffs = verification_between_lists(rows[0], equipment_list)
+            print ('Verification: ' + str(verified) + ' ' + str(diffs))
+            if verified:
+                # change dialog fields color to green @https://stackoverflow.com/questions/27432456/python-qlineedit-text-color
+                pass
+            else:
+                # Change failed fiends color to red + pop a message, did you meant:...
+                pass
     except Exception as e:
         print("Exception at db_item_exists: " + str(e))
+
+
+def verification_between_lists(db_list, equipment_list):
+    """
+Function that takes two lists and compare between them, if differences were found return them.
+    :param db_list: list of items from db
+    :param equipment_list: list of items from Dialog
+    :return: True/False, None/difference[[x,y]]
+    """
+    #  As the last 2 pointers in db_list are approved & used, we'll used equipement length as reference.
+    diffs = []
+    verified = False
+    for i in range(len(equipment_list)-1):
+        if equipment_list[i] != db_list[i]:
+            diffs.append([equipment_list[i], db_list[i]])
+    if len(diffs) == 0:
+        verified == True
+        return (True, None)
+    return (False, diffs)
+
 
 
 def select_sql_query(prime_key, table):

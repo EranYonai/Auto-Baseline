@@ -1900,56 +1900,48 @@ def find_table_in_tabs(kind):
 
 def choose_db():
     db_location = "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
-    db_list = os.listdir(db_location)
-    print(db_list)
-    # class db_select(QtWidgets.QWidget):
-    #     def __init__(self):
-    #         super().__init__()
-    #         self.initUI()
-    # 
-    #     def initUI(self):
-    #         self.setWindowTitle("Database")
-    #         self.setGeometry(10,10,320,200)
-    #         ok_button = QtWidgets.QPushButton('OK', self)
-    #         ok_button.move(100, 70)
-    #         ok_button.clicked.connect(self.on_ok)
-    #         self.show()
-    #     def on_ok(self):
-    #         print("ok")
-
+    db_list = os.listdir(db_location)  # Grabs all files from specific location^
+    for i in range (len(db_list)): db_list[i] = db_list[i][:-3]  # Removes .db
+    class db_Dialog(QtWidgets.QDialog):
+        def __init__(self):
+            super(db_Dialog, self).__init__()
+            self.selected_item = None
+            layout = QtWidgets.QFormLayout()
+            self.setLayout(layout)
+            self.setWindowTitle("Database")
+            self.setMinimumWidth(400)
+            item, ok_pressed = QtWidgets.QInputDialog.getItem(self, "Database", "Choose DB:",
+                                                    db_list, 0, False)
+            if ok_pressed and item:
+                self.selected_item = item
     try:
-        # w = QtWidgets.QWidget()
-        # w.resize(250, 150)
-        # w.move(300, 300)
-        # w.setWindowTitle('Simple')
-        # w.show()
-    # Need to think how to implement this annoying QDialog, tried using QMessagebox, but you can't add multiple QRadios to it.
-    # https://stackoverflow.com/questions/57564935/pyqt5-display-qmessagebox-and-qinputdialog-immediately
-    # https://www.tutorialspoint.com/pyqt/pyqt_qradiobutton_widget.htm
-    # Docs: https://doc.qt.io/archives/qtforpython-5.12/PySide2/QtWidgets/QWidget.html
-    # Not helpful: https://stackoverflow.com/questions/35130673/qmessagebox-with-a-do-not-show-this-again-checkbox
+        popup = db_Dialog()
+        chosen_db = popup.selected_item + '.db'
+        print("choose_db: selected db is: " + chosen_db)
+        return db_location + '\\' + chosen_db
     except Exception as e:
         print("Exception at choose_db: "+str(e))
+        return None
 
 
 
 def send_db(kind, equipment_list):
     tabs = create_tabs_tuples()
     kind = find_table_in_tabs(kind)
-    choose_db()
-    current_db = "db\\V8.db"
-    # try:
-    #     connection = sqlite3.connect(current_db)
-    #     cur = connection.cursor()
-    #     sql_query = insert_sql_get_string(equipment_list, kind)
-    #     print(sql_query)
-    #     cur.execute(sql_query)
-    #     cur.close()
-    #     connection.commit()
-    #     connection.close()
-    #     print("send_db: Success!")
-    # except Exception as e:
-    #     print("Exception at send_db: " + str(e))
+    current_db = choose_db()  # Returns full path to DB.
+    try:
+        if current_db is not None:
+            connection = sqlite3.connect(current_db)
+            cur = connection.cursor()
+            sql_query = insert_sql_get_string(equipment_list, kind)
+            print(sql_query)
+            cur.execute(sql_query)
+            cur.close()
+            connection.commit()
+            connection.close()
+            print("send_db: Success!")
+    except Exception as e:
+        print("Exception at send_db: " + str(e))
 
 class Ultrasound_Dialog(QtWidgets.QDialog):
     def __init__(self):

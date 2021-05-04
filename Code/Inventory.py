@@ -1,7 +1,8 @@
 import sys, sqlite3, time, os
 import qdarkstyle
-from PyQt5.uic import loadUi
-from PyQt5 import QtWidgets
+import cfg
+import threading
+from PyQt5 import QtWidgets, uic
 
 
 # experimentalWarning is a function that takes (self, kind) as arguments.
@@ -32,104 +33,40 @@ def experimental_warning(kind):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi("inventory.ui", self)
+        uic.loadUi("inventory.ui", self)
         self.resize(1050, 1070)
 
         # Global attributes:
         self.db_current = "db\\V8.db"  # default db
-        self.db_location = "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
         self.action_db = self.menuActions.addMenu('Databases')
+
         # Triggeres and connections:
         self.search_button.clicked.connect(self.search)
         self.editMode_button.clicked.connect(self.editmode_button_function)
         self.refresh_button.clicked.connect(self.refresh)
         self.action_db.triggered.connect(self.choose_database)
         self.actionCreateDB.triggered.connect(self.manage_database)
-        # Function calls:
+
+        # On initialization:
         self.load_db_menu()
         self.load_data()  # First load of data - current_db is the default
+        # refresh_thread = threading.Thread(target=self.auto_refresh, args=(20, ))
+        # refresh_thread.start()
 
     def create_tabs_tuples(self):
-        ws_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
-                        ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],
-                        ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-        system_db_fields = [["system_number", "STRING PRIMARY KEY"], ["piu_configuration", "STRING"],
-                            ["lp_number", "STRING"], ["patch_unit", "STRING"], ["monitor_1", "STRING"],
-                            ["monitor_2", "STRING"], ["ecg_phantom", "STRING"], ["aquarium_number", "STRING"],
-                            ["aquarium_maximo", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-        us_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["machine", "STRING"], ["software_version", "STRING"],
-                        ["application_version", "STRING"], ["video_cable", "STRING"],
-                        ["ethernet_cable", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-        stockert_db_fields = [["software_version", "STRING PRIMARY KEY"], ["serial_number", "STRING"],
-                              ["epio_box_sn", "STRING"], ["epio_connection_cable", "STRING"],
-                              ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"],
-                              ["global_port", "STRING"],
-                              ["ablation_adaptor_cable", "STRING"], ["gen_to_ws_cable", "STRING"],
-                              ["patch_elect_cable", "STRING"], ["footpedal", "STRING"], ["approved", "BOOLEAN"],
-                              ["used", "INTEGER"]]
-        ngen_db_fields = [["console_sn", "STRING PRIMARY KEY"], ["console_pn", "STRING"],
-                          ["console_version", "STRING"], ["psu_sn", "STRING"],
-                          ["psu_pn", "STRING"], ["psu_cable", "STRING"],
-                          ["gen_to_piu", "STRING"], ["monitor1_sn", "STRING"], ["monitor1_pn", "STRING"],
-                          ["monitor1_ver", "STRING"], ["monitor1_hubsn", "STRING"], ["monitor1_hubpn", "STRING"],
-                          ["monitor1_psusn", "STRING"],
-                          ["monitor1_psupn", "STRING"], ["monitor2_sn", "STRING"],
-                          ["monitor2_pn", "STRING"], ["monitor2_version", "STRING"], ["monitor2_hubsn", "STRING"],
-                          ["monitor2_hubpn", "STRING"], ["monitor2_psusn", "STRING"], ["monitor2_psupn", "STRING"],
-                          ["pump_sn", "STRING"], ["pump_pn", "STRING"], ["pump_version", "STRING"],
-                          ["pump_to_console", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                          ["used", "INTEGER"]]
-        nmarq_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                           ["gen_to_carto", "STRING"], ["ethernet", "STRING"],
-                           ["gen_to_pump", "STRING"], ["gen_to_monitor", "STRING"],
-                           ["pump_sn", "STRING"],
-                           ["pump_model", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                           ["used", "INTEGER"]]
-        smartablate_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                                 ["gen_to_piu", "STRING"], ["gen_to_ws", "STRING"],
-                                 ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                                 ["used", "INTEGER"]]
-        pacer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["type", "STRING"], ["approved", "BOOLEAN"],
-                           ["used", "INTEGER"]]
-        dongle_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                            ["hardware_version", "STRING"], ["approved", "BOOLEAN"],
-                            ["used", "INTEGER"]]
-        epu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["version", "STRING"], ["approved", "BOOLEAN"],
-                         ["used", "INTEGER"]]
-        printer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["model", "STRING"], ["approved", "BOOLEAN"],
-                             ["used", "INTEGER"]]
-        spu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["pn", "STRING"],
-                         ["software_version", "STRING"], ["main_fw_version", "STRING"],
-                         ["secondary_fw_version", "STRING"], ["front_board_location", "STRING"],
-                         ["front_board_location_rev", "STRING"],
-                         ["led_board", "STRING"], ["led_board_rev", "STRING"], ["mother_board", "STRING"],
-                         ["mother_board_rev", "STRING"],
-                         ["back_board", "STRING"], ["back_board_rev", "STRING"], ["power_board", "STRING"],
-                         ["power_board_rev", "STRING"],
-                         ["upper_board", "STRING"], ["upper_board_rev", "STRING"], ["pacing_board", "STRING"],
-                         ["pacing_board_rev", "STRING"],
-                         ["tpi_board", "STRING"], ["tpi_board_rev", "STRING"], ["digital_board", "STRING"],
-                         ["digital_board_rev", "STRING"],
-                         ["ecg_board", "STRING"], ["ecg_board_rev", "STRING"], ["spu_pro", "STRING"],
-                         ["spu_pro_rev", "STRING"], ["approved", "BOOLEAN"],
-                         ["used", "INTEGER"]]
-        demo_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["ws_type", "STRING"],
-                          ["sw_version", "STRING"], ["dsp_version", "STRING"],
-                          ["image_version", "STRING"], ["approved", "BOOLEAN"],
-                          ["used", "INTEGER"]]
-        workstation = ("workstations", self.ws_table, 8, ws_db_fields)
-        system = ("systems", self.system_table, 11, system_db_fields)
-        ultrasound = ("ultrasounds", self.us_table, 8, us_db_fields)
-        stockert = ("stockerts", self.stockert_table, 13, stockert_db_fields)
-        ngen = ("ngens", self.ngen_table, 27, ngen_db_fields)
-        nmarq = ("nmarqs", self.nmarq_table, 11, nmarq_db_fields)
-        smartablate = ("smartablates", self.smartablate_table, 7, smartablate_db_fields)
-        pacer = ("pacers", self.pacer_table, 4, pacer_db_fields)
-        dongle = ("dongles", self.dongles_table, 5, dongle_db_fields)
-        epu = ("epus", self.epu_table, 4, epu_db_fields)
-        printer = ("printers", self.printer_table, 4, printer_db_fields)
-        spu = ("spus", self.spu_table, 29, spu_db_fields)
-        demo = ("demos", self.demo_table, 7, demo_db_fields)
+        workstation = ("workstations", self.ws_table, 8, cfg.TABLE_FIELDS['WS'])
+        system = ("systems", self.system_table, 11, cfg.TABLE_FIELDS['SYSTEM'])
+        ultrasound = ("ultrasounds", self.us_table, 8, cfg.TABLE_FIELDS['ULS'])
+        stockert = ("stockerts", self.stockert_table, 13, cfg.TABLE_FIELDS['STOCKERT'])
+        ngen = ("ngens", self.ngen_table, 27, cfg.TABLE_FIELDS['NGEN'])
+        nmarq = ("nmarqs", self.nmarq_table, 11, cfg.TABLE_FIELDS['NMARQ'])
+        smartablate = ("smartablates", self.smartablate_table, 7, cfg.TABLE_FIELDS['SMARTABLATE'])
+        pacer = ("pacers", self.pacer_table, 4, cfg.TABLE_FIELDS['PACER'])
+        dongle = ("dongles", self.dongles_table, 5, cfg.TABLE_FIELDS['DONGLE'])
+        epu = ("epus", self.epu_table, 4, cfg.TABLE_FIELDS['EPU'])
+        printer = ("printers", self.printer_table, 4, cfg.TABLE_FIELDS['PRINTER'])
+        spu = ("spus", self.spu_table, 29, cfg.TABLE_FIELDS['SPU'])
+        demo = ("demos", self.demo_table, 7, cfg.TABLE_FIELDS['DEMO'])
         return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
                 demo]
 
@@ -168,12 +105,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load_data()
         print("Tables refreshed!")
 
-    # def auto_refresh(self):
-    # 	while True:
-    # 		for i in range(0, 10):
-    # 			self.refresh_button.setText("Refresh " + str(i))
-    # 			time.sleep(1)
-    # 			self.refresh()
+    def auto_refresh(self, sleep_for):
+        while True:
+            for i in range(sleep_for):
+                self.refresh_button.setText("Refresh in:  " + str(i))
+                time.sleep(1)
+            self.refresh()
+
     # 		#  https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
     #       #  https://realpython.com/python-pyqt-qthread/
 
@@ -181,16 +119,16 @@ class MainWindow(QtWidgets.QMainWindow):
         pass
 
     def manage_database(self):
-        # Starts by asking for password, not everyone can create a new db. Password: 'dbManager'
+        # Starts by asking for password, not everyone can create a new db.
         pressed_ok = False
         input_password, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Admin Password', 'Enter Admin password:')
-        if pressed_ok and input_password == "dbManager":
+        if pressed_ok and input_password == cfg.PASSWORDS['DB_MANAGER']:
             self.create_database()
-        else:
+        if pressed_ok and input_password != cfg.PASSWORDS['DB_MANAGER']:
             experimental_warning('admin_wrong')
 
     def create_database(self):
-        db_path = self.db_location
+        db_path = cfg.FILE_PATHS['DB_LOCATION']
         # Solution for db name will be a popup window for now:
         db_name, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Database Name', 'Enter database name:')
         if not pressed_ok:
@@ -208,10 +146,10 @@ class MainWindow(QtWidgets.QMainWindow):
             connection.commit()  # Commits the changes
             connection.close()  # Closes connection to db.
             self.load_db_menu()  # Refreshes the menu
-            print("mange_database: new database created! " + db_name)
+            print("create_database: new database created! " + db_name)
 
     def load_db_menu(self):
-        db_list = os.listdir(self.db_location)
+        db_list = os.listdir(cfg.FILE_PATHS['DB_LOCATION'])
         # db_list = ['V7', 'V8', 'Test']  # Test, ^uncomment above line for real usage.
         # Need to remove all actions first::
         # https://stackoverflow.com/questions/51333771/removing-dynamically-created-qmenu-items
@@ -294,7 +232,8 @@ if __name__ == '__main__':
     win.setFocus()
     sys.exit(app.exec_())
 
-#  need to create a special function and button from the top menu (file menu) that creates a new db
+# TODO:
+#  V need to create a special function and button from the top menu (file menu) that creates a new db
 #  need to choose on statup which db to use
 #  need to change position of refresh button - maybe think of a better logic? every x sec?
 #  interesting articles:

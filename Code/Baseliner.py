@@ -235,11 +235,11 @@ Checks if the item exists in a specific db according to its PRIME KEY.
             verified, diffs = verification_between_lists(rows[0], equipment_list)
             print ('Verification: ' + str(verified) + ' ' + str(diffs))
             if verified:
+                return diffs
                 # change dialog fields color to green @https://stackoverflow.com/questions/27432456/python-qlineedit-text-color
-                pass
             else:
                 # Change failed fiends color to red + pop a message, did you meant:...
-                pass
+                return diffs
     except Exception as e:
         print("Exception at db_item_exists: " + str(e))
 
@@ -253,15 +253,12 @@ Function that takes two lists and compare between them, if differences were foun
     """
     #  As the last 2 pointers in db_list are approved & used, we'll used equipement length as reference.
     diffs = []
-    verified = False
-    for i in range(len(equipment_list)-1):
-        if equipment_list[i] != db_list[i]:
-            diffs.append([equipment_list[i], db_list[i]])
-    if len(diffs) == 0:
-        verified == True
-        return (True, None)
-    return (False, diffs)
-
+    verified = True
+    for i in range(len(equipment_list)):
+        diffs.append([equipment_list[i], str(db_list[i])])
+        if equipment_list[i] != str(db_list[i]):
+            verified = False
+    return (True, diffs)
 
 
 def select_sql_query(prime_key, table):
@@ -2258,19 +2255,32 @@ class System_Dialog(QtWidgets.QDialog):
         self.sdialog.setupUi(self)
         self.sdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.sdialog.check_button.clicked.connect(self.verification)
+        self.equipment_list_obj = []
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
-
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
         self.infoBox()
-        equipment_list = [self.Systemnumber, self.PIUconf, self.Lposition, self.PUnumber, self.Monitormodel,
+        equipment_list_str = [self.Systemnumber, self.PIUconf, self.Lposition, self.PUnumber, self.Monitormodel,
                           self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
         # send_info_to_db("systems", equipment_list)
         db = choose_db()
-        db_item_exists("systems", equipment_list, db)
+        diffs = db_item_exists("systems", equipment_list_str, db)
+        try:
+            if diffs is None:
+                # As no diffs were found- change all fields to green
+                for equipment in self.equipment_list_obj:
+                    equipment.setStyleSheet('background-color: red;')
+            else:
+                for i in range(len(diffs)):
+                    if diffs[i][0] == diffs[i][1]:
+                        self.equipment_list_obj[i].setStyleSheet('background-color: green;')
+                    else:
+                        self.equipment_list_obj[i].setStyleSheet('background-color: red;')
+        except Exception as e:
+            print('Exception in system verification: ' +str(e))
 
     def infoBox(self):
         self.Systemnumber = self.sdialog.system_text.text()
@@ -2282,6 +2292,11 @@ class System_Dialog(QtWidgets.QDialog):
         self.ECGnumber = self.sdialog.ecg_text.text()
         self.Aquanumber = self.sdialog.aquanum_text.text()
         self.Aquamax = self.sdialog.aquamax_text.text()
+        self.equipment_list_obj = [self.sdialog.system_text, self.sdialog.piu_text, self.sdialog.lp_text,
+                              self.sdialog.patchunit_text, self.sdialog.mm_text, self.sdialog.mm2_text,
+                              self.sdialog.ecg_text, self.sdialog.aquanum_text, self.sdialog.aquamax_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
 
     def fillFields(self, clip):
         self.sdialog.system_text.setText(clip[0])

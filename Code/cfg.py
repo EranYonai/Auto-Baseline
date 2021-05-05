@@ -5,6 +5,10 @@ FILE_PATHS = {
     'DB_LOCATION': "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
 }
 
+APPLICATION_VERSION = {
+    'AutoBaseline': '1.1',
+    'Inventory': 'TBH'
+}
 TABLE_FIELDS = {
     'WS': [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
                 ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],

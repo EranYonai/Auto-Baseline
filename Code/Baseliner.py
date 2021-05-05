@@ -3,6 +3,7 @@ import qdarkstyle
 import sys
 import sqlite3
 import os
+import cfg as cfg
 import xml.etree.ElementTree as ET
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -277,6 +278,14 @@ Returns SELECT SQL command according to given parameters
         print("Exception at select_sql_query: " + str(e))
 
 
+def write_tooltips(Qobject, tooltip_kind):
+    if tooltip_kind == 'versions_to_title':
+        ver_string = ''
+        for ver in cfg.APPLICATION_VERSION:
+            ver_string += ver + ': ' + cfg.APPLICATION_VERSION[ver] + '\n'
+        ver_string = ver_string[:-1]
+        Qobject.setToolTip(ver_string)
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__(parent=None)
@@ -391,6 +400,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.exportTXT)  # Upon pressing "export" the program will append it's current content to a .txt file
         self.ui.import_button.clicked.connect(
             self.importButton)  # This is the next step of the program, upon importing txt file
+
+        write_tooltips(self.ui.title, 'versions_to_title')
 
     # self.experimentalWarning("beta") Not beta anymore :)
 
@@ -2107,6 +2118,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             # Presses search and returns list of mfgpart, description, family, catalog in this order if it doesn't find, returns False
             options = Options()
             options.headless = True
+            options.HideCommandPromptWindow = True
             driver = webdriver.Chrome(chrome_options=options)  # driver is a webdriver (chromedriver.exe at root folder)
             driver.get('http://itsusrawsp10939.jnj.com/partnolookup/Default.aspx')  # Sents to web address
             searchbox = driver.find_element_by_xpath(
@@ -2123,8 +2135,8 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             driver.close()
             driver.quit()
             return result
-        except:
-            return False
+        except Exception as e:
+            return print("Exception in getMFG_selenium: " +str(e))
 
     def oneCatalog(self):
         cat = self.getMFG_selenium(self.ui.signelCatalog_Text.text())

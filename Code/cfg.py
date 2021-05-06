@@ -2,12 +2,12 @@ PASSWORDS = {
     'DB_MANAGER': 'dbManager'
 }
 FILE_PATHS = {
-    'DB_LOCATION': "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
+    'DB_LOCATION': "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db\\"
 }
 
 APPLICATION_VERSION = {
     'AutoBaseline': '1.1',
-    'Inventory': 'TBH'
+    'Inventory': '0.2'
 }
 
 TABLE_NAMES = {

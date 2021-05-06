@@ -1,8 +1,12 @@
-import sys, sqlite3, time, os
+import os
+import sqlite3
+import sys
+import time
+
 import qdarkstyle
-import cfg
-import threading
 from PyQt5 import QtWidgets, uic
+
+import cfg
 
 
 # experimentalWarning is a function that takes (self, kind) as arguments.
@@ -39,7 +43,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Global attributes:
         self.action_db = self.menuActions.addMenu('Databases')
 
-        # Triggeres and connections:
+        # Triggers and connections:
         self.search_button.clicked.connect(self.search)
         self.editMode_button.clicked.connect(self.editmode_button_function)
         self.refresh_button.clicked.connect(self.refresh)
@@ -129,7 +133,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def manage_database(self):
         # Starts by asking for password, not everyone can create a new db.
-        pressed_ok = False
         input_password, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Admin Password', 'Enter Admin password:')
         if pressed_ok and input_password == cfg.PASSWORDS['DB_MANAGER']:
             self.create_database()
@@ -137,7 +140,6 @@ class MainWindow(QtWidgets.QMainWindow):
             experimental_warning('admin_wrong')
 
     def create_database(self):
-        db_path = cfg.FILE_PATHS['DB_LOCATION']
         # Solution for db name will be a popup window for now:
         db_name, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Database Name', 'Enter database name:')
         if not pressed_ok:
@@ -168,15 +170,19 @@ class MainWindow(QtWidgets.QMainWindow):
             action.setCheckable(True)
 
     def choose_database(self, action):
-        database_name = action.text()
-        database_bool = action.isChecked()
-        if database_bool:  # If true, turn all other menus to false
-            for action in self.action_db.actions():
-                if action.text() != database_name:
-                    action.setChecked(False)
-        self.db_current = 'db\\' + database_name + '.db'  # changes db_current to the selected db and runs refresh function
-        self.refresh()
-        experimental_warning('table_refreshed')
+        try:
+            database_name = action.text()
+            database_bool = action.isChecked()
+            if database_bool:  # If true, turn all other menus to false
+                for action in self.action_db.actions():
+                    if action.text() != database_name:
+                        action.setChecked(False)
+            self.db_current = cfg.FILE_PATHS['DB_LOCATION'] + database_name + '.db'
+            # changes db_current to the selected db and runs refresh function
+            self.refresh()
+            # experimental_warning('table_refreshed') - Annoying
+        except Exception as e:
+            print('Exception in choose_database: ' + str(e))
 
     def editmode_button_function(self):
         if self.editMode_button.isChecked():
@@ -243,8 +249,17 @@ if __name__ == '__main__':
 
 # TODO:
 #  V need to create a special function and button from the top menu (file menu) that creates a new db
-#  need to choose on statup which db to use
-#  need to change position of refresh button - maybe think of a better logic? every x sec?
+#  ----
+#  need to choose on statup which db to use >> username & password, when connected, insert to a new db accounts:
+#  Because I want to know how many users use/change/refresh each db to mitigate\prevent possible issues.
+#  |username| |password| |currently_connected_to|
+#  |EYonai  | |1234    | |'V7'                  |
+#  When exiting program, remove the connected user currently_connected_to cell
+#  When refreshing database, change a label to currently connected: 'x' by looping through the users and see if
+#  len(currently_connected) >= 0 if yes, and if this is the current shown db, add +1 to currently connected label
+#  ----
+#  need to change position of refresh button - maybe think of a better logic? every x sec? maybe change times based on
+#  how many users are connected to this db?
 #  interesting articles:
 #  https://www.programmersought.com/article/35244519297/
 #  https://forum.qt.io/topic/87141/while-retrieving-data-from-qtablewidget-the-type-appears-to-be-unicode-how-can-i-convert-it-to-number/5

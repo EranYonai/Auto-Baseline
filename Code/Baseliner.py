@@ -220,6 +220,9 @@ Checks if the item exists in a specific db according to its PRIME KEY.
     """
     tabs = create_tabs_tuples()
     table = find_table_in_tabs(kind)
+    verified = False
+    approved = False
+    diffs = []
     #  First I want to pull the information if existed in the db.
     try:
         connection = sqlite3.connect(db)
@@ -233,14 +236,11 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         connection.commit()
         connection.close()
         if len(rows) > 0:  # Found rows value in table
-            verified, diffs = verification_between_lists(rows[0], equipment_list)
+            verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
             print ('Verification: ' + str(verified) + ' ' + str(diffs))
-            if verified:
-                return diffs
-                # change dialog fields color to green @https://stackoverflow.com/questions/27432456/python-qlineedit-text-color
-            else:
-                # Change failed fiends color to red + pop a message, did you meant:...
-                return diffs
+        else:
+            print(equipment_list)
+        return verified, approved, diffs
     except Exception as e:
         print("Exception at db_item_exists: " + str(e))
 
@@ -259,7 +259,7 @@ Function that takes two lists and compare between them, if differences were foun
         diffs.append([equipment_list[i], str(db_list[i])])
         if equipment_list[i] != str(db_list[i]):
             verified = False
-    return (True, diffs)
+    return (verified, db_list[len(equipment_list)] == 1, diffs)
 
 
 def select_sql_query(prime_key, table):
@@ -1687,9 +1687,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.sysList_info[position][5], self.sysList_info[position][6], self.sysList_info[position][7],
                 self.sysList_info[position][8])
         if type == 'ultra':
-            return 'Ultrasound #%d: \nUltrasound System:\t%s\nSoftware Version:\t%s\nSerial Number:\t\t%s\nApplication Version:\t%s\nVideo Cable:\t\t%s\nEthernet Cable:\t\t%s\n-------------------\n' % (
+            if self.ultraList_info[position][3] != 'N\A':
+                return 'Ultrasound #%d: \nUltrasound System:\t%s\nSoftware Version:\t%s\nSerial Number:\t\t%s\nApplication Version:\t%s\nVideo Cable:\t\t%s\nEthernet Cable:\t\t%s\n-------------------\n' % (
+                    position + 1, self.ultraList_info[position][0], self.ultraList_info[position][1],
+                    self.ultraList_info[position][2], self.ultraList_info[position][3], self.ultraList_info[position][4],
+                    self.ultraList_info[position][5])
+            return 'Ultrasound #%d: \nUltrasound System:\t%s\nSoftware Version:\t%s\nSerial Number:\t\t%s\nVideo Cable:\t\t%s\nEthernet Cable:\t\t%s\n-------------------\n' % (
                 position + 1, self.ultraList_info[position][0], self.ultraList_info[position][1],
-                self.ultraList_info[position][2], self.ultraList_info[position][3], self.ultraList_info[position][4],
+                self.ultraList_info[position][2], self.ultraList_info[position][4],
                 self.ultraList_info[position][5])
         if type == 'ws':
             if (self.wsList_info[position][7] == "True"):
@@ -2053,8 +2058,8 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.setupUi(self)
         self.udialog.confirm_button.clicked.connect(self.confirmPressed)
         self.udialog.check_button.clicked.connect(self.verification)
+        self.udialog.ultrasound_combo.currentTextChanged.connect(self.app_ver_na)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
-
     # dict_of_values = {
     # "system": "",
     # "swversion": "",
@@ -2076,6 +2081,17 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.appVer = self.udialog.applicationver_text.text()
         self.Videocable = self.udialog.videocable_text.text()
         self.Ethcable = self.udialog.ethernet_text.text()
+
+    def app_ver_na(self):
+        require_ver = ['Vivid (i or q)', 'Vivid IQ', 'Vivid S-70']
+        change_na = True
+        for machine in require_ver:
+            if self.udialog.ultrasound_combo.currentText() == machine:
+                change_na = False
+        if change_na:
+            self.udialog.applicationver_text.setText('N\A')
+        else:
+            self.udialog.applicationver_text.setText('')
 
     def confirmPressed(self):
         self.infoBox()
@@ -2269,6 +2285,7 @@ class System_Dialog(QtWidgets.QDialog):
         self.sdialog.check_button.clicked.connect(self.verification)
         self.equipment_list_obj = []
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+
     def confirmPressed(self):
         self.infoBox()
         self.close()
@@ -2279,18 +2296,20 @@ class System_Dialog(QtWidgets.QDialog):
                           self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
         # send_info_to_db("systems", equipment_list)
         db = choose_db()
-        diffs = db_item_exists("systems", equipment_list_str, db)
+        verified, approved, diffs = db_item_exists("systems", equipment_list_str, db)
         try:
-            if diffs is None:
-                # As no diffs were found- change all fields to green
-                for equipment in self.equipment_list_obj:
-                    equipment.setStyleSheet('background-color: red;')
+            if approved:
+                if len(diffs) > 0:
+                    for i in range(len(diffs)):
+                        if diffs[i][0] == diffs[i][1]:
+                            self.equipment_list_obj[i].setStyleSheet('background-color: green;')
+                        else:
+                            self.equipment_list_obj[i].setStyleSheet('background-color: red;')
+                else:
+                    for equipment in self.equipment_list_obj:
+                        equipment.setStyleSheet('background-color: red;')
             else:
-                for i in range(len(diffs)):
-                    if diffs[i][0] == diffs[i][1]:
-                        self.equipment_list_obj[i].setStyleSheet('background-color: green;')
-                    else:
-                        self.equipment_list_obj[i].setStyleSheet('background-color: red;')
+                pass # Insert diffs
         except Exception as e:
             print('Exception in system verification: ' +str(e))
 

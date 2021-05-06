@@ -5,5 +5,5 @@ PyQt5-sip==12.8.1
 QDarkStyle==2.8.1
 QtPy==1.9.0
 selenium==3.141.0
-urllib3==1.26.2
+urllib3==1.26.4
 zipp==3.4.0

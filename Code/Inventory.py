@@ -37,7 +37,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.resize(1050, 1070)
 
         # Global attributes:
-        self.db_current = "db\\V8.db"  # default db
         self.action_db = self.menuActions.addMenu('Databases')
 
         # Triggeres and connections:
@@ -49,24 +48,25 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # On initialization:
         self.load_db_menu()
+        self.db_current = self.current_db("db\\V7.db")
         self.load_data()  # First load of data - current_db is the default
         # refresh_thread = threading.Thread(target=self.auto_refresh, args=(20, ))
         # refresh_thread.start()
 
     def create_tabs_tuples(self):
-        workstation = ("workstations", self.ws_table, 8, cfg.TABLE_FIELDS['WS'])
-        system = ("systems", self.system_table, 11, cfg.TABLE_FIELDS['SYSTEM'])
-        ultrasound = ("ultrasounds", self.us_table, 8, cfg.TABLE_FIELDS['ULS'])
-        stockert = ("stockerts", self.stockert_table, 13, cfg.TABLE_FIELDS['STOCKERT'])
-        ngen = ("ngens", self.ngen_table, 27, cfg.TABLE_FIELDS['NGEN'])
-        nmarq = ("nmarqs", self.nmarq_table, 11, cfg.TABLE_FIELDS['NMARQ'])
-        smartablate = ("smartablates", self.smartablate_table, 7, cfg.TABLE_FIELDS['SMARTABLATE'])
-        pacer = ("pacers", self.pacer_table, 4, cfg.TABLE_FIELDS['PACER'])
-        dongle = ("dongles", self.dongles_table, 5, cfg.TABLE_FIELDS['DONGLE'])
-        epu = ("epus", self.epu_table, 4, cfg.TABLE_FIELDS['EPU'])
-        printer = ("printers", self.printer_table, 4, cfg.TABLE_FIELDS['PRINTER'])
-        spu = ("spus", self.spu_table, 29, cfg.TABLE_FIELDS['SPU'])
-        demo = ("demos", self.demo_table, 7, cfg.TABLE_FIELDS['DEMO'])
+        workstation = (cfg.TABLE_NAMES['WORKSTATION'], self.ws_table, 8, cfg.TABLE_FIELDS['WS'])
+        system = (cfg.TABLE_NAMES['SYSTEM'], self.system_table, 11, cfg.TABLE_FIELDS['SYSTEM'])
+        ultrasound = (cfg.TABLE_NAMES['ULS'], self.us_table, 8, cfg.TABLE_FIELDS['ULS'])
+        stockert = (cfg.TABLE_NAMES['STOCKERT'], self.stockert_table, 13, cfg.TABLE_FIELDS['STOCKERT'])
+        ngen = (cfg.TABLE_NAMES['NGEN'], self.ngen_table, 27, cfg.TABLE_FIELDS['NGEN'])
+        nmarq = (cfg.TABLE_NAMES['NMARQ'], self.nmarq_table, 11, cfg.TABLE_FIELDS['NMARQ'])
+        smartablate = (cfg.TABLE_NAMES['SMARTABLATE'], self.smartablate_table, 7, cfg.TABLE_FIELDS['SMARTABLATE'])
+        pacer = (cfg.TABLE_NAMES['PACER'], self.pacer_table, 4, cfg.TABLE_FIELDS['PACER'])
+        dongle = (cfg.TABLE_NAMES['DONGLE'], self.dongles_table, 5, cfg.TABLE_FIELDS['DONGLE'])
+        epu = (cfg.TABLE_NAMES['EPU'], self.epu_table, 4, cfg.TABLE_FIELDS['EPU'])
+        printer = (cfg.TABLE_NAMES['PRINTER'], self.printer_table, 4, cfg.TABLE_FIELDS['PRINTER'])
+        spu = (cfg.TABLE_NAMES['SPU'], self.spu_table, 29, cfg.TABLE_FIELDS['SPU'])
+        demo = (cfg.TABLE_NAMES['DEMO'], self.demo_table, 7, cfg.TABLE_FIELDS['DEMO'])
         return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
                 demo]
 
@@ -89,6 +89,15 @@ class MainWindow(QtWidgets.QMainWindow):
             connection.close()
         except Exception as e:
             print("Exception at load_data: " + str(e))
+
+    def current_db(self, db):
+        db_name = db[3:][:-3]  # Need to remove db\\V7.db first 3 char and last 3 char to get just the name.
+        for action in self.action_db.actions():
+            if action.text() != db_name:
+                action.setChecked(False)
+            else:
+                action.setChecked(True)
+        return db
 
     def refresh(self):
         # refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().

@@ -239,6 +239,9 @@ Checks if the item exists in a specific db according to its PRIME KEY.
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
             print ('Verification: ' + str(verified) + ' ' + str(diffs))
         else:
+            # Key doesn't exist
+            # 1. more than 80% of fields have value (+primary)-> write key to db -> output to user Wait for verification
+            # 2. else: output to user to fill atleast 80% of fields (+primary) for entering value to db.
             print(equipment_list)
         return verified, approved, diffs
     except Exception as e:
@@ -261,6 +264,22 @@ Function that takes two lists and compare between them, if differences were foun
             verified = False
     return (verified, db_list[len(equipment_list)] == 1, diffs)
 
+def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
+    db = choose_db()
+    verified, approved, diffs = db_item_exists(type, equipment_list_str, db)
+    try:
+        if len(diffs) > 0 and approved:
+            for i in range(len(diffs)):
+                if diffs[i][0] == diffs[i][1]:
+                    equipment_list_obj[i].setStyleSheet('background-color: green;')
+                else:
+                    equipment_list_obj[i].setStyleSheet('background-color: red;')
+            if verified:
+                print("Entry is verified")
+        elif not approved:
+            print("Key exists but not approved, verify with team leader.")
+    except Exception as e:
+        print('Exception in system verification: ' + str(e))
 
 def select_sql_query(prime_key, table):
     """
@@ -2293,25 +2312,8 @@ class System_Dialog(QtWidgets.QDialog):
     def verification(self):
         self.infoBox()
         equipment_list_str = [self.Systemnumber, self.PIUconf, self.Lposition, self.PUnumber, self.Monitormodel,
-                          self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
-        # send_info_to_db("systems", equipment_list)
-        db = choose_db()
-        verified, approved, diffs = db_item_exists("systems", equipment_list_str, db)
-        try:
-            if approved:
-                if len(diffs) > 0:
-                    for i in range(len(diffs)):
-                        if diffs[i][0] == diffs[i][1]:
-                            self.equipment_list_obj[i].setStyleSheet('background-color: green;')
-                        else:
-                            self.equipment_list_obj[i].setStyleSheet('background-color: red;')
-                else:
-                    for equipment in self.equipment_list_obj:
-                        equipment.setStyleSheet('background-color: red;')
-            else:
-                pass # Insert diffs
-        except Exception as e:
-            print('Exception in system verification: ' +str(e))
+                                                self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
+        actual_verification(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['SYSTEM'])
 
     def infoBox(self):
         self.Systemnumber = self.sdialog.system_text.text()

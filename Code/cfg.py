@@ -9,6 +9,23 @@ APPLICATION_VERSION = {
     'AutoBaseline': '1.1',
     'Inventory': 'TBH'
 }
+
+TABLE_NAMES = {
+    'WORKSTATION': 'workstations',
+    'SYSTEM': 'systems',
+    'ULS': 'ultrasounds',
+    'STOCKERT': 'stockerts',
+    'NGEN': 'ngens',
+    'NMARQ': 'nmarqs',
+    'SMARTABLATE': 'smartablates',
+    'PACER': 'pacers',
+    'DONGLE': 'dongles',
+    'EPU': 'epus',
+    'PRINTER': 'printers',
+    'SPU': 'spus',
+    'DEMO': 'demos'
+}
+
 TABLE_FIELDS = {
     'WS': [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
                 ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],

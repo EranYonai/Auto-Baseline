@@ -36,86 +36,19 @@ Function returns a premade tuples object, which specify every machine used in Au
     -[1] will be a numrical value of how many fields are in the table.
     -[2] will be an array of the name of the fields: [0] is the name of the field [1] is the sql type.
     """
-    ws_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
-                    ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],
-                    ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-    system_db_fields = [["system_number", "STRING PRIMARY KEY"], ["piu_configuration", "STRING"],
-                        ["lp_number", "STRING"], ["patch_unit", "STRING"], ["monitor_1", "STRING"],
-                        ["monitor_2", "STRING"], ["ecg_phantom", "STRING"], ["aquarium_number", "STRING"],
-                        ["aquarium_maximo", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-    us_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["machine", "STRING"], ["software_version", "STRING"],
-                    ["application_version", "STRING"], ["video_cable", "STRING"],
-                    ["ethernet_cable", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]]
-    stockert_db_fields = [["software_version", "STRING PRIMARY KEY"], ["serial_number", "STRING"],
-                          ["epio_box_sn", "STRING"], ["epio_connection_cable", "STRING"],
-                          ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"],
-                          ["global_port", "STRING"],
-                          ["ablation_adaptor_cable", "STRING"], ["gen_to_ws_cable", "STRING"],
-                          ["patch_elect_cable", "STRING"], ["footpedal", "STRING"], ["approved", "BOOLEAN"],
-                          ["used", "INTEGER"]]
-    ngen_db_fields = [["console_sn", "STRING PRIMARY KEY"], ["console_pn", "STRING"],
-                      ["console_version", "STRING"], ["psu_sn", "STRING"],
-                      ["psu_pn", "STRING"], ["psu_cable", "STRING"],
-                      ["gen_to_piu", "STRING"], ["monitor1_sn", "STRING"], ["monitor1_pn", "STRING"],
-                      ["monitor1_ver", "STRING"], ["monitor1_hubsn", "STRING"], ["monitor1_hubpn", "STRING"],
-                      ["monitor1_psusn", "STRING"],
-                      ["monitor1_psupn", "STRING"], ["monitor2_sn", "STRING"],
-                      ["monitor2_pn", "STRING"], ["monitor2_version", "STRING"], ["monitor2_hubsn", "STRING"],
-                      ["monitor2_hubpn", "STRING"], ["monitor2_psusn", "STRING"], ["monitor2_psupn", "STRING"],
-                      ["pump_sn", "STRING"], ["pump_pn", "STRING"], ["pump_version", "STRING"],
-                      ["pump_to_console", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                      ["used", "INTEGER"]]
-    nmarq_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                       ["gen_to_carto", "STRING"], ["ethernet", "STRING"],
-                       ["gen_to_pump", "STRING"], ["gen_to_monitor", "STRING"],
-                       ["pump_sn", "STRING"],
-                       ["pump_model", "STRING"], ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                       ["used", "INTEGER"]]
-    smartablate_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                             ["gen_to_piu", "STRING"], ["gen_to_ws", "STRING"],
-                             ["foot_pedal", "STRING"], ["approved", "BOOLEAN"],
-                             ["used", "INTEGER"]]
-    pacer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["type", "STRING"], ["approved", "BOOLEAN"],
-                       ["used", "INTEGER"]]
-    dongle_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["software_version", "STRING"],
-                        ["hardware_version", "STRING"], ["approved", "BOOLEAN"],
-                        ["used", "INTEGER"]]
-    epu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["version", "STRING"], ["approved", "BOOLEAN"],
-                     ["used", "INTEGER"]]
-    printer_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["model", "STRING"], ["approved", "BOOLEAN"],
-                         ["used", "INTEGER"]]
-    spu_db_fields = [["serial_number", "STRING PRIMARY KEY"], ["pn", "STRING"],
-                     ["software_version", "STRING"], ["main_fw_version", "STRING"],
-                     ["secondary_fw_version", "STRING"], ["front_board_location", "STRING"],
-                     ["front_board_location_rev", "STRING"],
-                     ["led_board", "STRING"], ["led_board_rev", "STRING"], ["mother_board", "STRING"],
-                     ["mother_board_rev", "STRING"],
-                     ["back_board", "STRING"], ["back_board_rev", "STRING"], ["power_board", "STRING"],
-                     ["power_board_rev", "STRING"],
-                     ["upper_board", "STRING"], ["upper_board_rev", "STRING"], ["pacing_board", "STRING"],
-                     ["pacing_board_rev", "STRING"],
-                     ["tpi_board", "STRING"], ["tpi_board_rev", "STRING"], ["digital_board", "STRING"],
-                     ["digital_board_rev", "STRING"],
-                     ["ecg_board", "STRING"], ["ecg_board_rev", "STRING"], ["spu_pro", "STRING"],
-                     ["spu_pro_rev", "STRING"], ["approved", "BOOLEAN"],
-                     ["used", "INTEGER"]]
-    demo_db_fields = [["service_tag", "STRING PRIMARY KEY"], ["ws_type", "STRING"],
-                      ["sw_version", "STRING"], ["dsp_version", "STRING"],
-                      ["image_version", "STRING"], ["approved", "BOOLEAN"],
-                      ["used", "INTEGER"]]
-    workstation = ("workstations", 8, ws_db_fields)
-    system = ("systems", 11, system_db_fields)
-    ultrasound = ("ultrasounds", 8, us_db_fields)
-    stockert = ("stockerts", 13, stockert_db_fields)
-    ngen = ("ngens", 27, ngen_db_fields)
-    nmarq = ("nmarqs", 11, nmarq_db_fields)
-    smartablate = ("smartablates", 7, smartablate_db_fields)
-    pacer = ("pacers", 4, pacer_db_fields)
-    dongle = ("dongles", 5, dongle_db_fields)
-    epu = ("epus", 4, epu_db_fields)
-    printer = ("printers", 4, printer_db_fields)
-    spu = ("spus", 29, spu_db_fields)
-    demo = ("demos", 7, demo_db_fields)
+    workstation = ("workstations", 8, cfg.TABLE_FIELDS['WS'])
+    system = ("systems", 11, cfg.TABLE_FIELDS['SYSTEM'])
+    ultrasound = ("ultrasounds", 8, cfg.TABLE_FIELDS['ULS'])
+    stockert = ("stockerts", 13, cfg.TABLE_FIELDS['STOCKERT'])
+    ngen = ("ngens", 27, cfg.TABLE_FIELDS['NGEN'])
+    nmarq = ("nmarqs", 11, cfg.TABLE_FIELDS['NMARQ'])
+    smartablate = ("smartablates", 7, cfg.TABLE_FIELDS['SMARTABLATE'])
+    pacer = ("pacers", 4, cfg.TABLE_FIELDS['PACER'])
+    dongle = ("dongles", 5, cfg.TABLE_FIELDS['DONGLE'])
+    epu = ("epus", 4, cfg.TABLE_FIELDS['EPU'])
+    printer = ("printers", 4, cfg.TABLE_FIELDS['PRINTER'])
+    spu = ("spus", 29, cfg.TABLE_FIELDS['SPU'])
+    demo = ("demos", 7, cfg.TABLE_FIELDS['DEMO'])
     return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
             demo]
 
@@ -228,7 +161,6 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         connection = sqlite3.connect(db)
         cur = connection.cursor()
         sql_query = select_sql_query(equipment_list[0], table)
-        print('db_item_exists: ' + sql_query)
         cur.execute(sql_query)
         rows = cur.fetchall()
         print('db_item_exists found: '+str(rows))
@@ -276,8 +208,9 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
                     equipment_list_obj[i].setStyleSheet('background-color: red;')
             if verified:
                 print("Entry is verified")
+                # times used+1
         elif not approved:
-            print("Key exists but not approved, verify with team leader.")
+            experimentalWarning('verified_not_approved')
     except Exception as e:
         print('Exception in system verification: ' + str(e))
 
@@ -304,6 +237,48 @@ def write_tooltips(Qobject, tooltip_kind):
             ver_string += ver + ': ' + cfg.APPLICATION_VERSION[ver] + '\n'
         ver_string = ver_string[:-1]
         Qobject.setToolTip(ver_string)
+
+# experimentalWarning is a function that takes (self, kind) as arguments.
+# self being the pyqt5 inheritance - this function is being called by self.experimentalWarning(kind)
+# :param kind - 'experimental' will print an experimental feature messageBox.
+# :param kind - 'beta' will print a beta messageBox.
+# :param kind - 'wslicenses' will print licenses upon error bug description messageBox.
+# :param kind - 'notimp' will print not yet implemented warning messageBox.
+def experimentalWarning(kind):
+    if (kind == "experimental"):
+        warning = QtWidgets.QMessageBox()
+        warning.setText(
+            "This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
+    if (kind == "experimental_chrome"):
+        warning = QtWidgets.QMessageBox()
+        warning.setText(
+            "This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.\nSupports Chrome version 89.")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
+    if (kind == "beta"):
+        warning = QtWidgets.QMessageBox()
+        warning.setText("This program is in beta, please use in care.\nIf you see an issue please contact Eran.")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
+    if (kind == "wslicenses"):
+        warning = QtWidgets.QMessageBox()
+        warning.setText(
+            "Upon export of data, each WS licenses are deleted.\nIt is a known bug please wait for next version for a fix.\nMake sure to save the .txt file.")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
+    if (kind == "notimp"):
+        warning = QtWidgets.QMessageBox()
+        warning.setText("Not yet implemented")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
+
+    if (kind == "verified_not_approved"):
+        warning = QtWidgets.QMessageBox()
+        warning.setText("This machine wasn't approved yet.\nContact Team Leader to verify.")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -412,7 +387,7 @@ class MainWindow(QtWidgets.QMainWindow):
             lambda: self.open_demoDialog(0))  # For each System number there's a specific demo dialog
         self.ui.demo_win_2.clicked.connect(lambda: self.open_demoDialog(1))
         self.ui.demo_win_3.clicked.connect(lambda: self.open_demoDialog(2))
-        self.ui.actionBard.triggered.connect(lambda: self.experimentalWarning("notimp"))
+        self.ui.actionBard.triggered.connect(lambda: experimentalWarning("notimp"))
         self.ui.actionSPU.triggered.connect(lambda: self.showThings("spu"))
         self.ui.spu_win.clicked.connect(lambda: self.open_SPUDialog(0))
         self.ui.export_button.clicked.connect(
@@ -705,7 +680,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return state  # if any window opened return False, if not, return True.
 
     def catalogHelp(self):
-        self.experimentalWarning("experimental_chrome")
+        experimentalWarning("experimental_chrome")
         catWin = CatalogHelper_Dialog(self)  # Inheritance -> Passing MainWindow (self) as an argument
         catWin.exec_()
 
@@ -1862,42 +1837,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.spuList_info[position][21], self.spuList_info[position][22], self.spuList_info[position][23],
                 self.spuList_info[position][24], self.spuList_info[position][25], self.spuList_info[position][26])
 
-    # experimentalWarning is a function that takes (self, kind) as arguments.
-    # self being the pyqt5 inheritance - this function is being called by self.experimentalWarning(kind)
-    # :param kind - 'experimental' will print an experimental feature messageBox.
-    # :param kind - 'beta' will print a beta messageBox.
-    # :param kind - 'wslicenses' will print licenses upon error bug description messageBox.
-    # :param kind - 'notimp' will print not yet implemented warning messageBox.
-    def experimentalWarning(self, kind):
-        if (kind == "experimental"):
-            warning = QtWidgets.QMessageBox()
-            warning.setText(
-                "This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.")
-            warning.setWindowTitle("Warning")
-            warning.exec_()
-        if (kind == "experimental_chrome"):
-            warning = QtWidgets.QMessageBox()
-            warning.setText(
-                "This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.\nSupports Chrome version 89.")
-            warning.setWindowTitle("Warning")
-            warning.exec_()
-        if (kind == "beta"):
-            warning = QtWidgets.QMessageBox()
-            warning.setText("This program is in beta, please use in care.\nIf you see an issue please contact Eran.")
-            warning.setWindowTitle("Warning")
-            warning.exec_()
-        if (kind == "wslicenses"):
-            warning = QtWidgets.QMessageBox()
-            warning.setText(
-                "Upon export of data, each WS licenses are deleted.\nIt is a known bug please wait for next version for a fix.\nMake sure to save the .txt file.")
-            warning.setWindowTitle("Warning")
-            warning.exec_()
-        if (kind == "notimp"):
-            warning = QtWidgets.QMessageBox()
-            warning.setText("Not yet implemented")
-            warning.setWindowTitle("Warning")
-            warning.exec_()
-
     def importButton(self):
         try:
             state = self.check_progressbars()
@@ -2313,7 +2252,7 @@ class System_Dialog(QtWidgets.QDialog):
         self.infoBox()
         equipment_list_str = [self.Systemnumber, self.PIUconf, self.Lposition, self.PUnumber, self.Monitormodel,
                                                 self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
-        actual_verification(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['SYSTEM'])
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['SYSTEM'])
 
     def infoBox(self):
         self.Systemnumber = self.sdialog.system_text.text()

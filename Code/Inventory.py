@@ -81,15 +81,15 @@ class MainWindow(QtWidgets.QMainWindow):
             # tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
             tabs = self.create_tabs_tuples()
             for tab in tabs:
-                sqlquery = "SELECT * FROM " + tab[0]  # tab[0] = db name
-                cur.execute(sqlquery)
-                tablerow = 0
-                for row in cur.execute(sqlquery):
+                sql_query = "SELECT * FROM " + tab[0]  # tab[0] = db name
+                cur.execute(sql_query)
+                table_row = 0
+                for row in cur.execute(sql_query):
                     column = 0
                     for i in range(0, tab[2]):
-                        tab[1].setItem(tablerow, column, QtWidgets.QTableWidgetItem(str(row[column])))
+                        tab[1].setItem(table_row, column, QtWidgets.QTableWidgetItem(str(row[column])))
                         column += 1
-                    tablerow += 1
+                    table_row += 1
             connection.close()
         except Exception as e:
             print("Exception at load_data: " + str(e))

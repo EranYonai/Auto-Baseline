@@ -26,6 +26,11 @@ TABLE_NAMES = {
     'DEMO': 'demos'
 }
 
+DIALOGS_FIELD_NAMES = {
+    'workstations': ['Service Tag', 'DSP Version', 'Image Version', 'Configuration', 'Model', 'Graphics Card'],
+    'systems': ['System Number', 'PIU Configuration', 'Location Pad', 'Patch Unit', 'Monitor 1', 'Monitor 2',
+                'ECG Phantom', 'Aquarium Number', 'Aquarium Maximo']
+}
 TABLE_FIELDS = {
     'WS': [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
                 ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],

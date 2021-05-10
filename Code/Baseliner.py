@@ -6,6 +6,7 @@ import os
 import cfg as cfg
 import xml.etree.ElementTree as ET
 from selenium import webdriver
+from difflib import SequenceMatcher
 from selenium.webdriver.chrome.options import Options
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtWidgets import QListWidget
@@ -170,15 +171,36 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         if len(rows) > 0:  # Found rows value in table
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
             print ('Verification: ' + str(verified) + ' ' + str(diffs))
+            # suggestions part: use similar function to get a value 0-1 which is the corrolation between strings
+            # if correlation is enough, append the diff to a string with the name of the field from config
+            # pop a did you mean popup
+            # todo: finish config DIALOGS_FIELD_NAMES variable.!
+            # todo: think of a better popup/way to show the diffs.
+            diffs_suggestions = []
+            for i in range(len(diffs)):
+                current_diff = similar(diffs[i][0], diffs[i][1])
+                if current_diff > 0.7 and current_diff < 1 :
+                    diffs_suggestions.append([cfg.DIALOGS_FIELD_NAMES[kind][i], diffs[i][1]])
+            toText = ''
+            for suggest in diffs_suggestions:
+                toText += suggest[0] + ': ' + suggest[1] + '\n'
+            if len(toText) > 1:
+                suggestion = QtWidgets.QMessageBox()
+                suggestion.setText("Did you mean: \n" + toText)
+                suggestion.setWindowTitle("Suggestions")
+                suggestion.exec_()
         else:
             # Key doesn't exist
             # 1. more than 80% of fields have value (+primary)-> write key to db -> output to user Wait for verification
+
             # 2. else: output to user to fill atleast 80% of fields (+primary) for entering value to db.
             print(equipment_list)
         return verified, approved, diffs
     except Exception as e:
         print("Exception at db_item_exists: " + str(e))
 
+def similar(str1, str2):
+    return SequenceMatcher(None, str1, str2).ratio()
 
 def verification_between_lists(db_list, equipment_list):
     """
@@ -197,6 +219,14 @@ Function that takes two lists and compare between them, if differences were foun
     return (verified, db_list[len(equipment_list)] == 1, diffs)
 
 def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
+    """
+    write documentaion you lazy fk
+    :param dialogQ:
+    :param equipment_list_str:
+    :param equipment_list_obj:
+    :param type:
+    :return:
+    """
     db = choose_db()
     verified, approved, diffs = db_item_exists(type, equipment_list_str, db)
     try:
@@ -231,6 +261,12 @@ Returns SELECT SQL command according to given parameters
 
 
 def write_tooltips(Qobject, tooltip_kind):
+    """
+    write documentation you lazy fk
+    :param Qobject:
+    :param tooltip_kind:
+    :return:
+    """
     if tooltip_kind == 'versions_to_title':
         ver_string = ''
         for ver in cfg.APPLICATION_VERSION:
@@ -238,13 +274,18 @@ def write_tooltips(Qobject, tooltip_kind):
         ver_string = ver_string[:-1]
         Qobject.setToolTip(ver_string)
 
-# experimentalWarning is a function that takes (self, kind) as arguments.
-# self being the pyqt5 inheritance - this function is being called by self.experimentalWarning(kind)
-# :param kind - 'experimental' will print an experimental feature messageBox.
-# :param kind - 'beta' will print a beta messageBox.
-# :param kind - 'wslicenses' will print licenses upon error bug description messageBox.
-# :param kind - 'notimp' will print not yet implemented warning messageBox.
+
 def experimentalWarning(kind):
+    """
+    experimentalWarning is a function that takes (self, kind) as arguments.
+    self being the pyqt5 inheritance - this function is being called by self.experimentalWarning(kind)
+    :param kind - 'experimental' will print an experimental feature messageBox.
+    :param kind - 'beta' will print a beta messageBox.
+    :param kind - 'wslicenses' will print licenses upon error bug description messageBox.
+    :param kind - 'notimp' will print not yet implemented warning messageBox.
+    :param kind:
+    :return:
+    """
     if (kind == "experimental"):
         warning = QtWidgets.QMessageBox()
         warning.setText(

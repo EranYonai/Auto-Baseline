@@ -171,10 +171,6 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         if len(rows) > 0:  # Found rows value in table
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
             print ('Verification: ' + str(verified) + ' ' + str(diffs))
-            # Correlation check:
-            correlation_differences(diffs, kind)
-            # todo: finish config DIALOGS_FIELD_NAMES variable.!
-            #   think of a better popup/way to show the diffs.
         else:
             # todo: impliment logic when key doesn't exists:
             # Key doesn't exist
@@ -205,23 +201,25 @@ def correlation_differences(diffs, kind):
     # suggestions part: use similar function to get a value 0-1 which is the corrolation between strings
     # if correlation is enough, append the diff to a string with the name of the field from config
     diffs_suggestions = []
-    MIN_CORRELATION = 0.7
-    MAX_CORRELATION = 1
     for i in range(len(diffs)):
         current_diff = similar(diffs[i][0], diffs[i][1])
-        if current_diff > MIN_CORRELATION and current_diff < MAX_CORRELATION:
+        if current_diff > cfg.MIN_CORRELATION and current_diff < cfg.MAX_CORRELATION:
             #If i'd want to compare in the popup - 'xxxx' vs 'xxxx' add to diffs_suggestions diff[i][0] value...
-            diffs_suggestions.append([cfg.DIALOGS_FIELD_NAMES[kind][i], diffs[i][1]])
+            diffs_suggestions.append([cfg.DIALOGS_FIELD_NAMES[kind][i], diffs[i][1], diffs[i][0]])
         # print(cfg.DIALOGS_FIELD_NAMES[kind][i] + ' correlation is: ' + str(current_diff))
-    toText = ''
-    for suggest in diffs_suggestions:
-        toText += suggest[0] + ': ' + suggest[1] + '\n'
-    if len(toText) > 1:
-        suggestion = QtWidgets.QMessageBox()
-        suggestion.setText("Correlation between the following fields is >0.7\n"
-                           "Did you mean: \n" + toText)
-        suggestion.setWindowTitle("Suggestions")
-        suggestion.exec_()
+    # For now, I think this part is not good, popup is annoying.
+    # toText = ''
+    # for suggest in diffs_suggestions:
+    #     # diffs_suggestions structure: [FIELD_NAME, VERIFIED_VALUE, USER_INPUT)
+    #     toText += suggest[0] + ': User value-\'' + suggest[2] + '\'' + ' | Verified value-\'' + suggest[1] + '\'\n'
+    # if len(toText) > 1:
+    #     # fixme: better idea for this popup! make it Nonmodal/QDialog.
+    #     suggestion = QtWidgets.QMessageBox()
+    #     suggestion.setText("Correlation between the following fields is >" + str(MIN_CORRELATION) + "\n"
+    #                         "Differences between user input and verified machine:\n" + toText)
+    #     suggestion.setWindowTitle("Suggestions")
+    #     suggestion.exec_()
+    return diffs_suggestions
 
 def verification_between_lists(db_list, equipment_list):
     """
@@ -252,14 +250,26 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     verified, approved, diffs = db_item_exists(type, equipment_list_str, db)
     try:
         if len(diffs) > 0 and approved:
-            for i in range(len(diffs)):
-                if diffs[i][0] == diffs[i][1]:
-                    equipment_list_obj[i].setStyleSheet('background-color: green;')
-                else:
-                    equipment_list_obj[i].setStyleSheet('background-color: red;')
             if verified:
                 print("Entry is verified")
                 # times used+1
+            else:
+                # Correlation check:
+                suggestions = correlation_differences(diffs, type)
+                # todo: finish config DIALOGS_FIELD_NAMES variable.!
+                #   think of a better popup/way to show the diffs.
+            for i in range(len(diffs)): # diffs strcture: [USER_INPUT, ACTUAL_KEY]
+                if diffs[i][0] == diffs[i][1]:
+                    equipment_list_obj[i].setStyleSheet('background-color: rgba(0, 255, 30, 0.25);') # Green
+                    equipment_list_obj[i].setToolTip("Verified")
+                else:
+                    equipment_list_obj[i].setStyleSheet('background-color: rgba(255, 0, 0, 0.35);') # Red
+                    equipment_list_obj[i].setToolTip("Not Verified")
+                for suggest in suggestions:
+                    if (diffs[i][0] == suggest[2] and similar(diffs[i][0], diffs[i][1]) > cfg.MIN_CORRELATION):
+                        #fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
+                        equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);') # Yellow
+                        equipment_list_obj[i].setToolTip("Maybe: " + diffs[i][1])
         elif not approved:
             experimentalWarning('verified_not_approved')
     except Exception as e:
@@ -2331,6 +2341,7 @@ class System_Dialog(QtWidgets.QDialog):
                               self.sdialog.ecg_text, self.sdialog.aquanum_text, self.sdialog.aquamax_text]
         for field in self.equipment_list_obj:
             field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.sdialog.system_text.setText(clip[0])

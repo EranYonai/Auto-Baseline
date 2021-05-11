@@ -100,3 +100,6 @@ TABLE_FIELDS = {
                   ["image_version", "STRING"], ["approved", "BOOLEAN"],
                   ["used", "INTEGER"]]
 }
+
+MIN_CORRELATION = 0.7
+MAX_CORRELATION = 1

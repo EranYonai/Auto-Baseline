@@ -171,28 +171,14 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         if len(rows) > 0:  # Found rows value in table
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
             print ('Verification: ' + str(verified) + ' ' + str(diffs))
-            # suggestions part: use similar function to get a value 0-1 which is the corrolation between strings
-            # if correlation is enough, append the diff to a string with the name of the field from config
-            # pop a did you mean popup
+            # Correlation check:
+            correlation_differences(diffs, kind)
             # todo: finish config DIALOGS_FIELD_NAMES variable.!
-            # todo: think of a better popup/way to show the diffs.
-            diffs_suggestions = []
-            for i in range(len(diffs)):
-                current_diff = similar(diffs[i][0], diffs[i][1])
-                if current_diff > 0.7 and current_diff < 1 :
-                    diffs_suggestions.append([cfg.DIALOGS_FIELD_NAMES[kind][i], diffs[i][1]])
-            toText = ''
-            for suggest in diffs_suggestions:
-                toText += suggest[0] + ': ' + suggest[1] + '\n'
-            if len(toText) > 1:
-                suggestion = QtWidgets.QMessageBox()
-                suggestion.setText("Did you mean: \n" + toText)
-                suggestion.setWindowTitle("Suggestions")
-                suggestion.exec_()
+            #   think of a better popup/way to show the diffs.
         else:
+            # todo: impliment logic when key doesn't exists:
             # Key doesn't exist
             # 1. more than 80% of fields have value (+primary)-> write key to db -> output to user Wait for verification
-
             # 2. else: output to user to fill atleast 80% of fields (+primary) for entering value to db.
             print(equipment_list)
         return verified, approved, diffs
@@ -200,7 +186,42 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         print("Exception at db_item_exists: " + str(e))
 
 def similar(str1, str2):
+    """
+    Gets two string and returns their correlation in precentage (0-1).
+    Using SequenceMatcher of difflib library.
+    :param str1: String 1
+    :param str2: String 2
+    :return: float value
+    """
     return SequenceMatcher(None, str1, str2).ratio()
+
+def correlation_differences(diffs, kind):
+    """
+    Checks the correlation in the differences between dialog value and db value.
+    Pops a QMessageBox of the differences (for now)
+    :param diffs: [[a,b],[c,d]] differences.
+    :param kind: machine type in low chars (as written in DIALOGS_FIELD_NAMES).
+    """
+    # suggestions part: use similar function to get a value 0-1 which is the corrolation between strings
+    # if correlation is enough, append the diff to a string with the name of the field from config
+    diffs_suggestions = []
+    MIN_CORRELATION = 0.7
+    MAX_CORRELATION = 1
+    for i in range(len(diffs)):
+        current_diff = similar(diffs[i][0], diffs[i][1])
+        if current_diff > MIN_CORRELATION and current_diff < MAX_CORRELATION:
+            #If i'd want to compare in the popup - 'xxxx' vs 'xxxx' add to diffs_suggestions diff[i][0] value...
+            diffs_suggestions.append([cfg.DIALOGS_FIELD_NAMES[kind][i], diffs[i][1]])
+        # print(cfg.DIALOGS_FIELD_NAMES[kind][i] + ' correlation is: ' + str(current_diff))
+    toText = ''
+    for suggest in diffs_suggestions:
+        toText += suggest[0] + ': ' + suggest[1] + '\n'
+    if len(toText) > 1:
+        suggestion = QtWidgets.QMessageBox()
+        suggestion.setText("Correlation between the following fields is >0.7\n"
+                           "Did you mean: \n" + toText)
+        suggestion.setWindowTitle("Suggestions")
+        suggestion.exec_()
 
 def verification_between_lists(db_list, equipment_list):
     """

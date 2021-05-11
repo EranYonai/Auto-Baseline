@@ -26,7 +26,7 @@ TABLE_NAMES = {
     'DEMO': 'demos'
 }
 
-DIALOGS_FIELD_NAMES = {
+DIALOGS_FIELD_NAMES = { # FIXME
     'workstations': ['Service Tag', 'DSP Version', 'Image Version', 'Configuration', 'Model', 'Graphics Card'],
     'systems': ['System Number', 'PIU Configuration', 'Location Pad', 'Patch Unit', 'Monitor 1', 'Monitor 2',
                 'ECG Phantom', 'Aquarium Number', 'Aquarium Maximo']

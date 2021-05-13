@@ -96,7 +96,7 @@ def choose_db():
 Function that pops a dialog in which there's a list of the existing DBs in db_location.
     :return: The full path to the db chosen.
     """
-    db_location = "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db"
+    db_location = cfg.FILE_PATHS['DB_LOCATION']
     db_list = os.listdir(db_location)  # Grabs all files from specific location^
     for i in range (len(db_list)): db_list[i] = db_list[i][:-3]  # Removes .db
     class db_Dialog(QtWidgets.QDialog):
@@ -121,7 +121,7 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
         return None
 
 
-def send_info_to_db(kind, equipment_list):
+def send_info_to_db(kind, equipment_list, db):
     """
 Function that sends the data recevied to the specific table in a specific db.
     :param kind: DB type as string. e.g. "systems"
@@ -129,7 +129,10 @@ Function that sends the data recevied to the specific table in a specific db.
     """
     tabs = create_tabs_tuples()
     kind = find_table_in_tabs(kind)
-    current_db = choose_db()  # Returns full path to DB.
+    if db is None:
+        current_db = choose_db()  # Returns full path to DB.
+    else:
+        current_db = db
     try:
         if current_db is not None:
             connection = sqlite3.connect(current_db)
@@ -172,14 +175,35 @@ Checks if the item exists in a specific db according to its PRIME KEY.
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
             print ('Verification: ' + str(verified) + ' ' + str(diffs))
         else:
-            # todo: impliment logic when key doesn't exists:
-            # Key doesn't exist
-            # 1. more than 80% of fields have value (+primary)-> write key to db -> output to user Wait for verification
-            # 2. else: output to user to fill atleast 80% of fields (+primary) for entering value to db.
-            print(equipment_list)
+            pass
+            # Verification before db?
         return verified, approved, diffs
     except Exception as e:
         print("Exception at db_item_exists: " + str(e))
+
+def verification_before_db(kind, equipment_list, db):
+    # todo: impliment logic when key doesn't exists:
+    # Key doesn't exist
+    # 1. more than 80% of fields have value (+primary)-> write key to db -> output to user Wait for verification
+    # 2. else: output to user to fill atleast 80% of fields (+primary) for entering value to db.
+    count = 0
+    for field in equipment_list:
+        if len(field) > 0:
+            count += 1
+    if count/len(equipment_list) > cfg.PERCENTAGE_TO_PASS_DB:
+        windowsOpened_alert = QtWidgets.QMessageBox()
+        windowsOpened_alert.setText("Send this machine to Database?")
+        windowsOpened_alert.setWindowTitle("Confirmation Window")
+        windowsOpened_alert.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+        button_okCancel = windowsOpened_alert.exec_()  # if pressed okay -> 1024 if pressed cancel -> 4194304
+        if (button_okCancel == 1024):
+            if len(equipment_list[0]) < 1:
+                experimentalWarning('prime_key_needed')
+            else:
+                send_info_to_db(kind, equipment_list, db)
+    else:
+        experimentalWarning('sent_db_not_full')
+
 
 def similar(str1, str2):
     """
@@ -250,14 +274,10 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     verified, approved, diffs = db_item_exists(type, equipment_list_str, db)
     try:
         if len(diffs) > 0 and approved:
-            if verified:
-                print("Entry is verified")
-                # times used+1
-            else:
-                # Correlation check:
-                suggestions = correlation_differences(diffs, type)
-                # todo: finish config DIALOGS_FIELD_NAMES variable.!
-                #   think of a better popup/way to show the diffs.
+            # Correlation check:
+            suggestions = correlation_differences(diffs, type)
+            # todo: finish config DIALOGS_FIELD_NAMES variable.!
+            #   think of a better popup/way to show the diffs.
             for i in range(len(diffs)): # diffs strcture: [USER_INPUT, ACTUAL_KEY]
                 if diffs[i][0] == diffs[i][1]:
                     equipment_list_obj[i].setStyleSheet('background-color: rgba(0, 255, 30, 0.25);') # Green
@@ -269,9 +289,14 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
                     if (diffs[i][0] == suggest[2] and similar(diffs[i][0], diffs[i][1]) > cfg.MIN_CORRELATION):
                         #fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
                         equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);') # Yellow
-                        equipment_list_obj[i].setToolTip("Maybe: " + diffs[i][1])
-        elif not approved:
+                        equipment_list_obj[i].setToolTip("->" + diffs[i][1])
+            if verified:
+                print("Entry is verified") # times used +1
+        elif not approved and len(diffs) > 0:
             experimentalWarning('verified_not_approved')
+        else:
+            pass
+            verification_before_db(type, equipment_list_str, db)
     except Exception as e:
         print('Exception in system verification: ' + str(e))
 
@@ -349,6 +374,16 @@ def experimentalWarning(kind):
     if (kind == "verified_not_approved"):
         warning = QtWidgets.QMessageBox()
         warning.setText("This machine wasn't approved yet.\nContact Team Leader to verify.")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
+    if kind == "sent_db_not_full":
+        warning = QtWidgets.QMessageBox()
+        warning.setText("Please fill more than " + str(cfg.PERCENTAGE_TO_PASS_DB)*100 + "% of the fields.")
+        warning.setWindowTitle("Warning")
+        warning.exec_()
+    if kind == "prime_key_needed":
+        warning = QtWidgets.QMessageBox()
+        warning.setText("Prime key must exist.")
         warning.setWindowTitle("Warning")
         warning.exec_()
 

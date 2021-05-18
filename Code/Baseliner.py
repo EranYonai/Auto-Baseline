@@ -76,7 +76,25 @@ Function creates a custom INSERT INTO sql command.
     except Exception as e:
         print("Exception at insert_sql_get_string: " + str(e))
 
-
+def update_times_used(prime_key, table_str, db):
+    try:
+        table = find_table_in_tabs(table_str)
+        connection = sqlite3.connect(db)
+        cur = connection.cursor()
+        sql_query = select_sql_query(prime_key, table)
+        cur.execute(sql_query)
+        rows = cur.fetchall()
+        times_used = rows[0][len(rows[0])-1]
+        times_used = int(times_used) + 1
+        sql_query = f'UPDATE {table_str} ' \
+                    f'SET used = \'{str(times_used)}\' ' \
+                    f'WHERE {cfg.TABLE_FIELDS[cfg.TABLE_NAMES[table_str]][0][0]} = {prime_key}'
+        cur.execute(sql_query)
+        cur.close()
+        connection.commit()
+        connection.close()
+    except Exception as e:
+        print("Exception at update_times_used: " + str(e))
 def find_table_in_tabs(kind):
     """
 A very basic function, finds the ID of the table based on a string
@@ -292,6 +310,7 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
                         equipment_list_obj[i].setToolTip("->" + diffs[i][1])
             if verified:
                 print("Entry is verified") # times used +1
+                update_times_used(diffs[0][0], type, db)
         elif not approved and len(diffs) > 0:
             experimentalWarning('verified_not_approved')
         else:
@@ -378,7 +397,7 @@ def experimentalWarning(kind):
         warning.exec_()
     if kind == "sent_db_not_full":
         warning = QtWidgets.QMessageBox()
-        warning.setText("Please fill more than " + str(cfg.PERCENTAGE_TO_PASS_DB)*100 + "% of the fields.")
+        warning.setText("Please fill more than " + str(cfg.PERCENTAGE_TO_PASS_DB*100) + "% of the fields.")
         warning.setWindowTitle("Warning")
         warning.exec_()
     if kind == "prime_key_needed":
@@ -2132,6 +2151,7 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
     # "swlcable":"",
     # "videocable":"",
     # "ethcable":""}
+        self.equipment_list_obj = []
 
     def infoBox(self):
         # self.dict_of_values["system"] = self.udialog.ultrasound_combo.currentText()
@@ -2146,6 +2166,10 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.appVer = self.udialog.applicationver_text.text()
         self.Videocable = self.udialog.videocable_text.text()
         self.Ethcable = self.udialog.ethernet_text.text()
+        self.equipment_list_obj = [self.udialog.serialnum_text, self.udialog.ultrasound_combo, self.udialog.softwarever_text, self.udialog.applicationver_text, self.udialog.videocable_text, self.udialog.ethernet_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def app_ver_na(self):
         require_ver = ['Vivid (i or q)', 'Vivid IQ', 'Vivid S-70']
@@ -2163,12 +2187,9 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
-
+        self.infoBox()
+        equipment_list_str = [self.SLnumber ,self.ultrasystem, self.SWversion, self.appVer, self.Videocable, self.Ethcable]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['ULS'])
     def fillFields(self, clip):
         index = self.udialog.ultrasound_combo.findText(
             clip[0], QtCore.Qt.MatchFixedString)

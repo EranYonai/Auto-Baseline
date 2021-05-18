@@ -23,13 +23,27 @@ TABLE_NAMES = {
     'EPU': 'epus',
     'PRINTER': 'printers',
     'SPU': 'spus',
-    'DEMO': 'demos'
+    'DEMO': 'demos',
+    'workstations': 'WS',
+    'systems': 'SYSTEM',
+    'ultrasounds': 'ULS',
+    'stockerts': 'STOCKERT',
+    'ngens': 'NGEN',
+    'nmarqs': 'NMARQ',
+    'smartablates': 'SMARTABLATE',
+    'pacers': 'PACER',
+    'dongles': 'DONGLE',
+    'epus': 'EPU',
+    'printers': 'PRINTER',
+    'spus': 'SPU',
+    'demos': 'DEMO'
 }
 
 DIALOGS_FIELD_NAMES = { # FIXME
     'workstations': ['Service Tag', 'DSP Version', 'Image Version', 'Configuration', 'Model', 'Graphics Card'],
     'systems': ['System Number', 'PIU Configuration', 'Location Pad', 'Patch Unit', 'Monitor 1', 'Monitor 2',
-                'ECG Phantom', 'Aquarium Number', 'Aquarium Maximo']
+                'ECG Phantom', 'Aquarium Number', 'Aquarium Maximo'],
+    'ultrasounds': ['Serial Number', 'Ultrasound System', 'Software Version', 'Application Version', 'Video Cable', 'Etherent Cable']
 }
 TABLE_FIELDS = {
     'WS': [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],

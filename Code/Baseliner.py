@@ -5,6 +5,8 @@ import sqlite3
 import os
 import cfg as cfg
 import xml.etree.ElementTree as ET
+import requests
+import subprocess, sys
 from selenium import webdriver
 from difflib import SequenceMatcher
 from selenium.webdriver.chrome.options import Options
@@ -28,6 +30,7 @@ from Forms.printer_dialog import Ui_Dialog as printer_Ui
 from Forms.CatalogHelper_details import Ui_Dialog as cathelp_detUi
 from Forms.CatalogHelper_main import Ui_Dialog as cathelp_mainUi
 from Forms.spu_dialog import Ui_Dialog as spu_Ui
+from bs4 import BeautifulSoup
 
 def create_tabs_tuples():
     """
@@ -2240,9 +2243,43 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
         except Exception as e:
             return print("Exception in getMFG_selenium: " +str(e))
 
+    def search_catheter(self, search_data):
+        try:
+            # This function uses powershell command to search in catheter catalog and retrive html page of the results
+            # using beautifulSoup the function serach the html for the table, and extracting the first row to details_info
+            # returning the Mfg part number, Description, Family, Catalog - by this order
+            PS_PATH = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' # path to run powershell
+            command = f'$txt = "{search_data}" \n' \
+                    '$s = Invoke-WebRequest -Uri "http://itsusrawsp10939.jnj.com/partnolookup/Main.aspx" -UseDefaultCredentials `\n' \
+                    '-Method "POST" `\n' \
+                    '-Headers @{ \n' \
+                    '"Cache-Control"="max-age=0"\n' \
+                    '"Upgrade-Insecure-Requests"="1"\n' \
+                    '"Origin"="http://itsusrawsp10939.jnj.com"\n' \
+                    '"User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 Edg/86.0.622.58"\n' \
+                    '"Accept"="text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"\n' \
+                    '"Referer"="http://itsusrawsp10939.jnj.com/partnolookup/Main.aspx"\n' \
+                    '"Accept-Encoding"="gzip, deflate"\n' \
+                    '"Accept-Language"="en-US,en;q=0.9,he;q=0.8"\n' \
+                    '"Cookie"="_ga=GA1.2.231059344.1603268627; ASP.NET_SessionId=appg4m3nazairir3shlei445"\n' \
+                    '} `\n' \
+                    '-ContentType "application/x-www-form-urlencoded" `\n' \
+                    '-Body ("__EVENTTARGET=&__EVENTARGUMENT=&__VIEWSTATE=Jx1bFdZUxxK%2FIyJlVuaAS8d6GW%2F2MZKhNWzn7ZDD4xp1ptT4Zl4pr7PS1o7yb2RO%2F%2FFSGz7MkXsqu%2FD2i5c2hzHdq4FgBfjUoW5QDaa14%2BIlCGqsZUAVFmiB6TenAnicIBfJvHNjYRtz62Zag0Tq01i5ZKcngUt9DMa3d0ws7N%2BPGfciV7w3McgzH8SRRKPTKHutTYZ5SL%2FdEAQ7e0D2RpWwOpm9Z8mAtMVvuDz17wCjFqCEH37Sx3NoSW9cSOKkb8RNekuuCgE9S2%2BFaHyMs%2B3dPa9QtsdG3YcAfIZ8LwzByZRSfrWF6MfhaAfNOEWfeyfxaSWZZx%2B4amLCXwPiBimvxA%2Ff5jJUovUttuH%2FU2%2Fx3rwfGajlM4o84vrIKKl1qjsZhuTCwIn8bfz9HxieyQDjeRNhTgGuAt1MK6fGmVD2BWpaGd9w2yHTE222v7zACxQu8WrWn1SnJMZbeJyyLD3sQm91Ne57QgYRMGRycq1Ou2QGOUkF%2FuAulkjOvIFAjPe07zHCyV9kX8h49NqWuOGGgZQShSRQWJdUVaraux10Nqmc1a5auzT7JlRtobnNHDUVCsjBKykwiHawyzKJNe%2BQxWcfmLbDVSMP9JTJxvt%2Fr%2FNCyUL9sN4jcA3r8aGjjilxIsxVILKlgwDA%2FM5xO010AtJ1jsOe4U%2FvLkfngznvVUxxU3KfU55IP2X7uHeCZ8Ei%2F%2FSadtvULUvJPqzib%2F4Rwn5MhmRAn6ePcUDVaxDPzeTYAp4c3MPQm4oRH85MRRXA77lA6XmIaf8W0SaksvE8DOhSK79azfOeYiVB21osOqiQJhej3m4%2F%2FLQlTdUuP8OBeueQ56H%2ByUhU6e6q4yeVTQxeG0dsAyi%2B5AyduS2zgocfLck6hkiX2octeVY4nREgV%2Bewb8%2B%2BVMAbt1Wha5K03CvxUa%2BGPBLepjdPeWw28YUij0%2BJs5%2BoFE1MyP%2BadM2dKWPQDWM4CQgGhHYEtpEt17sumnvQA868taWFwHA88MZd%2BtXiYZMWquDmekKVYMaFsoiedfY8w897rQNb0gSLXoWXOs14JtVIYx%2BNu4%2F%2FLl3YHzMniN9FtRpSvQEmDY7AYe1luXcG%2BtZb4lo%2FVdADc6QOXXbGITK%2BECq7ww3RLrYlY3KKwBI6QkRxfMLQmznuNIdm5RmST%2BmJJ0JIUVQyQ5NTuGxx9CiQEP4TcpamMZ%2FSVbTpykWrxL44kI7X44SqbPsx26fD71Qg6WXyLXkRjx%2BuwMJjyss7Dgt288RDpiwGLkQ1ccSpx3%2BCsJyI0HEKyh38rClj8XgHYZiiszxkH9rsizQkzt0mHjPrBVkSUaZOjGN7HTzMyv3zJCqohdjYVruoRCDlWB%2F8UgfTRRzF9PBgTToojqnC5wwWNtB83XMMcK83niy9ycDAL16thx0vxhx2rVdK9GnPaC5C%2FVS6dkA8seryip8XYdKXQwuCBVwhKCUgWtWu21ffFSNcKSYh4zOylC4yJd%2FHD5I8kA%2BBP54%3D&__VIEWSTATEGENERATOR=3F1D2CC7&__VIEWSTATEENCRYPTED=&__EVENTVALIDATION=3MeVR2ARcxwwgDIpmzhIz6e0P%2BHEJIzw%2BEmhH%2Fvny6FuNhtcq9LABi52ZS5av3em90%2F1VT6RDNWHykf3qrkb9HTUg%2FC472C8gauFaFoiRfHIIejdITmRrmJyNlSymlUH8jdo%2Fw%3D%3D&txtPartNo=" + $txt + "&btnLookup=Search&TextBoxWatermarkExtender1_ClientState=&txtSRP5=&TextBoxWatermarkExtender2_ClientState=")\n' \
+                    '$s.Content' # command to open catheter catalog and search 'search_data' 
+            search_results = BeautifulSoup(str(subprocess.Popen([PS_PATH, command], stdout=subprocess.PIPE).communicate()), 'lxml') # extracting html page of catheter catalog using powershell and the command
+            details_info = [] # details_info is an arry that hold all the data from the first row in catheter catalog table
+            table_data = search_results.table.find_all('td') #search for the table in search_results (html content)
+            if table_data[0].text == "No values found.":
+                return None
+            for i in range(9):
+                details_info.append(table_data[i].text)
+            return [details_info[3].strip(),details_info[7].strip(),details_info[8].strip(),details_info[2].strip()] # 3-mfg part number, 7-description, 8-family, 2-catalog
+        except Exception as e:
+            return print("Exception in serach_catheter: " + )
+
     def oneCatalog(self):
-        cat = self.getMFG_selenium(self.ui.signelCatalog_Text.text())
-        if (cat != False):
+        cat = self.search_catheter(self.ui.signelCatalog_Text.text())
+        if (cat is not None):
             singleCat = SingleCatheter(cat, self)
             singleCat.exec_()
         else:

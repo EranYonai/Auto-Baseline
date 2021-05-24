@@ -6,6 +6,7 @@ import os
 import cfg as cfg
 import xml.etree.ElementTree as ET
 import requests
+import lxml # Needed??
 import subprocess, sys
 from selenium import webdriver
 from difflib import SequenceMatcher
@@ -408,6 +409,22 @@ def experimentalWarning(kind):
         warning.setText("Prime key must exist.")
         warning.setWindowTitle("Warning")
         warning.exec_()
+    if kind == 'export_error':
+        notimplemented = QtWidgets.QMessageBox()
+        notimplemented.setText("Error while exporting")
+        notimplemented.setWindowTitle("Error while exporting")
+        notimplemented.exec_()
+    if kind == 'export_success':
+        notimplemented = QtWidgets.QMessageBox()
+        notimplemented.setText("Exported succssfully, save _config file in order to import in the future")
+        notimplemented.setWindowTitle("Exported Succssfully!")
+        notimplemented.exec_()
+    if kind == 'import_error':
+        notimplemented = QtWidgets.QMessageBox()
+        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
+        notimplemented.setText('Error in importing')
+        notimplemented.setWindowTitle("Error")
+        notimplemented.exec_()
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -809,7 +826,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return state  # if any window opened return False, if not, return True.
 
     def catalogHelp(self):
-        experimentalWarning("experimental_chrome")
+        # experimentalWarning("experimental_chrome") no need for this notification anymore.
         catWin = CatalogHelper_Dialog(self)  # Inheritance -> Passing MainWindow (self) as an argument
         catWin.exec_()
 
@@ -1526,8 +1543,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def exportXML(self, fileLocation):
         try:
-            fileLocation = fileLocation[:-4]
-            fileLocation += '_config.xml'
+            fileLocation = fileLocation[:-4] # Get fileLocation and remove the .txt [:-4]
+            fileLocation += '_config.xml' # change file name to xxx_config.xml
             root = ET.Element("Baseline_data")  # Root tag -> <Baseline_data>
             comment = ET.Comment(
                 "Import data for Baseline Tool")  # Creating a tag to the root tag and appending it the next line
@@ -1536,6 +1553,7 @@ class MainWindow(QtWidgets.QMainWindow):
             title_header = ET.SubElement(root, "Header")
             title_header.text = self.ui.header_text.toPlainText()
             # Start of WS export
+            #this part repeats itself, understand one you understand all.
             countOpenWin = 0
             count_ = 0
             for tf in (self.workstationOpened):
@@ -1789,16 +1807,10 @@ class MainWindow(QtWidgets.QMainWindow):
             b_xml = ET.tostring(root)  # parse to bytes
             with open(fileLocation, "wb") as f:  # might want to to apply the xml insted of rewriting.
                 f.write(b_xml)
-            notimplemented = QtWidgets.QMessageBox()
-            notimplemented.setText("Exported succssfully, save _config file in order to import in the future")
-            notimplemented.setWindowTitle("Exported Succssfully!")
-            notimplemented.exec_()
+            experimentalWarning("export_success")
         except Exception as e:
-            notimplemented = QtWidgets.QMessageBox()
-            notimplemented.setText("Error while exporting")
-            notimplemented.setWindowTitle("Error while exporting")
-            notimplemented.exec_()
-            print(e)
+            experimentalWarning('export_error')
+            print("Exception in Export_XML: " + str(e))
 
     # format is a function that takes (self,type,position) as arguments.
     # self being the pyqt5 inheritance - this function is being called by self.format(type,position)
@@ -1991,12 +2003,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 if (button_okCancel == 4194304):
                     pass  # well, cancel
         except Exception as e:
-            notimplemented = QtWidgets.QMessageBox()
-            notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-            notimplemented.setText('Error in importing')
-            notimplemented.setWindowTitle("Error")
-            notimplemented.exec_()
-            print(e)
+            experimentalWarning('import_error')
+            print("Exception in import: " + str(e))
 
     def importBase(self, filelocation):
         imported_xml = ET.parse(filelocation)

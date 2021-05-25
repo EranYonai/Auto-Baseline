@@ -40,12 +40,34 @@ TABLE_NAMES = {
     'demos': 'DEMO'
 }
 
-DIALOGS_FIELD_NAMES = { # FIXME
+DIALOGS_FIELD_NAMES = {
     'workstations': ['Service Tag', 'DSP Version', 'Image Version', 'Configuration', 'Model', 'Graphics Card'],
     'systems': ['System Number', 'PIU Configuration', 'Location Pad', 'Patch Unit', 'Monitor 1', 'Monitor 2',
                 'ECG Phantom', 'Aquarium Number', 'Aquarium Maximo'],
-    'ultrasounds': ['Serial Number', 'Ultrasound System', 'Software Version', 'Application Version', 'Video Cable', 'Etherent Cable']
+    'ultrasounds': ['Serial Number', 'Ultrasound System', 'Software Version', 'Application Version', 'Video Cable',
+                    'Etherent Cable'],
+    'stockerts': ['System SW', 'Serial Number', 'Stockert EP IO SN', 'EP IO Interface cable', 'EP Shuttle to PIU',
+                  'Global Port', 'Ablation Adaptor CBL', 'RFG to WS Cable', 'Patch Electrode Cable', 'Foot Pedal'],
+    'smartablates': ['System SW', 'Serial Number', 'RFG to PIU Cable', 'RFG to WS Cable', 'Foot Pedal'],
+    'ngens': ['Console SW', 'Console PN', 'Console Version', 'PSU SN', 'PSU PN', 'PSU Cable', 'RFG to PIU Cable',
+              'Monitor 1 SN', 'Monitor 1 PN', 'Monitor 1 Version', 'Monitor 1 Hub SN', 'Monitor 1 Hub PN',
+              'Monitor 1 PSU SN', 'Monitor 1 PSU PN', 'Monitor 2 SN', 'Monitor 2 PN', 'Monitor 2Version',
+              'Monitor 2 Hub SN', 'Monitor 2 Hub PN', 'Monitor 2 PSU SN', 'Monitor 2 PSU PN', 'nGEN Pump SN',
+              'nGEN Pump PN', 'nGEN Pump Version', 'Pump to Console Cable', 'Foot Pedal'],
+    'nmarqs': ['System SW', 'Serial Number', 'RFG to Carto Cable', 'Ethernet Cable', 'RFG to Pump Cable',
+               'RFG to Monitor', 'CoolFlow Pump SN', 'CoolFlow Pump Model', 'Foot Pedal'],
+    'pacers': ['Pacer Type', 'Serial Number'],
+    'dongles': ['Dongle SN', 'Dongle SW Version', 'Dongle HW Version'],
+    'printers': ['Printer Model', 'Printer SN'],
+    'epus': ['Unit SN', 'Unit Version'],
+    'spus': ['Serial Number', 'Part Number', 'SW Version', 'Main FW Version', 'Secondary FW Version', 'Front Board PN',
+             'Front Board REV', 'Led Board PN', 'Led Board REV', 'Mother Board SN', 'Mother Board REV', 'Back Board PN',
+             'Back Board REV', 'Power Board PN', 'Power Board REV', 'Upper Board PN', 'Upper Board REV', 'Pacing Board PN',
+             'Pacing Board REV', 'TPI Board SN', 'TPI Board REV', 'Digital Board SN', 'Digital Board REV',
+             'ECG Board SN', 'ECG Board REV', 'SPU Prototypes PN', 'SPU Prototypes REV'],
+    'demos': ['WS Type', 'SW Version', 'DSP Version', 'Image Version', 'Service Tag', 'SurPoint']
 }
+
 TABLE_FIELDS = {
     'WS': [["service_tag", "STRING PRIMARY KEY"], ["dsp_version", "STRING"], ["image_version", "STRING"],
                 ["configuration", "STRING"], ["model", "STRING"], ["graphics_card", "STRING"],

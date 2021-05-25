@@ -257,7 +257,7 @@ def correlation_differences(diffs, kind):
     diffs_suggestions = []
     for i in range(len(diffs)):
         current_diff = similar(diffs[i][0], diffs[i][1])
-        if current_diff > cfg.MIN_CORRELATION and current_diff < cfg.MAX_CORRELATION:
+        if cfg.MIN_CORRELATION < current_diff < cfg.MAX_CORRELATION:
             # If i'd want to compare in the popup - 'xxxx' vs 'xxxx' add to diffs_suggestions diff[i][0] value...
             diffs_suggestions.append([cfg.DIALOGS_FIELD_NAMES[kind][i], diffs[i][1], diffs[i][0]])
         # print(cfg.DIALOGS_FIELD_NAMES[kind][i] + ' correlation is: ' + str(current_diff))
@@ -307,9 +307,7 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     try:
         if len(diffs) > 0 and approved:
             # Correlation check:
-            suggestions = correlation_differences(diffs, type)
-            # todo: finish config DIALOGS_FIELD_NAMES variable.!
-            #   think of a better popup/way to show the diffs.
+            suggestions = correlation_differences(diffs, type) # [['field_text', dbvalue, uservalue]] ([['Aquarium Number', 'SQA1', 'SQA']])
             for i in range(len(diffs)):  # diffs strcture: [USER_INPUT, ACTUAL_KEY]
                 if diffs[i][0] == diffs[i][1]:
                     equipment_list_obj[i].setStyleSheet('background-color: rgba(0, 255, 30, 0.25);')  # Green
@@ -318,7 +316,7 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
                     equipment_list_obj[i].setStyleSheet('background-color: rgba(255, 0, 0, 0.35);')  # Red
                     equipment_list_obj[i].setToolTip("Not Verified")
                 for suggest in suggestions:
-                    if (diffs[i][0] == suggest[2] and similar(diffs[i][0], diffs[i][1]) > cfg.MIN_CORRELATION):
+                    if diffs[i][0] == suggest[2] and similar(diffs[i][0], diffs[i][1]) > cfg.MIN_CORRELATION:
                         # fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
                         equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);')  # Yellow
                         equipment_list_obj[i].setToolTip("->" + diffs[i][1])
@@ -2169,13 +2167,7 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.check_button.clicked.connect(self.verification)
         self.udialog.ultrasound_combo.currentTextChanged.connect(self.app_ver_na)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
-        # dict_of_values = {
-        # "system": "",
-        # "swversion": "",
-        # "slnumber":"",
-        # "swlcable":"",
-        # "videocable":"",
-        # "ethcable":""}
+
         self.equipment_list_obj = []
 
     def infoBox(self):
@@ -2243,31 +2235,31 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
         self.ui.getCatalog_B.clicked.connect(self.oneCatalog)
         self.mainWin = mainWin
 
-    def getMFG_selenium(self, part):
-        try:
-            # This function uses selenium to open Chrome -> go to catheter catalog, enter 'part' into the search bar
-            # Presses search and returns list of mfgpart, description, family, catalog in this order if it doesn't find, returns False
-            options = Options()
-            options.headless = True
-            options.HideCommandPromptWindow = True
-            driver = webdriver.Chrome(chrome_options=options)  # driver is a webdriver (chromedriver.exe at root folder)
-            driver.get('http://itsusrawsp10939.jnj.com/partnolookup/Default.aspx')  # Sents to web address
-            searchbox = driver.find_element_by_xpath(
-                '//*[@id="txtPartNo"]')  # searches for the element xpath of searchbox
-            searchbox.send_keys(part)  # Enters the input it gets to the search bar
-            searchButton = driver.find_element_by_xpath('//*[@id="btnLookup"]')  # looks and finds the search button
-            searchButton.click()  # Clicks on it
-            mfg_part_number = driver.find_element_by_xpath(
-                '//*[@id="grdResults"]/tbody/tr[2]/td[4]')  # Looks for the xpath of the mfg field
-            description = driver.find_element_by_xpath('//*[@id="grdResults"]/tbody/tr[2]/td[8]')
-            family = driver.find_element_by_xpath('//*[@id="grdResults"]/tbody/tr[2]/td[9]')
-            catalog = driver.find_element_by_xpath('//*[@id="grdResults"]/tbody/tr[2]/td[3]')
-            result = [mfg_part_number.text, description.text, family.text, catalog.text]
-            driver.close()
-            driver.quit()
-            return result
-        except Exception as e:
-            return print("Exception in getMFG_selenium: " + str(e))
+    # def getMFG_selenium(self, part):
+    #     try:
+    #         # This function uses selenium to open Chrome -> go to catheter catalog, enter 'part' into the search bar
+    #         # Presses search and returns list of mfgpart, description, family, catalog in this order if it doesn't find, returns False
+    #         options = Options()
+    #         options.headless = True
+    #         options.HideCommandPromptWindow = True
+    #         driver = webdriver.Chrome(chrome_options=options)  # driver is a webdriver (chromedriver.exe at root folder)
+    #         driver.get('http://itsusrawsp10939.jnj.com/partnolookup/Default.aspx')  # Sents to web address
+    #         searchbox = driver.find_element_by_xpath(
+    #             '//*[@id="txtPartNo"]')  # searches for the element xpath of searchbox
+    #         searchbox.send_keys(part)  # Enters the input it gets to the search bar
+    #         searchButton = driver.find_element_by_xpath('//*[@id="btnLookup"]')  # looks and finds the search button
+    #         searchButton.click()  # Clicks on it
+    #         mfg_part_number = driver.find_element_by_xpath(
+    #             '//*[@id="grdResults"]/tbody/tr[2]/td[4]')  # Looks for the xpath of the mfg field
+    #         description = driver.find_element_by_xpath('//*[@id="grdResults"]/tbody/tr[2]/td[8]')
+    #         family = driver.find_element_by_xpath('//*[@id="grdResults"]/tbody/tr[2]/td[9]')
+    #         catalog = driver.find_element_by_xpath('//*[@id="grdResults"]/tbody/tr[2]/td[3]')
+    #         result = [mfg_part_number.text, description.text, family.text, catalog.text]
+    #         driver.close()
+    #         driver.quit()
+    #         return result
+    #     except Exception as e:
+    #         return print("Exception in getMFG_selenium: " + str(e))
 
     def search_catheter(self, search_data):
         try:
@@ -2830,17 +2822,17 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.stdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.stdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable,
+                              self.ep_to_piu, self.global_port, self.gen_to_ws, self.patch_cable, self.foot_pedal]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['STOCKERT'])
 
     def infoBox(self):
         self.sysSW = self.stdialog.software_text.text()
@@ -2856,6 +2848,13 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.foot_pedal = self.stdialog.footPedal_text.text()
         self.infoList = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable,
                          self.ep_to_piu, self.global_port, self.gen_to_ws, self.patch_cable, self.foot_pedal]
+        self.equipment_list_obj = [self.stdialog.software_text, self.stdialog.SN_text, self.stdialog.EPcable_text,
+                                   self.stdialog.abaadaCable_text, self.stdialog.epboxSN_text, self.stdialog.epioCable_text,
+                                   self.stdialog.ep_to_piu_text, self.stdialog.global_port_text, self.stdialog.gen_to_ws_text,
+                                   self.stdialog.patch_cable_text, self.stdialog.footPedal_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.stdialog.software_text.setText(clip[0])

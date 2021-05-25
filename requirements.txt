@@ -1,9 +1,16 @@
+beautifulsoup4==4.9.3
+bs4==0.0.1
+certifi==2020.12.5
+chardet==4.0.0
 helpdev==0.7.1
+idna==2.10
 importlib-metadata==3.1.1
+lxml==4.6.3
 PyQt5==5.15.2
 PyQt5-sip==12.8.1
 QDarkStyle==2.8.1
 QtPy==1.9.0
-selenium==3.141.0
+requests==2.25.1
+soupsieve==2.2.1
 urllib3==1.26.4
 zipp==3.4.0

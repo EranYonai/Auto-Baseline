@@ -2,7 +2,7 @@ PASSWORDS = {
     'DB_MANAGER': 'dbManager'
 }
 FILE_PATHS = {
-    'DB_LOCATION': "C:\\Users\\eyonai\\OneDrive - JNJ\\Documents\\GitHub\\Baseliner\\Code\\db\\",
+    'DB_LOCATION': "C:\\Users\\Eyonai\\Documents\\GitHub\\AutoBaseline\\Code\\db\\",
     'POWERSHELL': 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
 }
 

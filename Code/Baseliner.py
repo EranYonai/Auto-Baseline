@@ -6,11 +6,11 @@ import os
 import cfg as cfg
 import xml.etree.ElementTree as ET
 import requests
-import lxml # Needed??
+# import lxml # Needed??
 import subprocess, sys
-from selenium import webdriver
+# from selenium import webdriver # Not using selenium anymore
+# from selenium.webdriver.chrome.options import Options # Not using selenium anymore
 from difflib import SequenceMatcher
-from selenium.webdriver.chrome.options import Options
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtWidgets import QListWidget
 from Forms.MainWindowBig import Ui_MainWindow
@@ -32,6 +32,7 @@ from Forms.CatalogHelper_details import Ui_Dialog as cathelp_detUi
 from Forms.CatalogHelper_main import Ui_Dialog as cathelp_mainUi
 from Forms.spu_dialog import Ui_Dialog as spu_Ui
 from bs4 import BeautifulSoup
+
 
 def create_tabs_tuples():
     """
@@ -80,6 +81,7 @@ Function creates a custom INSERT INTO sql command.
     except Exception as e:
         print("Exception at insert_sql_get_string: " + str(e))
 
+
 def update_times_used(prime_key, table_str, db):
     try:
         table = find_table_in_tabs(table_str)
@@ -88,7 +90,7 @@ def update_times_used(prime_key, table_str, db):
         sql_query = select_sql_query(prime_key, table)
         cur.execute(sql_query)
         rows = cur.fetchall()
-        times_used = rows[0][len(rows[0])-1]
+        times_used = rows[0][len(rows[0]) - 1]
         times_used = int(times_used) + 1
         sql_query = f'UPDATE {table_str} ' \
                     f'SET used = \'{str(times_used)}\' ' \
@@ -99,6 +101,8 @@ def update_times_used(prime_key, table_str, db):
         connection.close()
     except Exception as e:
         print("Exception at update_times_used: " + str(e))
+
+
 def find_table_in_tabs(kind):
     """
 A very basic function, finds the ID of the table based on a string
@@ -120,7 +124,8 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
     """
     db_location = cfg.FILE_PATHS['DB_LOCATION']
     db_list = os.listdir(db_location)  # Grabs all files from specific location^
-    for i in range (len(db_list)): db_list[i] = db_list[i][:-3]  # Removes .db
+    for i in range(len(db_list)): db_list[i] = db_list[i][:-3]  # Removes .db
+
     class db_Dialog(QtWidgets.QDialog):
         def __init__(self):
             super(db_Dialog, self).__init__()
@@ -130,16 +135,17 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
             self.setWindowTitle("Database")
             self.setMinimumWidth(400)
             item, ok_pressed = QtWidgets.QInputDialog.getItem(self, "Database", "Choose DB:",
-                                                    db_list, 0, False)
+                                                              db_list, 0, False)
             if ok_pressed and item:
                 self.selected_item = item
+
     try:
         popup = db_Dialog()
         chosen_db = popup.selected_item + '.db'
         print("choose_db: selected db is: " + chosen_db)
         return db_location + '\\' + chosen_db
     except Exception as e:
-        print("Exception at choose_db: "+str(e))
+        print("Exception at choose_db: " + str(e))
         return None
 
 
@@ -189,19 +195,20 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         sql_query = select_sql_query(equipment_list[0], table)
         cur.execute(sql_query)
         rows = cur.fetchall()
-        print('db_item_exists found: '+str(rows))
+        print('db_item_exists found: ' + str(rows))
         cur.close()
         connection.commit()
         connection.close()
         if len(rows) > 0:  # Found rows value in table
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
-            print ('Verification: ' + str(verified) + ' ' + str(diffs))
+            print('Verification: ' + str(verified) + ' ' + str(diffs))
         else:
             pass
             # Verification before db?
         return verified, approved, diffs
     except Exception as e:
         print("Exception at db_item_exists: " + str(e))
+
 
 def verification_before_db(kind, equipment_list, db):
     # todo: impliment logic when key doesn't exists:
@@ -212,7 +219,7 @@ def verification_before_db(kind, equipment_list, db):
     for field in equipment_list:
         if len(field) > 0:
             count += 1
-    if count/len(equipment_list) > cfg.PERCENTAGE_TO_PASS_DB:
+    if count / len(equipment_list) > cfg.PERCENTAGE_TO_PASS_DB:
         windowsOpened_alert = QtWidgets.QMessageBox()
         windowsOpened_alert.setText("Send this machine to Database?")
         windowsOpened_alert.setWindowTitle("Confirmation Window")
@@ -237,6 +244,7 @@ def similar(str1, str2):
     """
     return SequenceMatcher(None, str1, str2).ratio()
 
+
 def correlation_differences(diffs, kind):
     """
     Checks the correlation in the differences between dialog value and db value.
@@ -250,7 +258,7 @@ def correlation_differences(diffs, kind):
     for i in range(len(diffs)):
         current_diff = similar(diffs[i][0], diffs[i][1])
         if current_diff > cfg.MIN_CORRELATION and current_diff < cfg.MAX_CORRELATION:
-            #If i'd want to compare in the popup - 'xxxx' vs 'xxxx' add to diffs_suggestions diff[i][0] value...
+            # If i'd want to compare in the popup - 'xxxx' vs 'xxxx' add to diffs_suggestions diff[i][0] value...
             diffs_suggestions.append([cfg.DIALOGS_FIELD_NAMES[kind][i], diffs[i][1], diffs[i][0]])
         # print(cfg.DIALOGS_FIELD_NAMES[kind][i] + ' correlation is: ' + str(current_diff))
     # For now, I think this part is not good, popup is annoying.
@@ -267,6 +275,7 @@ def correlation_differences(diffs, kind):
     #     suggestion.exec_()
     return diffs_suggestions
 
+
 def verification_between_lists(db_list, equipment_list):
     """
 Function that takes two lists and compare between them, if differences were found return them.
@@ -282,6 +291,7 @@ Function that takes two lists and compare between them, if differences were foun
         if equipment_list[i] != str(db_list[i]):
             verified = False
     return (verified, db_list[len(equipment_list)] == 1, diffs)
+
 
 def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     """
@@ -300,20 +310,20 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
             suggestions = correlation_differences(diffs, type)
             # todo: finish config DIALOGS_FIELD_NAMES variable.!
             #   think of a better popup/way to show the diffs.
-            for i in range(len(diffs)): # diffs strcture: [USER_INPUT, ACTUAL_KEY]
+            for i in range(len(diffs)):  # diffs strcture: [USER_INPUT, ACTUAL_KEY]
                 if diffs[i][0] == diffs[i][1]:
-                    equipment_list_obj[i].setStyleSheet('background-color: rgba(0, 255, 30, 0.25);') # Green
+                    equipment_list_obj[i].setStyleSheet('background-color: rgba(0, 255, 30, 0.25);')  # Green
                     equipment_list_obj[i].setToolTip("Verified")
                 else:
-                    equipment_list_obj[i].setStyleSheet('background-color: rgba(255, 0, 0, 0.35);') # Red
+                    equipment_list_obj[i].setStyleSheet('background-color: rgba(255, 0, 0, 0.35);')  # Red
                     equipment_list_obj[i].setToolTip("Not Verified")
                 for suggest in suggestions:
                     if (diffs[i][0] == suggest[2] and similar(diffs[i][0], diffs[i][1]) > cfg.MIN_CORRELATION):
-                        #fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
-                        equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);') # Yellow
+                        # fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
+                        equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);')  # Yellow
                         equipment_list_obj[i].setToolTip("->" + diffs[i][1])
             if verified:
-                print("Entry is verified") # times used +1
+                print("Entry is verified")  # times used +1
                 update_times_used(diffs[0][0], type, db)
         elif not approved and len(diffs) > 0:
             experimentalWarning('verified_not_approved')
@@ -322,6 +332,7 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
             verification_before_db(type, equipment_list_str, db)
     except Exception as e:
         print('Exception in system verification: ' + str(e))
+
 
 def select_sql_query(prime_key, table):
     """
@@ -401,7 +412,7 @@ def experimentalWarning(kind):
         warning.exec_()
     if kind == "sent_db_not_full":
         warning = QtWidgets.QMessageBox()
-        warning.setText("Please fill more than " + str(cfg.PERCENTAGE_TO_PASS_DB*100) + "% of the fields.")
+        warning.setText("Please fill more than " + str(cfg.PERCENTAGE_TO_PASS_DB * 100) + "% of the fields.")
         warning.setWindowTitle("Warning")
         warning.exec_()
     if kind == "prime_key_needed":
@@ -425,6 +436,7 @@ def experimentalWarning(kind):
         notimplemented.setText('Error in importing')
         notimplemented.setWindowTitle("Error")
         notimplemented.exec_()
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -1543,8 +1555,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def exportXML(self, fileLocation):
         try:
-            fileLocation = fileLocation[:-4] # Get fileLocation and remove the .txt [:-4]
-            fileLocation += '_config.xml' # change file name to xxx_config.xml
+            fileLocation = fileLocation[:-4]  # Get fileLocation and remove the .txt [:-4]
+            fileLocation += '_config.xml'  # change file name to xxx_config.xml
             root = ET.Element("Baseline_data")  # Root tag -> <Baseline_data>
             comment = ET.Comment(
                 "Import data for Baseline Tool")  # Creating a tag to the root tag and appending it the next line
@@ -1553,7 +1565,7 @@ class MainWindow(QtWidgets.QMainWindow):
             title_header = ET.SubElement(root, "Header")
             title_header.text = self.ui.header_text.toPlainText()
             # Start of WS export
-            #this part repeats itself, understand one you understand all.
+            # this part repeats itself, understand one you understand all.
             countOpenWin = 0
             count_ = 0
             for tf in (self.workstationOpened):
@@ -1825,7 +1837,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.ultraList_info[position][3] != 'N\A':
                 return 'Ultrasound #%d: \nUltrasound System:\t%s\nSoftware Version:\t%s\nSerial Number:\t\t%s\nApplication Version:\t%s\nVideo Cable:\t\t%s\nEthernet Cable:\t\t%s\n-------------------\n' % (
                     position + 1, self.ultraList_info[position][0], self.ultraList_info[position][1],
-                    self.ultraList_info[position][2], self.ultraList_info[position][3], self.ultraList_info[position][4],
+                    self.ultraList_info[position][2], self.ultraList_info[position][3],
+                    self.ultraList_info[position][4],
                     self.ultraList_info[position][5])
             return 'Ultrasound #%d: \nUltrasound System:\t%s\nSoftware Version:\t%s\nSerial Number:\t\t%s\nVideo Cable:\t\t%s\nEthernet Cable:\t\t%s\n-------------------\n' % (
                 position + 1, self.ultraList_info[position][0], self.ultraList_info[position][1],
@@ -2146,6 +2159,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if (type == "Extenders"):
             self.ui.extender_list_2.addItem(listValues)
 
+
 class Ultrasound_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Ultrasound_Dialog, self).__init__()
@@ -2155,13 +2169,13 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.check_button.clicked.connect(self.verification)
         self.udialog.ultrasound_combo.currentTextChanged.connect(self.app_ver_na)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
-    # dict_of_values = {
-    # "system": "",
-    # "swversion": "",
-    # "slnumber":"",
-    # "swlcable":"",
-    # "videocable":"",
-    # "ethcable":""}
+        # dict_of_values = {
+        # "system": "",
+        # "swversion": "",
+        # "slnumber":"",
+        # "swlcable":"",
+        # "videocable":"",
+        # "ethcable":""}
         self.equipment_list_obj = []
 
     def infoBox(self):
@@ -2177,7 +2191,9 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.appVer = self.udialog.applicationver_text.text()
         self.Videocable = self.udialog.videocable_text.text()
         self.Ethcable = self.udialog.ethernet_text.text()
-        self.equipment_list_obj = [self.udialog.serialnum_text, self.udialog.ultrasound_combo, self.udialog.softwarever_text, self.udialog.applicationver_text, self.udialog.videocable_text, self.udialog.ethernet_text]
+        self.equipment_list_obj = [self.udialog.serialnum_text, self.udialog.ultrasound_combo,
+                                   self.udialog.softwarever_text, self.udialog.applicationver_text,
+                                   self.udialog.videocable_text, self.udialog.ethernet_text]
         for field in self.equipment_list_obj:
             field.setStyleSheet('')
             field.setToolTip('')
@@ -2199,8 +2215,10 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
 
     def verification(self):
         self.infoBox()
-        equipment_list_str = [self.SLnumber ,self.ultrasystem, self.SWversion, self.appVer, self.Videocable, self.Ethcable]
+        equipment_list_str = [self.SLnumber, self.ultrasystem, self.SWversion, self.appVer, self.Videocable,
+                              self.Ethcable]
         verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['ULS'])
+
     def fillFields(self, clip):
         index = self.udialog.ultrasound_combo.findText(
             clip[0], QtCore.Qt.MatchFixedString)
@@ -2249,25 +2267,29 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             driver.quit()
             return result
         except Exception as e:
-            return print("Exception in getMFG_selenium: " +str(e))
+            return print("Exception in getMFG_selenium: " + str(e))
 
     def search_catheter(self, search_data):
         try:
             # This function uses powershell command to search in catheter catalog and retrive html page of the results
             # using beautifulSoup the function serach the html for the table, and extracting the first row to details_info
             # returning the Mfg part number, Description, Family, Catalog - by this order
-            PS_PATH = cfg.FILE_PATHS['POWERSHELL'] # path to run powershell
+            PS_PATH = cfg.FILE_PATHS['POWERSHELL']  # path to run powershell
             command = f'$txt = "{search_data}" \n' + cfg.SEARCH_CATALOG_COMMAND
-            search_results = BeautifulSoup(str(subprocess.Popen([PS_PATH, command], stdout=subprocess.PIPE).communicate()), 'lxml') # extracting html page of catheter catalog using powershell and the command
-            details_info = [] # details_info is an arry that hold all the data from the first row in catheter catalog table
-            table_data = search_results.table.find_all('td') #search for the table in search_results (html content)
+            search_results = BeautifulSoup(
+                str(subprocess.Popen([PS_PATH, command], stdout=subprocess.PIPE).communicate()),
+                'lxml')  # extracting html page of catheter catalog using powershell and the command
+            details_info = []  # details_info is an arry that hold all the data from the first row in catheter catalog table
+            table_data = search_results.table.find_all('td')  # search for the table in search_results (html content)
             if table_data[0].text == "No values found.":
                 return None
             for i in range(9):
                 details_info.append(table_data[i].text)
-            return [details_info[3].strip(),details_info[7].strip(),details_info[8].strip(),details_info[2].strip()] # 3-mfg part number, 7-description, 8-family, 2-catalog
+            return [details_info[3].strip(), details_info[7].strip(), details_info[8].strip(),
+                    details_info[2].strip()]  # 3-mfg part number, 7-description, 8-family, 2-catalog
         except Exception as e:
-            print("Exception in serach_catheter: " + str(e)) # needed to pip install lxml. see how it affects the exe build.
+            print("Exception in serach_catheter: " + str(
+                e))  # needed to pip install lxml. see how it affects the exe build.
             return None
 
     def oneCatalog(self):
@@ -2409,7 +2431,7 @@ class System_Dialog(QtWidgets.QDialog):
     def verification(self):
         self.infoBox()
         equipment_list_str = [self.Systemnumber, self.PIUconf, self.Lposition, self.PUnumber, self.Monitormodel,
-                                                self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
+                              self.Monitor2model, self.ECGnumber, self.Aquanumber, self.Aquamax]
         verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['SYSTEM'])
 
     def infoBox(self):
@@ -2423,8 +2445,8 @@ class System_Dialog(QtWidgets.QDialog):
         self.Aquanumber = self.sdialog.aquanum_text.text()
         self.Aquamax = self.sdialog.aquamax_text.text()
         self.equipment_list_obj = [self.sdialog.system_text, self.sdialog.piu_text, self.sdialog.lp_text,
-                              self.sdialog.patchunit_text, self.sdialog.mm_text, self.sdialog.mm2_text,
-                              self.sdialog.ecg_text, self.sdialog.aquanum_text, self.sdialog.aquamax_text]
+                                   self.sdialog.patchunit_text, self.sdialog.mm_text, self.sdialog.mm2_text,
+                                   self.sdialog.ecg_text, self.sdialog.aquanum_text, self.sdialog.aquamax_text]
         for field in self.equipment_list_obj:
             field.setStyleSheet('')
             field.setToolTip('')

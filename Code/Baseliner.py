@@ -5,6 +5,7 @@ import sqlite3
 import os
 import cfg as cfg
 import xml.etree.ElementTree as ET
+import logging
 import requests
 # import lxml # Needed??
 import subprocess, sys
@@ -79,7 +80,7 @@ Function creates a custom INSERT INTO sql command.
         query += "\'0\',\'0\');"
         return query
     except Exception as e:
-        print("Exception at insert_sql_get_string: " + str(e))
+        logging.exception('Exception at insert_sql_get_string:')
 
 
 def update_times_used(prime_key, table_str, db):
@@ -100,7 +101,7 @@ def update_times_used(prime_key, table_str, db):
         connection.commit()
         connection.close()
     except Exception as e:
-        print("Exception at update_times_used: " + str(e))
+        logging.exception('Exception at update_times_used:')
 
 
 def find_table_in_tabs(kind):
@@ -113,7 +114,7 @@ A very basic function, finds the ID of the table based on a string
     for i in range(len(tabs)):
         if kind == tabs[i][0]:
             return i
-    print("find_table_in_tabs: couldn't find table.")
+    logging.warning('Exception at update_times_used: kind=' + kind)
     return None
 
 
@@ -142,12 +143,19 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
     try:
         popup = db_Dialog()
         chosen_db = popup.selected_item + '.db'
-        print("choose_db: selected db is: " + chosen_db)
+        logging.info("choose_db: selected db is: " + chosen_db)
         return db_location + '\\' + chosen_db
     except Exception as e:
-        print("Exception at choose_db: " + str(e))
+        logging.exception("Exception at choose_db:")
         return None
 
+def start_logger():
+    logging.basicConfig(filename=cfg.FILE_PATHS['LOG'],
+                        filemode='a',
+                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.DEBUG)
+    logging.info("-----------Start Application-----------")
 
 def send_info_to_db(kind, equipment_list, db):
     """
@@ -166,14 +174,15 @@ Function that sends the data recevied to the specific table in a specific db.
             connection = sqlite3.connect(current_db)
             cur = connection.cursor()
             sql_query = insert_sql_get_string(equipment_list, kind)
-            print(sql_query)
             cur.execute(sql_query)
             cur.close()
             connection.commit()
             connection.close()
-            print("send_db: Success!")
+            logging.info(sql_query)
+            logging.info('send_db: Success!')
+
     except Exception as e:
-        print("Exception at send_db: " + str(e))
+        logging.exception("Exception in send_db: ")
 
 
 def db_item_exists(kind, equipment_list, db):
@@ -195,19 +204,19 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         sql_query = select_sql_query(equipment_list[0], table)
         cur.execute(sql_query)
         rows = cur.fetchall()
-        print('db_item_exists found: ' + str(rows))
+        logging.info('db_item_exists found: ' + str(rows))
         cur.close()
         connection.commit()
         connection.close()
         if len(rows) > 0:  # Found rows value in table
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
-            print('Verification: ' + str(verified) + ' ' + str(diffs))
+            logging.info('db_item_exists verification: ' + str(verified) + ' ' + str(diffs))
         else:
             pass
             # Verification before db?
         return verified, approved, diffs
     except Exception as e:
-        print("Exception at db_item_exists: " + str(e))
+        logging.exception('Exception at db_item_exists:')
 
 
 def verification_before_db(kind, equipment_list, db):
@@ -552,6 +561,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.importButton)  # This is the next step of the program, upon importing txt file
 
         write_tooltips(self.ui.title, 'versions_to_title')
+        start_logger()
 
     # self.experimentalWarning("beta") Not beta anymore :)
 
@@ -2049,6 +2059,10 @@ class MainWindow(QtWidgets.QMainWindow):
             elif (child.tag == 'Header'):
                 self.ui.header_text.clear()
                 self.ui.header_text.setText(child.text)
+
+    def closeEvent(self, event):
+        logging.info("-----------Application closeEvent-----------")
+        event.accept
 
     def importaddtoInfoCount(self, type, listValues):
         # This function gets type (child.tag) e.g. "Workstations" and listValues which is the list of all the values of the children texts(childx3.text)

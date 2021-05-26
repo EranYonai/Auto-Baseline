@@ -1,9 +1,12 @@
+import os
+
 PASSWORDS = {
     'DB_MANAGER': 'dbManager'
 }
 FILE_PATHS = {
     'DB_LOCATION': "C:\\Users\\Eyonai\\Documents\\GitHub\\AutoBaseline\\Code\\db\\",
-    'POWERSHELL': 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+    'POWERSHELL': 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
+    'LOG': os.getenv('APPDATA') + '\\auto_baseline_logs.log'
 }
 
 APPLICATION_VERSION = {

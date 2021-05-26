@@ -327,10 +327,11 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
                 for suggest in suggestions:
                     if diffs[i][0] == suggest[2] and similar(diffs[i][0], diffs[i][1]) > cfg.MIN_CORRELATION:
                         # fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
+                        # fixme: if one field is yellow and the second is correct, it will show as yellow even though it's right.
                         equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);')  # Yellow
                         equipment_list_obj[i].setToolTip("->" + diffs[i][1])
             if verified:
-                print("Entry is verified")  # times used +1
+                logging.info("Entery is verified, times used +1")
                 update_times_used(diffs[0][0], type, db)
         elif not approved and len(diffs) > 0:
             experimentalWarning('verified_not_approved')
@@ -338,7 +339,7 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
             pass
             verification_before_db(type, equipment_list_str, db)
     except Exception as e:
-        print('Exception in system verification: ' + str(e))
+        logging.exception("Exception is system verification: ")
 
 
 def select_sql_query(prime_key, table):
@@ -354,7 +355,7 @@ Returns SELECT SQL command according to given parameters
         query = f"SELECT * FROM {table_name} WHERE {tabs[table][2][0][0]}=\'{prime_key}\'"
         return query
     except Exception as e:
-        print("Exception at select_sql_query: " + str(e))
+        logging.exception("Exception at select_sql_query: ")
 
 
 def write_tooltips(Qobject, tooltip_kind):
@@ -383,36 +384,36 @@ def experimentalWarning(kind):
     :param kind:
     :return:
     """
-    if (kind == "experimental"):
+    if kind == "experimental":
         warning = QtWidgets.QMessageBox()
         warning.setText(
             "This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.")
         warning.setWindowTitle("Warning")
         warning.exec_()
-    if (kind == "experimental_chrome"):
+    if kind == "experimental_chrome":
         warning = QtWidgets.QMessageBox()
         warning.setText(
             "This is an experimental feature\nPlease accept firewall dialog if it's the first time of running.\nSupports Chrome version 89.")
         warning.setWindowTitle("Warning")
         warning.exec_()
-    if (kind == "beta"):
+    if kind == "beta":
         warning = QtWidgets.QMessageBox()
         warning.setText("This program is in beta, please use in care.\nIf you see an issue please contact Eran.")
         warning.setWindowTitle("Warning")
         warning.exec_()
-    if (kind == "wslicenses"):
+    if kind == "wslicenses":
         warning = QtWidgets.QMessageBox()
         warning.setText(
             "Upon export of data, each WS licenses are deleted.\nIt is a known bug please wait for next version for a fix.\nMake sure to save the .txt file.")
         warning.setWindowTitle("Warning")
         warning.exec_()
-    if (kind == "notimp"):
+    if kind == "notimp":
         warning = QtWidgets.QMessageBox()
         warning.setText("Not yet implemented")
         warning.setWindowTitle("Warning")
         warning.exec_()
 
-    if (kind == "verified_not_approved"):
+    if kind == "verified_not_approved":
         warning = QtWidgets.QMessageBox()
         warning.setText("This machine wasn't approved yet.\nContact Team Leader to verify.")
         warning.setWindowTitle("Warning")
@@ -561,7 +562,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.importButton)  # This is the next step of the program, upon importing txt file
 
         write_tooltips(self.ui.title, 'versions_to_title')
-        start_logger()
+        start_logger() # Start logger
 
     # self.experimentalWarning("beta") Not beta anymore :)
 
@@ -1830,7 +1831,7 @@ class MainWindow(QtWidgets.QMainWindow):
             experimentalWarning("export_success")
         except Exception as e:
             experimentalWarning('export_error')
-            print("Exception in Export_XML: " + str(e))
+            logging.exception("Exception in Export_XML: ")
 
     # format is a function that takes (self,type,position) as arguments.
     # self being the pyqt5 inheritance - this function is being called by self.format(type,position)
@@ -2025,7 +2026,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     pass  # well, cancel
         except Exception as e:
             experimentalWarning('import_error')
-            print("Exception in import: " + str(e))
+            logging.exception("EException in import: ")
 
     def importBase(self, filelocation):
         imported_xml = ET.parse(filelocation)
@@ -2294,8 +2295,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             return [details_info[3].strip(), details_info[7].strip(), details_info[8].strip(),
                     details_info[2].strip()]  # 3-mfg part number, 7-description, 8-family, 2-catalog
         except Exception as e:
-            print("Exception in serach_catheter: " + str(
-                e))  # needed to pip install lxml. see how it affects the exe build.
+            logging.exception("Exception in serach_catheter: ")  # needed to pip install lxml. see how it affects the exe build.
             return None
 
     def oneCatalog(self):

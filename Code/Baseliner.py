@@ -139,8 +139,11 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
             self.setMinimumWidth(400)
             item, ok_pressed = QtWidgets.QInputDialog.getItem(self, "Database", "Choose DB:",
                                                               db_list, 0, False)
-            if ok_pressed and item:
-                self.selected_item = item
+           # if ok_pressed and item:
+            self.selected_item = item
+            # if the user pressed cancle, self.selected_item was none and it caused a crash
+            # for now, either cancel places the chosen item to selected_item.
+
 
     try:
         popup = db_Dialog()
@@ -319,19 +322,19 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
         if len(diffs) > 0 and approved:
             # Correlation check:
             suggestions = correlation_differences(diffs, type) # [['field_text', dbvalue, uservalue]] ([['Aquarium Number', 'SQA1', 'SQA']])
+            print(diffs)
             for i in range(len(diffs)):  # diffs strcture: [USER_INPUT, ACTUAL_KEY]
                 if diffs[i][0] == diffs[i][1]:
                     equipment_list_obj[i].setStyleSheet('background-color: rgba(0, 255, 30, 0.25);')  # Green
                     equipment_list_obj[i].setToolTip("Verified")
-                else:
+                elif similar(diffs[i][0], diffs[i][1]) < cfg.MIN_CORRELATION:
                     equipment_list_obj[i].setStyleSheet('background-color: rgba(255, 0, 0, 0.35);')  # Red
                     equipment_list_obj[i].setToolTip("Not Verified")
-                for suggest in suggestions:
-                    if diffs[i][0] == suggest[2] and similar(diffs[i][0], diffs[i][1]) > cfg.MIN_CORRELATION:
-                        # fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
-                        # fixme: if one field is yellow and the second is correct, it will show as yellow even though it's right.
-                        equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);')  # Yellow
-                        equipment_list_obj[i].setToolTip("->" + diffs[i][1])
+                else:
+                    # fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
+                    # fixme: if one field is yellow and the second is correct, it will show as yellow even though it's right.
+                    equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);')  # Yellow
+                    equipment_list_obj[i].setToolTip("->" + diffs[i][1])
             if verified:
                 logging.info("Entry is verified, times used +1")
                 update_times_used(diffs[0][0], type, db)
@@ -2872,8 +2875,8 @@ class Stockert_Dialog(QtWidgets.QDialog):
 
     def verification(self):
         self.infoBox()
-        equipment_list_str = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable,
-                              self.ep_to_piu, self.global_port, self.gen_to_ws, self.patch_cable, self.foot_pedal]
+        equipment_list_str = [self.sn, self.sysSW, self.epboxSN, self.epioCable, self.epCable, self.ep_to_piu,
+                              self.global_port, self.abaadaCable, self.gen_to_ws, self.patch_cable, self.foot_pedal]
         verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['STOCKERT'])
 
     def infoBox(self):
@@ -2890,7 +2893,7 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.foot_pedal = self.stdialog.footPedal_text.text()
         self.infoList = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable,
                          self.ep_to_piu, self.global_port, self.gen_to_ws, self.patch_cable, self.foot_pedal]
-        self.equipment_list_obj = [self.stdialog.software_text, self.stdialog.SN_text, self.stdialog.EPcable_text,
+        self.equipment_list_obj = [self.stdialog.SN_text, self.stdialog.software_text, self.stdialog.EPcable_text,
                                    self.stdialog.abaadaCable_text, self.stdialog.epboxSN_text, self.stdialog.epioCable_text,
                                    self.stdialog.ep_to_piu_text, self.stdialog.global_port_text, self.stdialog.gen_to_ws_text,
                                    self.stdialog.patch_cable_text, self.stdialog.footPedal_text]

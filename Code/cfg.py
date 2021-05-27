@@ -82,7 +82,7 @@ TABLE_FIELDS = {
     'ULS': [["serial_number", "STRING PRIMARY KEY"], ["machine", "STRING"], ["software_version", "STRING"],
                 ["application_version", "STRING"], ["video_cable", "STRING"],
                 ["ethernet_cable", "STRING"], ["approved", "BOOLEAN"], ["used", "INTEGER"]],
-    'STOCKERT': [["software_version", "STRING PRIMARY KEY"], ["serial_number", "STRING"],
+    'STOCKERT': [["serial_number", "STRING PRIMARY KEY"],["software_version", "STRING"],
                       ["epio_box_sn", "STRING"], ["epio_connection_cable", "STRING"],
                       ["epio_interface_cable", "STRING"], ["epushuttle_piu", "STRING"],
                       ["global_port", "STRING"],

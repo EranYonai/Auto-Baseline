@@ -101,7 +101,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="systems">
        <attribute name="title">
@@ -1543,12 +1543,12 @@
         <row/>
         <column>
          <property name="text">
-          <string>Software Version</string>
+          <string>Serial Number</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Serial Number</string>
+          <string>Software Version</string>
          </property>
         </column>
         <column>

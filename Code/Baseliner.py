@@ -1,3 +1,4 @@
+import logging
 import PyQt5
 import qdarkstyle
 import sys
@@ -5,7 +6,6 @@ import sqlite3
 import os
 import cfg as cfg
 import xml.etree.ElementTree as ET
-import logging
 import requests
 # import lxml # Needed??
 import subprocess, sys
@@ -78,6 +78,7 @@ Function creates a custom INSERT INTO sql command.
         for part in equipment_list:
             query += "\'" + part + '\','
         query += "\'0\',\'0\');"
+        logging.info(query)
         return query
     except Exception as e:
         logging.exception('Exception at insert_sql_get_string:')
@@ -100,6 +101,7 @@ def update_times_used(prime_key, table_str, db):
         cur.close()
         connection.commit()
         connection.close()
+        logging.info("updated times used successfully for prime key: " + prime_key)
     except Exception as e:
         logging.exception('Exception at update_times_used:')
 
@@ -126,7 +128,7 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
     db_location = cfg.FILE_PATHS['DB_LOCATION']
     db_list = os.listdir(db_location)  # Grabs all files from specific location^
     for i in range(len(db_list)): db_list[i] = db_list[i][:-3]  # Removes .db
-
+    logging.info("all availiable dbs at: " + db_location + " are: " + str(db_list))
     class db_Dialog(QtWidgets.QDialog):
         def __init__(self):
             super(db_Dialog, self).__init__()
@@ -143,19 +145,22 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
     try:
         popup = db_Dialog()
         chosen_db = popup.selected_item + '.db'
-        logging.info("choose_db: selected db is: " + chosen_db)
+        logging.info("selected db is: " + chosen_db)
         return db_location + '\\' + chosen_db
     except Exception as e:
         logging.exception("Exception at choose_db:")
         return None
 
 def start_logger():
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
     logging.basicConfig(filename=cfg.FILE_PATHS['LOG'],
-                        filemode='a',
-                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                        filemode='a', # Change to w if you want log file to delete before start writing new logs.
+                        format='%(asctime)s - %(levelname)s %(funcName)s: %(message)s',
                         datefmt='%H:%M:%S',
                         level=logging.DEBUG)
-    logging.info("-----------Start Application-----------")
+    logging.warning("-----------Start Application-----------")
+    logging.debug("Logs location: " +cfg.FILE_PATHS['LOG'])
 
 def send_info_to_db(kind, equipment_list, db):
     """
@@ -178,9 +183,7 @@ Function that sends the data recevied to the specific table in a specific db.
             cur.close()
             connection.commit()
             connection.close()
-            logging.info(sql_query)
-            logging.info('send_db: Success!')
-
+            logging.info('Success! Added: ' + str(equipment_list) + ' To: ' + kind)
     except Exception as e:
         logging.exception("Exception in send_db: ")
 
@@ -204,16 +207,13 @@ Checks if the item exists in a specific db according to its PRIME KEY.
         sql_query = select_sql_query(equipment_list[0], table)
         cur.execute(sql_query)
         rows = cur.fetchall()
-        logging.info('db_item_exists found: ' + str(rows))
+        logging.info('found existance: ' + str(rows))
         cur.close()
         connection.commit()
         connection.close()
         if len(rows) > 0:  # Found rows value in table
             verified, approved, diffs = verification_between_lists(rows[0], equipment_list)
-            logging.info('db_item_exists verification: ' + str(verified) + ' ' + str(diffs))
-        else:
-            pass
-            # Verification before db?
+            logging.info('verification: ' + str(verified) + ' ' + str(diffs))
         return verified, approved, diffs
     except Exception as e:
         logging.exception('Exception at db_item_exists:')
@@ -236,10 +236,12 @@ def verification_before_db(kind, equipment_list, db):
         button_okCancel = windowsOpened_alert.exec_()  # if pressed okay -> 1024 if pressed cancel -> 4194304
         if (button_okCancel == 1024):
             if len(equipment_list[0]) < 1:
+                logging.info("user sent info without prime key - prime key needed!")
                 experimentalWarning('prime_key_needed')
             else:
                 send_info_to_db(kind, equipment_list, db)
     else:
+        logging.info("user sent less than " + str(cfg.PERCENTAGE_TO_PASS_DB*100) + " % of fields. db didn't accept." )
         experimentalWarning('sent_db_not_full')
 
 
@@ -331,7 +333,7 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
                         equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);')  # Yellow
                         equipment_list_obj[i].setToolTip("->" + diffs[i][1])
             if verified:
-                logging.info("Entery is verified, times used +1")
+                logging.info("Entry is verified, times used +1")
                 update_times_used(diffs[0][0], type, db)
         elif not approved and len(diffs) > 0:
             experimentalWarning('verified_not_approved')
@@ -369,9 +371,9 @@ def write_tooltips(Qobject, tooltip_kind):
         ver_string = ''
         for ver in cfg.APPLICATION_VERSION:
             ver_string += ver + ': ' + cfg.APPLICATION_VERSION[ver] + '\n'
+            logging.info("---Application version " + str(ver) + ': ' + cfg.APPLICATION_VERSION[ver] + '---')
         ver_string = ver_string[:-1]
         Qobject.setToolTip(ver_string)
-
 
 def experimentalWarning(kind):
     """
@@ -451,6 +453,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(parent=None)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        start_logger()  # Start logger
         self.reset_allFields()
         self.filePath_configured = False  # In order to know if filePath was already choosen, and won't open everytime
         self.hideThings()  # A function that hides all of the buttons and progress bars.
@@ -562,7 +565,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.importButton)  # This is the next step of the program, upon importing txt file
 
         write_tooltips(self.ui.title, 'versions_to_title')
-        start_logger() # Start logger
 
     # self.experimentalWarning("beta") Not beta anymore :)
 
@@ -848,6 +850,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def catalogHelp(self):
         # experimentalWarning("experimental_chrome") no need for this notification anymore.
+        logging.info("user opened Catheter Helper dialog.")
         catWin = CatalogHelper_Dialog(self)  # Inheritance -> Passing MainWindow (self) as an argument
         catWin.exec_()
 
@@ -1274,6 +1277,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                          self.ultraList[position].Ethcable]
         self.updateProgressbars("us", position)
         self.ultrasoundOpened[position] = True
+        logging.info("user opened ULS machine")
 
     def open_systemDialog(self, position):
         if self.systemOpened[position]:
@@ -1286,8 +1290,10 @@ class MainWindow(QtWidgets.QMainWindow):
                                        self.sysList[position].Aquamax]
         self.updateProgressbars("sys", position)
         self.systemOpened[position] = True
+        logging.info("user opened SYSTEM machine")
 
     def open_bardDialog(self, position):
+        logging.info("user tried to add BARD machine -- not yet implemented")
         pass
 
     def open_SPUDialog(self, position):
@@ -1310,6 +1316,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                        self.spuList[position].spuprobo_rev]
         self.updateProgressbars("spu", position)
         self.spuOpened[position] = True
+        logging.info("user opened SPU machine")
 
     def open_workstationDialog(self, position):
         if self.workstationOpened[position]:
@@ -1322,6 +1329,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                       str(self.wsList[position].performance), self.wsList[position].gpu]
         self.workstationOpened[position] = True
         self.updateProgressbars("ws", position)
+        logging.info("user opened WS machine")
 
     # self.WSlist_info in place of WS if true add licenses = self.wsList[position].Licenses
 
@@ -1359,6 +1367,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stockertList_info[position] = self.stockertList[position].infoList
         self.updateProgressbars("stockert", position)
         self.stockertOpened[position] = True
+        logging.info("user opened STOCKERT machine")
 
     def open_smartablateDialog(self, position):
         if self.smartablateOpened[position]:
@@ -1367,6 +1376,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.smartablate_info[position] = self.smartablateList[position].infoList
         self.updateProgressbars("smartablate", position)
         self.smartablateOpened[position] = True
+        logging.info("user opened SMARTABLATE machine")
 
     def open_ngenDialog(self, position):
         if self.ngenOpened[position]:
@@ -1375,6 +1385,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ngenlist_info[position] = self.ngenList[position].infoList
         self.updateProgressbars("ngen", position)
         self.ngenOpened[position] = True
+        logging.info("user opened NGEN machine")
 
     def open_nmarqDialog(self, position):
         if self.nmarqOpened[position]:
@@ -1383,6 +1394,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.nmarqlist_info[position] = self.nmarqList[position].infoList
         self.updateProgressbars("nmarq", position)
         self.nmarqOpened[position] = True
+        logging.info("user opened NMARQ machine")
 
     def open_pacerDialog(self, position):
         if self.pacerOpened[position]:
@@ -1391,6 +1403,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pacerlist_info[position] = self.pacerList[position].infoList
         self.updateProgressbars("pacer", position)
         self.pacerOpened[position] = True
+        logging.info("user opened PACER machine")
 
     def open_qdotdongleDialog(self, position):
         if self.qdotdongleOpened[position]:
@@ -1399,6 +1412,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.qdotdonglelist_info[position] = self.qdotdongleList[position].infoList
         self.updateProgressbars("qdotdongle", position)
         self.qdotdongleOpened[position] = True
+        logging.info("user opened DONGLE machine")
 
     def open_printerDialog(self, position):
         if self.printerOpened[position]:
@@ -1407,6 +1421,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.printerlist_info[position] = self.printerList[position].infoList
         self.updateProgressbars("printer", position)
         self.printerOpened[position] = True
+        logging.info("user opened PRINTER machine")
 
     def open_epuDialog(self, position):
         if self.epuOpened[position]:
@@ -1415,6 +1430,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.epulist_info[position] = self.epuList[position].infoList
         self.updateProgressbars("epu", position)
         self.epuOpened[position] = True
+        logging.info("user opened EPU machine")
 
     def open_demoDialog(self, position):
         if self.demoOpened[position]:
@@ -1423,14 +1439,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.demolist_info[position] = self.demoList[position].infoList
         self.updateProgressbars("demo", position)
         self.demoOpened[position] = True
+        logging.info("user opened DEMO LAPTOP machine")
 
     def remove_catheter(self, cat_ext):
-        if (cat_ext == 0):
-            item = self.ui.catheter_list.takeItem(self.ui.catheter_list.currentRow())
-            item = None
-        if (cat_ext == 1):
-            item = self.ui.extender_list_2.takeItem(self.ui.extender_list_2.currentRow())
-            item = None
+        try:
+            if (cat_ext == 0):
+                item = self.ui.catheter_list.takeItem(self.ui.catheter_list.currentRow())
+                logging.info("user removed catheter: " + item.text())
+                item = None
+            if (cat_ext == 1):
+                item = self.ui.extender_list_2.takeItem(self.ui.extender_list_2.currentRow())
+                logging.info("user removed extender: " + item.text())
+                item = None
+        except Exception as e:
+            logging.exception('exception while removing catheter.')
 
     def exportTXT(self):
         # self.experimentalWarning("wslicenses") In experimental branch i fixed this issue.
@@ -1438,6 +1460,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.exportfilelocation = \
                 QtWidgets.QFileDialog.getSaveFileName(None, "Save File", '/', "Text Files (*.txt)")[0]
             self.filePath_configured = True
+            logging.info('exporting to: ' + self.exportfilelocation)
         if (self.filePath_configured and len(self.exportfilelocation) > 1):
             toText = []
             toText.append(self.ui.header_text.toPlainText() + '\n\n')
@@ -1831,7 +1854,7 @@ class MainWindow(QtWidgets.QMainWindow):
             experimentalWarning("export_success")
         except Exception as e:
             experimentalWarning('export_error')
-            logging.exception("Exception in Export_XML: ")
+            logging.exception("exception in Export_XML: ")
 
     # format is a function that takes (self,type,position) as arguments.
     # self being the pyqt5 inheritance - this function is being called by self.format(type,position)
@@ -1862,6 +1885,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 performance = "Yes"
             else:
                 performance = "No"
+            if len(self.wsList[position].spToExport) < 1: self.wsList[position].spToExport = 'None'
             if (len(self.wsList_info[position][1]) > 1):
                 toReturn = 'Workstation #%d:\nSW Version:\t\t%s Upgraded from %s\nDSP Version:\t\t%s\nImage Version:\t\t%s\nWS Service Tag:\t\t%s\nWS Configuration:\t%s\nWS Type:\t\t%s\nSolios:\t\t\t%s\nPerformance Tool:\t%s\nGraphics Card:\t\t%s\nLicenses:\t\t%s\nService Packs:\t\t%s\n-------------------\n' % (
                     position + 1, self.wsList_info[position][0], self.wsList_info[position][1],
@@ -2026,11 +2050,12 @@ class MainWindow(QtWidgets.QMainWindow):
                     pass  # well, cancel
         except Exception as e:
             experimentalWarning('import_error')
-            logging.exception("EException in import: ")
+            logging.exception("Exception in import: ")
 
     def importBase(self, filelocation):
         imported_xml = ET.parse(filelocation)
         importedroot = imported_xml.getroot()
+        logging.info('importing from: ' + filelocation)
         for child in importedroot:
             if (
                     child.tag != 'Catheters' and child.tag != 'Extenders' and child.tag != 'Workstations' and child.tag != 'Header'):
@@ -2062,7 +2087,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.ui.header_text.setText(child.text)
 
     def closeEvent(self, event):
-        logging.info("-----------Application closeEvent-----------")
+        logging.warning("-----------Application closeEvent-----------")
         event.accept
 
     def importaddtoInfoCount(self, type, listValues):
@@ -2281,6 +2306,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             # This function uses powershell command to search in catheter catalog and retrive html page of the results
             # using beautifulSoup the function serach the html for the table, and extracting the first row to details_info
             # returning the Mfg part number, Description, Family, Catalog - by this order
+            logging.info("search value: " + search_data)
             PS_PATH = cfg.FILE_PATHS['POWERSHELL']  # path to run powershell
             command = f'$txt = "{search_data}" \n' + cfg.SEARCH_CATALOG_COMMAND
             search_results = BeautifulSoup(
@@ -2301,6 +2327,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
     def oneCatalog(self):
         cat = self.search_catheter(self.ui.signelCatalog_Text.text())
         if (cat is not None):
+            logging.info("found item: " + str(cat))
             singleCat = SingleCatheter(cat, self)
             singleCat.exec_()
         else:
@@ -2308,6 +2335,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             notimplemented.setText("Couldn't find item in catalog")
             notimplemented.setWindowTitle("Error")
             notimplemented.exec_()
+            logging.info("couldn't find item")
 
 
 class SPU_Dialog(QtWidgets.QDialog):

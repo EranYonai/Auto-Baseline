@@ -249,6 +249,9 @@ if __name__ == '__main__':
 
 # TODO:
 #  V need to create a special function and button from the top menu (file menu) that creates a new db
+#   Export list of used devices with some options (export approved only, export approved only & times used > 1)
+#   Reset times used for a table
+#   Fix databases update actions upon adding new db (currently create duplicates)
 #  ----
 #  need to choose on statup which db to use >> username & password, when connected, insert to a new db accounts:
 #  Because I want to know how many users use/change/refresh each db to mitigate\prevent possible issues.

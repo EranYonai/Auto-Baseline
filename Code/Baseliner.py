@@ -321,16 +321,15 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     try:
         if len(diffs) > 0 and approved:
             # Correlation check:
-            suggestions = correlation_differences(diffs, type) # [['field_text', dbvalue, uservalue]] ([['Aquarium Number', 'SQA1', 'SQA']])
-            print(diffs)
+            # suggestions = correlation_differences(diffs, type) # [['field_text', dbvalue, uservalue]] ([['Aquarium Number', 'SQA1', 'SQA']])
             for i in range(len(diffs)):  # diffs strcture: [USER_INPUT, ACTUAL_KEY]
                 if diffs[i][0] == diffs[i][1]:
                     equipment_list_obj[i].setStyleSheet('background-color: rgba(0, 255, 30, 0.25);')  # Green
                     equipment_list_obj[i].setToolTip("Verified")
-                elif similar(diffs[i][0], diffs[i][1]) < cfg.MIN_CORRELATION:
+                elif similar(diffs[i][0], diffs[i][1]) <= cfg.MIN_CORRELATION:
                     equipment_list_obj[i].setStyleSheet('background-color: rgba(255, 0, 0, 0.35);')  # Red
                     equipment_list_obj[i].setToolTip("Not Verified")
-                else:
+                elif (similar(diffs[i][0], diffs[i][1]) >= cfg.MIN_CORRELATION):
                     # fixme: if two fields are the of the same value, both will be dark green even if one of them is approved.
                     # fixme: if one field is yellow and the second is correct, it will show as yellow even though it's right.
                     equipment_list_obj[i].setStyleSheet('background-color: rgb(255, 220, 0, 0.35);')  # Yellow
@@ -2743,17 +2742,16 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.wdialog.check_button.clicked.connect(self.verification)
         self.wdialog.licenses.clicked.connect(self.open_workstationDialog_licenses)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.servicetag, self.dspver, self.imagever, self.wsconf, self.wsmodel, self.gpu]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['WORKSTATION'])
 
     def infoBox(self):
         self.softwarever = self.wdialog.softwarever_text.text()
@@ -2766,6 +2764,11 @@ class Workstation_Dialog(QtWidgets.QDialog):
         self.solios = self.wdialog.solios_check.isChecked()
         self.performance = self.wdialog.performance_check.isChecked()
         self.gpu = self.wdialog.gpu_text.text()
+        self.equipment_list_obj = [self.wdialog.servicetag_text, self.wdialog.dspver_text, self.wdialog.imagever_text,
+                                   self.wdialog.wsconf_text, self.wdialog.wsmodel_text, self.wdialog.gpu_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.wdialog.softwarever_text.setText(clip[0])
@@ -2893,9 +2896,9 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.foot_pedal = self.stdialog.footPedal_text.text()
         self.infoList = [self.sysSW, self.sn, self.epCable, self.abaadaCable, self.epboxSN, self.epioCable,
                          self.ep_to_piu, self.global_port, self.gen_to_ws, self.patch_cable, self.foot_pedal]
-        self.equipment_list_obj = [self.stdialog.SN_text, self.stdialog.software_text, self.stdialog.EPcable_text,
-                                   self.stdialog.abaadaCable_text, self.stdialog.epboxSN_text, self.stdialog.epioCable_text,
-                                   self.stdialog.ep_to_piu_text, self.stdialog.global_port_text, self.stdialog.gen_to_ws_text,
+        self.equipment_list_obj = [self.stdialog.SN_text, self.stdialog.software_text, self.stdialog.epboxSN_text,
+                                   self.stdialog.epioCable_text, self.stdialog.EPcable_text, self.stdialog.ep_to_piu_text,
+                                   self.stdialog.global_port_text, self.stdialog.abaadaCable_text, self.stdialog.gen_to_ws_text,
                                    self.stdialog.patch_cable_text, self.stdialog.footPedal_text]
         for field in self.equipment_list_obj:
             field.setStyleSheet('')

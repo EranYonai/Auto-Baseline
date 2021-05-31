@@ -96,7 +96,8 @@ def update_times_used(prime_key, table_str, db):
         times_used = int(times_used) + 1
         sql_query = f'UPDATE {table_str} ' \
                     f'SET used = \'{str(times_used)}\' ' \
-                    f'WHERE {cfg.TABLE_FIELDS[cfg.TABLE_NAMES[table_str]][0][0]} = {prime_key}'
+                    f'WHERE {cfg.TABLE_FIELDS[cfg.TABLE_NAMES[table_str]][0][0]} = \'{prime_key}\''
+        print(sql_query)
         cur.execute(sql_query)
         cur.close()
         connection.commit()

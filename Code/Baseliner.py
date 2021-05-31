@@ -3051,17 +3051,17 @@ class nMARQ_Dialog(QtWidgets.QDialog):
         self.nmdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.nmdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.SN, self.software, self.GtoCable, self.ethernetCable, self.gToPumpCable, self.gToM,
+                              self.pumpSN, self.pumpModel, self.footPadel]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['NMARQ'])
 
     def infoBox(self):
         self.software = self.nmdialog.software_text.text()
@@ -3075,6 +3075,12 @@ class nMARQ_Dialog(QtWidgets.QDialog):
         self.footPadel = self.nmdialog.footPadel_text.text()
         self.infoList = [self.software, self.SN, self.GtoCable, self.ethernetCable, self.gToPumpCable, self.gToM,
                          self.pumpSN, self.pumpModel, self.footPadel]
+        self.equipment_list_obj = [self.nmdialog.SN_text, self.nmdialog.software_text, self.nmdialog.GtoCable_text,
+                                   self.nmdialog.ethernetCable_text, self.nmdialog.gToPumpCable_text, self.nmdialog.gToM_text,
+                                   self.nmdialog.pumpSN_text, self.nmdialog.pumpModel_text, self.nmdialog.footPadel_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.nmdialog.software_text.setText(clip[0])

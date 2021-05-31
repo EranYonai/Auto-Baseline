@@ -3103,22 +3103,25 @@ class Pacer_Dialog(QtWidgets.QDialog):
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.unitSN, self.unitV]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['PACER'])
 
     def infoBox(self):
         self.unitSN = self.pdialog.unitSN_text.text()
         self.unitV = self.pdialog.unitV_text.text()
         self.infoList = [self.unitSN, self.unitV]
+        self.equipment_list_obj = [self.pdialog.unitSN_text, self.pdialog.unitV_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.pdialog.unitSN_text.setText(clip[0])
@@ -3134,22 +3137,25 @@ class Printer_Dialog(QtWidgets.QDialog):
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.unitSN, self.unitV]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['PRINTER'])
 
     def infoBox(self):
         self.unitSN = self.pdialog.unitSN_text.text()
         self.unitV = self.pdialog.unitV_text.text()
         self.infoList = [self.unitSN, self.unitV]
+        self.equipment_list_obj = [self.pdialog.unitSN_text, self.pdialog.unitV_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.pdialog.unitSN_text.setText(clip[0])
@@ -3171,17 +3177,20 @@ class qDotDongle_Dialog(QtWidgets.QDialog):
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.software, self.SN, self.EPcable]
+        print(equipment_list_str)
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['DONGLE'])
 
     def infoBox(self):
         self.software = self.qddialog.software_text.text()
         self.SN = self.qddialog.SN_text.text()
         self.EPcable = self.qddialog.EPcable_text.text()
         self.infoList = [self.software, self.SN, self.EPcable]
+        self.equipment_list_obj = [self.qddialog.software_text, self.qddialog.SN_text, self.qddialog.EPcable_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.qddialog.software_text.setText(clip[0])

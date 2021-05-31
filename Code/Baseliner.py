@@ -97,7 +97,6 @@ def update_times_used(prime_key, table_str, db):
         sql_query = f'UPDATE {table_str} ' \
                     f'SET used = \'{str(times_used)}\' ' \
                     f'WHERE {cfg.TABLE_FIELDS[cfg.TABLE_NAMES[table_str]][0][0]} = \'{prime_key}\''
-        print(sql_query)
         cur.execute(sql_query)
         cur.close()
         connection.commit()
@@ -2928,17 +2927,16 @@ class SmartAblate_Dialog(QtWidgets.QDialog):
         self.sadialog.confirm_button.clicked.connect(self.confirmPressed)
         self.sadialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.sn, self.sysSW, self.gen_to_piu, self.gen_to_ws, self.footPedal]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['SMARTABLATE'])
 
     def infoBox(self):
         self.sysSW = self.sadialog.software_text.text()
@@ -2947,6 +2945,11 @@ class SmartAblate_Dialog(QtWidgets.QDialog):
         self.gen_to_ws = self.sadialog.gen_to_ws_text.text()
         self.footPedal = self.sadialog.footPedal_text.text()
         self.infoList = [self.sysSW, self.sn, self.gen_to_piu, self.gen_to_ws, self.footPedal]
+        self.equipment_list_obj = [self.sadialog.SN_text, self.sadialog.software_text, self.sadialog.gen_to_piu_text,
+                                   self.sadialog.gen_to_ws_text, self.sadialog.footPedal_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.sadialog.software_text.setText(clip[0])

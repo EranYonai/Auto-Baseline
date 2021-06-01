@@ -7,7 +7,8 @@ FILE_PATHS = {
     'DB_LOCATION': "C:\\Users\\Eyonai\\Documents\\GitHub\\AutoBaseline\\Code\\db\\",
     #  'DB_LOCATION': "NetworkFolder\\Auto Baseline Validation\\dbs\\",
     'POWERSHELL': 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
-    'LOG': os.getenv('APPDATA') + '\\auto_baseline_logs.log'
+    'BASELINE_LOG': os.getenv('APPDATA') + '\\auto_baseline_logs.log',
+    'INVENTORY_LOG': os.getenv('APPDATA') + '\\inventory_logs.log'
 }
 
 APPLICATION_VERSION = {

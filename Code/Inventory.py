@@ -2,6 +2,7 @@ import os
 import sqlite3
 import sys
 import time
+import logging
 import qdarkstyle
 from PyQt5 import QtWidgets, uic
 
@@ -19,18 +20,33 @@ def experimental_warning(kind):
         warning.setIcon(1)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
         warning.setWindowTitle("Notification")
         warning.exec_()
+        logging.info("Change Database")
     if kind == "admin_wrong":
         warning = QtWidgets.QMessageBox()
         warning.setText("Admin password is wrong.")
         warning.setIcon(2)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
         warning.setWindowTitle("Warning")
         warning.exec_()
+        logging.info("user input admin password is wrong")
     if kind == "exited_edit_mode":
         warning = QtWidgets.QMessageBox()
         warning.setText("Exited edit mode!")
         warning.setIcon(2)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
         warning.setWindowTitle("Notification")
         warning.exec_()
+        logging.info("exited edit mode")
+
+
+def start_logger():
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+    logging.basicConfig(filename=cfg.FILE_PATHS['INVENTORY_LOG'],
+                        filemode='a',  # Change to w if you want log file to delete before start writing new logs.
+                        format='%(asctime)s - %(levelname)s %(funcName)s: %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.DEBUG)
+    logging.warning("-----------Start Application-----------")
+    logging.debug("Logs location: " + cfg.FILE_PATHS['INVENTORY_LOG'])
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -50,11 +66,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actionCreateDB.triggered.connect(self.manage_database)
 
         # On initialization:
+        start_logger()
         self.load_db_menu()
         self.db_current = None
         self.load_data()  # First load of data - current_db is the default
         # refresh_thread = threading.Thread(target=self.auto_refresh, args=(20, ))
         # refresh_thread.start()
+
+    def closeEvent(self, event):
+        logging.warning("-----------Application closeEvent-----------")
+        event.accept
 
     def create_tabs_tuples(self):
         workstation = (cfg.TABLE_NAMES['WORKSTATION'], self.ws_table, 8, cfg.TABLE_FIELDS['WS'])
@@ -91,8 +112,8 @@ class MainWindow(QtWidgets.QMainWindow):
                             column += 1
                         table_row += 1
                 connection.close()
-            except Exception as e:
-                print("Exception at load_data: " + str(e))
+            except:
+                logging.exception("exception in load_data:")
         else:
             # What to do?
             pass
@@ -119,7 +140,6 @@ class MainWindow(QtWidgets.QMainWindow):
             tab[1].setRowCount(0)
             tab[1].setRowCount(rows)
         self.load_data()
-        print("Tables refreshed!")
 
     def auto_refresh(self, sleep_for):
         while True:
@@ -161,9 +181,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 connection.commit()  # Commits the changes
                 connection.close()  # Closes connection to db.
                 self.load_db_menu()  # Refreshes the menu
-                print("create_database: new database created! " + db_name)
-        except Exception as e:
-            print("Error in create_database: " + str(e))
+                logging.info("create_database: new database created! " + db_name)
+        except:
+            logging.exception("Error in create_database: ")
 
     def load_db_menu(self):
         db_list = os.listdir(cfg.FILE_PATHS['DB_LOCATION'])
@@ -187,8 +207,8 @@ class MainWindow(QtWidgets.QMainWindow):
             # changes db_current to the selected db and runs refresh function
             self.refresh()
             # experimental_warning('table_refreshed') - Annoying
-        except Exception as e:
-            print('Exception in choose_database: ' + str(e))
+        except:
+            logging.exception('Exception in choose_database:')
 
     def editmode_button_function(self):
         if self.editMode_button.isChecked():
@@ -201,11 +221,13 @@ class MainWindow(QtWidgets.QMainWindow):
         for tab in tabs:
             tab[1].blockSignals(False)  # enable signals from the specific widget
             tab[1].cellChanged.connect(self.on_item_change)
+        logging.info("edit mode is ON")
 
     def stop_edit_listener(self):
         tabs = self.create_tabs_tuples()
         for tab in tabs:
             tab[1].blockSignals(True)  # disable signals from the specific widget
+        logging.info("edit mode is off")
 
     def on_item_change(self):
         #  self.machines.currentIndex() - 0 systems, 1 workstations, 3 ultrasounds..
@@ -218,9 +240,9 @@ class MainWindow(QtWidgets.QMainWindow):
             if itemKey is not None:  # If itemKey is none, it means the user tried to change empty row, do nothing.
                 self.update_sql_item(item, itemKey.text(), whichTable)
             else:  # For debug purposes, delete this else on release.
-                print("User is editing empty row.")
-        except Exception as e:
-            print("Exception at on_item_change: " + str(e))
+                logging.info("user is editing empty row.")
+        except:
+            logging.exception("Exception at on_item_change:")
 
     def update_sql_get_string(self, col, text, key, whichTable):
         tabs = self.create_tabs_tuples()
@@ -238,9 +260,9 @@ class MainWindow(QtWidgets.QMainWindow):
             cur.close()
             connection.commit()
             connection.close()
-            print(sql_query)
-        except Exception as e:
-            print("Exception at update_sql_item: " + str(e))
+            logging.info("update_sql_item query: " + sql_query)
+        except:
+            logging.exception("Exception at update_sql_item:")
 
 
 if __name__ == '__main__':

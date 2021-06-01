@@ -157,7 +157,7 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
 def start_logger():
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
-    logging.basicConfig(filename=cfg.FILE_PATHS['LOG'],
+    logging.basicConfig(filename=cfg.FILE_PATHS['BASELINE_LOG'],
                         filemode='a', # Change to w if you want log file to delete before start writing new logs.
                         format='%(asctime)s - %(levelname)s %(funcName)s: %(message)s',
                         datefmt='%H:%M:%S',

@@ -33,7 +33,7 @@
      <string>Equipment Inventory</string>
     </property>
    </widget>
-   <widget class="QTabWidget" name="edit_inventory">
+   <widget class="QTabWidget" name="additional_tab">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -5010,7 +5010,7 @@
     </widget>
     <widget class="QWidget" name="inventory_edit">
      <attribute name="title">
-      <string>Edit Inventory</string>
+      <string>Additional Features</string>
      </attribute>
     </widget>
    </widget>

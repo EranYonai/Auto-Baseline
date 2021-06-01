@@ -2,7 +2,6 @@ import os
 import sqlite3
 import sys
 import time
-
 import qdarkstyle
 from PyQt5 import QtWidgets, uic
 
@@ -52,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # On initialization:
         self.load_db_menu()
-        self.db_current = self.current_db("db\\V7.db")
+        self.db_current = None
         self.load_data()  # First load of data - current_db is the default
         # refresh_thread = threading.Thread(target=self.auto_refresh, args=(20, ))
         # refresh_thread.start()
@@ -75,24 +74,28 @@ class MainWindow(QtWidgets.QMainWindow):
                 demo]
 
     def load_data(self):
-        try:
-            connection = sqlite3.connect(self.db_current)
-            cur = connection.cursor()
-            # tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
-            tabs = self.create_tabs_tuples()
-            for tab in tabs:
-                sql_query = "SELECT * FROM " + tab[0]  # tab[0] = db name
-                cur.execute(sql_query)
-                table_row = 0
-                for row in cur.execute(sql_query):
-                    column = 0
-                    for i in range(0, tab[2]):
-                        tab[1].setItem(table_row, column, QtWidgets.QTableWidgetItem(str(row[column])))
-                        column += 1
-                    table_row += 1
-            connection.close()
-        except Exception as e:
-            print("Exception at load_data: " + str(e))
+        if self.db_current is not None:
+            try:
+                connection = sqlite3.connect(self.db_current)
+                cur = connection.cursor()
+                # tuples for each db, [0] is the db name, [1] is the table object, [2] is the number of columns in db
+                tabs = self.create_tabs_tuples()
+                for tab in tabs:
+                    sql_query = "SELECT * FROM " + tab[0]  # tab[0] = db name
+                    cur.execute(sql_query)
+                    table_row = 0
+                    for row in cur.execute(sql_query):
+                        column = 0
+                        for i in range(0, tab[2]):
+                            tab[1].setItem(table_row, column, QtWidgets.QTableWidgetItem(str(row[column])))
+                            column += 1
+                        table_row += 1
+                connection.close()
+            except Exception as e:
+                print("Exception at load_data: " + str(e))
+        else:
+            # What to do?
+            pass
 
     def current_db(self, db):
         db_name = db[3:][:-3]  # Need to remove db\\V7.db first 3 char and last 3 char to get just the name.
@@ -140,33 +143,36 @@ class MainWindow(QtWidgets.QMainWindow):
             experimental_warning('admin_wrong')
 
     def create_database(self):
-        # Solution for db name will be a popup window for now:
-        db_name, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Database Name', 'Enter database name:')
-        if not pressed_ok:
-            db_name = ""
-        if db_name != "" and len(db_name) < 10:  # Some verification for db name value.
-            connection = sqlite3.connect('db\\' + db_name + '.db')
-            cur = connection.cursor()  # Opens connection to db (creates a new db file)
-            equipment_tuple = self.create_tabs_tuples()
-            for machine in equipment_tuple:  # for each element in equipment tuple
-                sql_command = f"CREATE TABLE {machine[0]} ("
-                for column in machine[3]:
-                    sql_command += f"[{column[0]}] {column[1]}, "
-                sql_command = sql_command[:-2] + ')'  # Removes the ', ' at the end and adds ')'
-                cur.execute(sql_command)  # Executes the command
-            connection.commit()  # Commits the changes
-            connection.close()  # Closes connection to db.
-            self.load_db_menu()  # Refreshes the menu
-            print("create_database: new database created! " + db_name)
+        try:
+            # Solution for db name will be a popup window for now:
+            db_name, pressed_ok = QtWidgets.QInputDialog.getText(self, 'Database Name', 'Enter database name:')
+            if not pressed_ok:
+                db_name = ""
+            if db_name != "" and len(db_name) < 10:  # Some verification for db name value.
+                connection = sqlite3.connect(cfg.FILE_PATHS['DB_LOCATION'] + db_name + '.db')
+                cur = connection.cursor()  # Opens connection to db (creates a new db file)
+                equipment_tuple = self.create_tabs_tuples()
+                for machine in equipment_tuple:  # for each element in equipment tuple
+                    sql_command = f"CREATE TABLE {machine[0]} ("
+                    for column in machine[3]:
+                        sql_command += f"[{column[0]}] {column[1]}, "
+                    sql_command = sql_command[:-2] + ')'  # Removes the ', ' at the end and adds ')'
+                    cur.execute(sql_command)  # Executes the command
+                connection.commit()  # Commits the changes
+                connection.close()  # Closes connection to db.
+                self.load_db_menu()  # Refreshes the menu
+                print("create_database: new database created! " + db_name)
+        except Exception as e:
+            print("Error in create_database: " + str(e))
 
     def load_db_menu(self):
         db_list = os.listdir(cfg.FILE_PATHS['DB_LOCATION'])
-        # db_list = ['V7', 'V8', 'Test']  # Test, ^uncomment above line for real usage.
-        # Need to remove all actions first::
-        # https://stackoverflow.com/questions/51333771/removing-dynamically-created-qmenu-items
+        # first, clear the actions
+        for action in self.action_db.actions():
+            self.action_db.removeAction(action)
+        # adds action for each db name in dir.
         for db in db_list:
             action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
-            # action = self.action_db.addAction(db)  # Test, ^uncomment above line for real usage.
             action.setCheckable(True)
 
     def choose_database(self, action):
@@ -186,10 +192,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def editmode_button_function(self):
         if self.editMode_button.isChecked():
-            print("edit_mode: Enabled")
             self.start_edit_listener()
         else:
-            print("edit_mode: Disabled")
             self.stop_edit_listener()
 
     def start_edit_listener(self):
@@ -251,7 +255,7 @@ if __name__ == '__main__':
 #  V need to create a special function and button from the top menu (file menu) that creates a new db
 #   Export list of used devices with some options (export approved only, export approved only & times used > 1)
 #   Reset times used for a table
-#   Fix databases update actions upon adding new db (currently create duplicates)
+#  V Fix databases update actions upon adding new db (currently create duplicates)
 #  ----
 #  need to choose on statup which db to use >> username & password, when connected, insert to a new db accounts:
 #  Because I want to know how many users use/change/refresh each db to mitigate\prevent possible issues.

@@ -2971,17 +2971,15 @@ class nGEN_Dialog(QtWidgets.QDialog):
         self.ngdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.ngdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        verification_dialog(self, self.infoList, self.equipment_list_obj, cfg.TABLE_NAMES['NGEN'])
 
     def infoBox(self):
         self.consoleSN = self.ngdialog.consoleSN_text.text()
@@ -3015,6 +3013,18 @@ class nGEN_Dialog(QtWidgets.QDialog):
                          self.monitor1HubPN, self.monitor1PsuSN, self.monitor1PsuPN, self.monitor2SN, self.monitor2PN,
                          self.monitor2V, self.monitor2HubSN, self.monitor2HubPN, self.monitor2PsuSN, self.monitor2PsuPN,
                          self.ngenPumpSN, self.ngenPumpPN, self.ngenPumpV, self.pumptoConsoleCable, self.footPedal]
+        self.equipment_list_obj = [self.ngdialog.consoleSN_text, self.ngdialog.consolePN_text, self.ngdialog.consoleV_text,
+                                   self.ngdialog.psuSN_text, self.ngdialog.psuPN_text, self.ngdialog.psuCable_text,
+                                   self.ngdialog.genToPiu_text, self.ngdialog.monitor1SN_text, self.ngdialog.monitor1PN_text,
+                                   self.ngdialog.monitor1V_text, self.ngdialog.monitor1HubSN_text, self.ngdialog.monitor1HubPN_text,
+                                   self.ngdialog.monitor1PsuSN_text, self.ngdialog.monitor1PsuPN_text, self.ngdialog.monitor2SN_text,
+                                   self.ngdialog.monitor2PN_text, self.ngdialog.monitor2V_text, self.ngdialog.monitor2HubSN_text,
+                                   self.ngdialog.monitor2HubPN_text, self.ngdialog.monitor2PsuSN_text, self.ngdialog.monitor2PsuPN_text,
+                                   self.ngdialog.ngenPumpSN_text, self.ngdialog.ngenPumpPN_text, self.ngdialog.ngenPumpV_text,
+                                   self.ngdialog.pumptoConsoleCable_text, self.ngdialog.foot_pedal_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.ngdialog.consoleSN_text.setText(clip[0])

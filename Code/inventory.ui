@@ -101,7 +101,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="systems">
        <attribute name="title">
@@ -1625,7 +1625,7 @@
          <number>300</number>
         </property>
         <property name="columnCount">
-         <number>27</number>
+         <number>28</number>
         </property>
         <row/>
         <row/>
@@ -2005,6 +2005,11 @@
         <column>
          <property name="text">
           <string>Monitor 2 PN</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Monitor 2 Version</string>
          </property>
         </column>
         <column>

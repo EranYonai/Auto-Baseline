@@ -474,6 +474,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.demoList = self.createWindowsLists("demo")
         self.bardList = self.createWindowsLists('bard')
         self.spuList = self.createWindowsLists("spu")
+        # Set Minimum and maximum window sizes
+        self.setMinimumSize(698, 600)
+        self.setMaximumSize(698, 600)
         self.ui.actionWork_Station.triggered.connect(
             lambda: self.showThings("workstation"))  # Calls function "showThings" that shows the sent item
         self.ui.actionRF_Generator_Stockert.triggered.connect(
@@ -3179,7 +3182,6 @@ class qDotDongle_Dialog(QtWidgets.QDialog):
     def verification(self):
         self.infoBox()
         equipment_list_str = [self.software, self.SN, self.EPcable]
-        print(equipment_list_str)
         verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['DONGLE'])
 
     def infoBox(self):
@@ -3207,22 +3209,25 @@ class epu_Dialog(QtWidgets.QDialog):
         self.epdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.epdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.unitSN, self.unitV]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['EPU'])
 
     def infoBox(self):
         self.unitSN = self.epdialog.unitSN_text.text()
         self.unitV = self.epdialog.unitV_text.text()
         self.infoList = [self.unitSN, self.unitV]
+        self.equipment_list_obj = [self.epdialog.unitSN_text, self.epdialog.unitV_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.epdialog.unitSN_text.setText(clip[0])
@@ -3238,17 +3243,16 @@ class Demo_Dialog(QtWidgets.QDialog):
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = [self.serviceTag, self.wsType, self.SW, self.dsp, self.imageV]
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['DEMO'])
 
     def infoBox(self):
         self.wsType = self.pdialog.wsType_text.text()
@@ -3259,6 +3263,11 @@ class Demo_Dialog(QtWidgets.QDialog):
         self.surpoint = self.pdialog.surpoint_checkbox.isChecked()
         self.infoList = [self.wsType, self.SW, self.dsp, self.imageV, self.serviceTag, str(self.surpoint)]
         self.infoListwithoutSurpoint = [self.wsType, self.SW, self.dsp, self.imageV, self.serviceTag]
+        self.equipment_list_obj = [self.pdialog.serviceTag_text, self.pdialog.wsType_text, self.pdialog.SW_text,
+                                   self.pdialog.dsp_text, self.pdialog.imageV_text]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.pdialog.wsType_text.setText(clip[0])

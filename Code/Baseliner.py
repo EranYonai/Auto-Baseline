@@ -139,17 +139,21 @@ Function that pops a dialog in which there's a list of the existing DBs in db_lo
             self.setMinimumWidth(400)
             item, ok_pressed = QtWidgets.QInputDialog.getItem(self, "Database", "Choose DB:",
                                                               db_list, 0, False)
-           # if ok_pressed and item:
-            self.selected_item = item
+            if ok_pressed:
+                self.selected_item = item
+            else:
+                self.selected_item = None
             # if the user pressed cancle, self.selected_item was none and it caused a crash
             # for now, either cancel places the chosen item to selected_item.
 
 
     try:
         popup = db_Dialog()
-        chosen_db = popup.selected_item + '.db'
-        logging.info("selected db is: " + chosen_db)
-        return db_location + '\\' + chosen_db
+        if popup.selected_item is not None:
+            chosen_db = popup.selected_item + '.db'
+            logging.info("selected db is: " + chosen_db)
+            return db_location + '\\' + chosen_db
+        return None
     except Exception as e:
         logging.exception("Exception at choose_db:")
         return None
@@ -163,7 +167,7 @@ def start_logger():
                         datefmt='%H:%M:%S',
                         level=logging.DEBUG)
     logging.warning("-----------Start Application-----------")
-    logging.debug("Logs location: " +cfg.FILE_PATHS['LOG'])
+    logging.debug("Logs location: " +cfg.FILE_PATHS['BASELINE_LOG'])
 
 def send_info_to_db(kind, equipment_list, db):
     """
@@ -317,7 +321,8 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     :return:
     """
     db = choose_db()
-    verified, approved, diffs = db_item_exists(type, equipment_list_str, db)
+    if db is not None:
+        verified, approved, diffs = db_item_exists(type, equipment_list_str, db)
     try:
         if len(diffs) > 0 and approved:
             # Correlation check:
@@ -2212,7 +2217,6 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.check_button.clicked.connect(self.verification)
         self.udialog.ultrasound_combo.currentTextChanged.connect(self.app_ver_na)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
-
         self.equipment_list_obj = []
 
     def infoBox(self):
@@ -2351,17 +2355,17 @@ class SPU_Dialog(QtWidgets.QDialog):
         self.spdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.spdialog.check_button.clicked.connect(self.verification)
         self.infoBox()
+        self.equipment_list_obj = []
 
     def confirmPressed(self):
         self.infoBox()
         self.close()
 
     def verification(self):
-        notimplemented = QtWidgets.QMessageBox()
-        notimplemented.setIcon(QtWidgets.QMessageBox.Critical)
-        notimplemented.setText('To be implemented...')
-        notimplemented.setWindowTitle("Work in Progress")
-        notimplemented.exec_()
+        self.infoBox()
+        equipment_list_str = []
+        for item in self.equipment_list_obj: equipment_list_str.append(item.text())
+        verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['SPU'])
 
     def infoBox(self):
         self.mainfwver = self.spdialog.mainfwver_text.text()
@@ -2393,6 +2397,18 @@ class SPU_Dialog(QtWidgets.QDialog):
         self.ecgbo_rev = self.spdialog.ecgbo_text_rev.text()
         self.spuprobo = self.spdialog.spuprobo_text.text()
         self.spuprobo_rev = self.spdialog.spuprobo_text_rev.text()
+        self.equipment_list_obj = [self.spdialog.sn_text, self.spdialog.pn_text, self.spdialog.swver_text,
+                                   self.spdialog.mainfwver_text, self.spdialog.secfwver_text, self.spdialog.frontloc_text,
+                                   self.spdialog.frontloc_text_rev, self.spdialog.ledbo_text, self.spdialog.ledbo_text_rev,
+                                   self.spdialog.motherbo_text, self.spdialog.motherbo_text_rev, self.spdialog.backbo_text,
+                                   self.spdialog.backbo_text_rev, self.spdialog.powerb_text, self.spdialog.powerb_text_rev,
+                                   self.spdialog.upbo_text, self.spdialog.upbo_text_rev, self.spdialog.pacingbo_text,
+                                   self.spdialog.pacingbo_text_rev, self.spdialog.tpibo_text, self.spdialog.tpibo_text_rev,
+                                   self.spdialog.digibo_text, self.spdialog.digibo_text_rev, self.spdialog.ecgbo_text,
+                                   self.spdialog.ecgbo_text_rev, self.spdialog.spuprobo_text, self.spdialog.spuprobo_text_rev]
+        for field in self.equipment_list_obj:
+            field.setStyleSheet('')
+            field.setToolTip('')
 
     def fillFields(self, clip):
         self.spdialog.mainfwver_text.setText(clip[0])

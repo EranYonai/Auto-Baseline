@@ -4,9 +4,9 @@ import sys
 import time
 import logging
 import qdarkstyle
+import cfg
 from PyQt5 import QtWidgets, uic
 
-import cfg
 
 
 # experimentalWarning is a function that takes (self, kind) as arguments.
@@ -47,6 +47,7 @@ def start_logger():
                         level=logging.DEBUG)
     logging.warning("-----------Start Application-----------")
     logging.debug("Logs location: " + cfg.FILE_PATHS['INVENTORY_LOG'])
+    logging.debug("DB_LOCATION: " + cfg.FILE_PATHS['DB_LOCATION'])
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -186,7 +187,10 @@ class MainWindow(QtWidgets.QMainWindow):
             logging.exception("Error in create_database: ")
 
     def load_db_menu(self):
-        db_list = os.listdir(cfg.FILE_PATHS['DB_LOCATION'])
+        try:
+            db_list = os.listdir(cfg.FILE_PATHS['DB_LOCATION'])
+        except:
+            logging.error("db location invalid: " + cfg.FILE_PATHS['DB_LOCATION'])
         # first, clear the actions
         for action in self.action_db.actions():
             self.action_db.removeAction(action)

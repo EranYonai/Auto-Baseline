@@ -5,8 +5,8 @@ import time
 import logging
 import qdarkstyle
 import cfg
+import PyQt5
 from PyQt5 import QtWidgets, uic
-
 
 
 # experimentalWarning is a function that takes (self, kind) as arguments.
@@ -50,17 +50,17 @@ def start_logger():
     logging.debug("DB_LOCATION: " + cfg.FILE_PATHS['DB_LOCATION'])
 
 
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi("inventory.ui", self)
         self.resize(1050, 1070)
-
         # Global attributes:
         self.action_db = self.menuActions.addMenu('Databases')
 
         # Triggers and connections:
-        self.search_button.clicked.connect(self.search)
+        self.delete_button.clicked.connect(self.delete_row)
         self.editMode_button.clicked.connect(self.editmode_button_function)
         self.refresh_button.clicked.connect(self.refresh)
         self.action_db.triggered.connect(self.choose_database)
@@ -71,12 +71,41 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load_db_menu()
         self.db_current = None
         self.load_data()  # First load of data - current_db is the default
+        # self.login()
         # refresh_thread = threading.Thread(target=self.auto_refresh, args=(20, ))
         # refresh_thread.start()
 
     def closeEvent(self, event):
         logging.warning("-----------Application closeEvent-----------")
         event.accept
+
+    def login(self):
+        class DbDialog(QtWidgets.QDialog):
+            def __init__(self):
+                super(DbDialog, self).__init__()
+                self.selected_item = None
+                layout = QtWidgets.QFormLayout()
+                self.setLayout(layout)
+                self.setWindowTitle("Login")
+                self.setMinimumWidth(400)
+                password, ok_pressed = QtWidgets.QInputDialog.getText(self, 'Password', 'Please enter a password:')
+                if ok_pressed:
+                    self.password = password
+                else:
+                    self.password = None
+
+        popup = DbDialog()
+        if popup.password is not None:
+            if popup.password == cfg.PASSWORDS['INVENTORY_PASS']:
+                logging.info("logging successfully" + popup.password)
+                return
+            else:
+                logging.warning("password wrong: " + popup.password)
+                self.login()
+        elif popup.password != cfg.PASSWORDS['INVENTORY_PASS']:
+            pass
+            # WATTT y no quit
+
 
     def create_tabs_tuples(self):
         workstation = (cfg.TABLE_NAMES['WORKSTATION'], self.ws_table, 8, cfg.TABLE_FIELDS['WS'])
@@ -132,7 +161,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().
         self.stop_edit_listener()  # stops listener before refreshing lists.
         if self.editMode_button.isChecked():
-            experimental_warning("exited_edit_mode")
+           # experimental_warning("exited_edit_mode") Annoying
             self.editMode_button.setChecked(False)  # exits edit mode
 
         rows = 300
@@ -152,8 +181,27 @@ class MainWindow(QtWidgets.QMainWindow):
     # 		#  https://stackoverflow.com/questions/49886313/how-to-run-a-while-loop-with-pyqt5
     #       #  https://realpython.com/python-pyqt-qthread/
 
-    def search(self):
-        pass
+    def delete_row(self):
+        which_table = self.machines.currentIndex()
+        tabs = self.create_tabs_tuples()
+        try:
+            item = tabs[which_table][1].item(tabs[which_table][1].currentRow(),
+                                             tabs[which_table][1].currentColumn())  # gets the item = QTableWidgetItem
+            item_key = tabs[which_table][1].item(tabs[which_table][1].currentRow(), 0)
+            if item_key is not None:  # If itemKey is none, it means the user tried to change empty row, do nothing.
+                sql_query = self.delete_sql_get_string(item_key.text(), which_table)
+                connection = sqlite3.connect(self.db_current)
+                cur = connection.cursor()
+                cur.execute(sql_query)
+                cur.close()
+                connection.commit()
+                connection.close()
+                logging.info("delete_row: " + sql_query)
+                self.refresh()
+            else:  # For debug purposes, delete this else on release.
+                logging.info("user is deleting empty row.")
+        except:
+            logging.exception("Exception at delete_row:")
 
     def manage_database(self):
         # Starts by asking for password, not everyone can create a new db.
@@ -225,24 +273,26 @@ class MainWindow(QtWidgets.QMainWindow):
         for tab in tabs:
             tab[1].blockSignals(False)  # enable signals from the specific widget
             tab[1].cellChanged.connect(self.on_item_change)
+        self.delete_button.setEnabled(True)
         logging.info("edit mode is ON")
 
     def stop_edit_listener(self):
         tabs = self.create_tabs_tuples()
         for tab in tabs:
             tab[1].blockSignals(True)  # disable signals from the specific widget
+        self.delete_button.setEnabled(False)
         logging.info("edit mode is off")
 
     def on_item_change(self):
         #  self.machines.currentIndex() - 0 systems, 1 workstations, 3 ultrasounds..
-        whichTable = self.machines.currentIndex()
+        which_table = self.machines.currentIndex()
         tabs = self.create_tabs_tuples()
         try:
-            item = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(),
-                                            tabs[whichTable][1].currentColumn())  # gets the item = QTableWidgetItem
-            itemKey = tabs[whichTable][1].item(tabs[whichTable][1].currentRow(), 0)
-            if itemKey is not None:  # If itemKey is none, it means the user tried to change empty row, do nothing.
-                self.update_sql_item(item, itemKey.text(), whichTable)
+            item = tabs[which_table][1].item(tabs[which_table][1].currentRow(),
+                                            tabs[which_table][1].currentColumn())  # gets the item = QTableWidgetItem
+            item_key = tabs[which_table][1].item(tabs[which_table][1].currentRow(), 0)
+            if item_key is not None:  # If itemKey is none, it means the user tried to change empty row, do nothing.
+                self.update_sql_item(item, item_key.text(), which_table)
             else:  # For debug purposes, delete this else on release.
                 logging.info("user is editing empty row.")
         except:
@@ -253,6 +303,12 @@ class MainWindow(QtWidgets.QMainWindow):
         query = f"UPDATE {tabs[whichTable][0]} " \
                 f"SET {tabs[whichTable][3][col][0]} = '{text}' " \
                 f"WHERE {tabs[whichTable][3][0][0]} = '{key}'; "
+        return query
+
+    def delete_sql_get_string(self, key, table):
+        tabs = self.create_tabs_tuples()
+        query = f"DELETE FROM {tabs[table][0]} " \
+                f"WHERE {tabs[table][3][0][0]}=\'{key}\'"
         return query
 
     def update_sql_item(self, item, itemKey, whichTable):
@@ -278,9 +334,11 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
 
 # TODO:
-#  V need to create a special function and button from the top menu (file menu) that creates a new db
+#  V need to create a function and button from the top menu (file menu) that creates a new db
 #   Export list of used devices with some options (export approved only, export approved only & times used > 1)
 #   Reset times used for a table
+#   Delete button
+#   Background green of approved rows
 #  V Fix databases update actions upon adding new db (currently create duplicates)
 #  ----
 #  need to choose on statup which db to use >> username & password, when connected, insert to a new db accounts:

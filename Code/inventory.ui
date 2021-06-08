@@ -49,48 +49,6 @@
      <attribute name="title">
       <string>Inventory Details</string>
      </attribute>
-     <widget class="QLabel" name="title_2">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>111</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Product Sans</family>
-        <pointsize>20</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Search:</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="searchEdit">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>20</y>
-        <width>331</width>
-        <height>31</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="search_button">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>20</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Search</string>
-      </property>
-     </widget>
      <widget class="QTabWidget" name="machines">
       <property name="geometry">
        <rect>
@@ -101,7 +59,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="systems">
        <attribute name="title">
@@ -118,6 +76,12 @@
         </property>
         <property name="autoScrollMargin">
          <number>11</number>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
         </property>
         <property name="rowCount">
          <number>300</number>
@@ -508,7 +472,7 @@
          <enum>Qt::SolidLine</enum>
         </property>
         <property name="sortingEnabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="rowCount">
          <number>300</number>
@@ -874,6 +838,12 @@
           <height>741</height>
          </rect>
         </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
         <property name="rowCount">
          <number>300</number>
         </property>
@@ -1234,6 +1204,12 @@
           <width>951</width>
           <height>741</height>
          </rect>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
         </property>
         <property name="rowCount">
          <number>300</number>
@@ -1620,6 +1596,12 @@
           <width>951</width>
           <height>741</height>
          </rect>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
         </property>
         <property name="rowCount">
          <number>300</number>
@@ -2082,6 +2064,12 @@
           <height>741</height>
          </rect>
         </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
         <property name="rowCount">
          <number>300</number>
         </property>
@@ -2458,6 +2446,12 @@
           <height>741</height>
          </rect>
         </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
         <property name="rowCount">
          <number>300</number>
         </property>
@@ -2814,6 +2808,12 @@
           <height>741</height>
          </rect>
         </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
         <property name="rowCount">
          <number>300</number>
         </property>
@@ -3154,6 +3154,12 @@
           <width>951</width>
           <height>741</height>
          </rect>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
         </property>
         <property name="rowCount">
          <number>300</number>
@@ -3498,6 +3504,12 @@
           <height>741</height>
          </rect>
         </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
         <property name="rowCount">
          <number>300</number>
         </property>
@@ -3836,6 +3848,12 @@
           <height>741</height>
          </rect>
         </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
         <property name="rowCount">
          <number>300</number>
         </property>
@@ -4173,6 +4191,12 @@
           <width>951</width>
           <height>741</height>
          </rect>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
         </property>
         <property name="rowCount">
          <number>300</number>
@@ -4637,6 +4661,12 @@
           <height>741</height>
          </rect>
         </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
         <property name="rowCount">
          <number>300</number>
         </property>
@@ -4981,7 +5011,7 @@
      <widget class="QPushButton" name="editMode_button">
       <property name="geometry">
        <rect>
-        <x>630</x>
+        <x>450</x>
         <y>20</y>
         <width>93</width>
         <height>28</height>
@@ -4997,14 +5027,30 @@
      <widget class="QPushButton" name="refresh_button">
       <property name="geometry">
        <rect>
-        <x>820</x>
+        <x>570</x>
         <y>20</y>
-        <width>121</width>
+        <width>91</width>
         <height>28</height>
        </rect>
       </property>
       <property name="text">
        <string>Refresh</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="delete_button">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>20</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
       </property>
      </widget>
     </widget>

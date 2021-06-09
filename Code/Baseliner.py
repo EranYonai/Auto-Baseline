@@ -2328,8 +2328,10 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             logging.info("search value: " + search_data)
             PS_PATH = cfg.FILE_PATHS['POWERSHELL']  # path to run powershell
             command = f'$txt = "{search_data}" \n' + cfg.SEARCH_CATALOG_COMMAND
+            CREATE_NO_WINDOW = 0x08000000
             search_results = BeautifulSoup(
-                str(subprocess.Popen([PS_PATH, command], stdout=subprocess.PIPE).communicate()),
+                str(subprocess.Popen([PS_PATH, command], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     stdin=subprocess.PIPE, creationflags = CREATE_NO_WINDOW).communicate()), #creation flag should silently run (after pyinstaller)
                 'lxml')  # extracting html page of catheter catalog using powershell and the command
             details_info = []  # details_info is an arry that hold all the data from the first row in catheter catalog table
             table_data = search_results.table.find_all('td')  # search for the table in search_results (html content)

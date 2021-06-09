@@ -5,8 +5,7 @@ import time
 import logging
 import qdarkstyle
 import cfg
-import PyQt5
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic, QtGui
 
 
 # experimentalWarning is a function that takes (self, kind) as arguments.
@@ -50,6 +49,30 @@ def start_logger():
     logging.debug("DB_LOCATION: " + cfg.FILE_PATHS['DB_LOCATION'])
 
 
+class Login(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(Login, self).__init__(parent)
+        self.label = QtWidgets.QLabel(self)
+        self.label.setText("Welcome to Inventory Manager\nIn order to proceed please enter the password provided:")
+        self.textPass = QtWidgets.QLineEdit(self)
+        self.textPass.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.buttonLogin = QtWidgets.QPushButton('Login', self)
+        self.buttonLogin.clicked.connect(self.handle_login)
+        self.setWindowTitle("Login")
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.addWidget(self.label)
+        layout.addWidget(self.textPass)
+        layout.addWidget(self.buttonLogin)
+        logging.warning("-----------Login Window-----------")
+
+    def handle_login(self):
+        if self.textPass.text() == cfg.PASSWORDS['INVENTORY_PASS']:
+            logging.info("user logged in successfully with the password: " + self.textPass.text())
+            self.accept()
+        else:
+            logging.info("login password wrong: " + self.textPass.text())
+            self.textPass.setText("")
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -71,41 +94,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load_db_menu()
         self.db_current = None
         self.load_data()  # First load of data - current_db is the default
-        # self.login()
         # refresh_thread = threading.Thread(target=self.auto_refresh, args=(20, ))
         # refresh_thread.start()
 
     def closeEvent(self, event):
         logging.warning("-----------Application closeEvent-----------")
-        event.accept
-
-    def login(self):
-        class DbDialog(QtWidgets.QDialog):
-            def __init__(self):
-                super(DbDialog, self).__init__()
-                self.selected_item = None
-                layout = QtWidgets.QFormLayout()
-                self.setLayout(layout)
-                self.setWindowTitle("Login")
-                self.setMinimumWidth(400)
-                password, ok_pressed = QtWidgets.QInputDialog.getText(self, 'Password', 'Please enter a password:')
-                if ok_pressed:
-                    self.password = password
-                else:
-                    self.password = None
-
-        popup = DbDialog()
-        if popup.password is not None:
-            if popup.password == cfg.PASSWORDS['INVENTORY_PASS']:
-                logging.info("logging successfully" + popup.password)
-                return
-            else:
-                logging.warning("password wrong: " + popup.password)
-                self.login()
-        elif popup.password != cfg.PASSWORDS['INVENTORY_PASS']:
-            pass
-            # WATTT y no quit
-
+        event.accept()
 
     def create_tabs_tuples(self):
         workstation = (cfg.TABLE_NAMES['WORKSTATION'], self.ws_table, 8, cfg.TABLE_FIELDS['WS'])
@@ -161,7 +155,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # refreshes all tables by removing all rows -> adding new - blank rows -> calling loadata().
         self.stop_edit_listener()  # stops listener before refreshing lists.
         if self.editMode_button.isChecked():
-           # experimental_warning("exited_edit_mode") Annoying
+            # experimental_warning("exited_edit_mode") Annoying
             self.editMode_button.setChecked(False)  # exits edit mode
 
         rows = 300
@@ -289,7 +283,7 @@ class MainWindow(QtWidgets.QMainWindow):
         tabs = self.create_tabs_tuples()
         try:
             item = tabs[which_table][1].item(tabs[which_table][1].currentRow(),
-                                            tabs[which_table][1].currentColumn())  # gets the item = QTableWidgetItem
+                                             tabs[which_table][1].currentColumn())  # gets the item = QTableWidgetItem
             item_key = tabs[which_table][1].item(tabs[which_table][1].currentRow(), 0)
             if item_key is not None:  # If itemKey is none, it means the user tried to change empty row, do nothing.
                 self.update_sql_item(item, item_key.text(), which_table)
@@ -327,11 +321,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-    win = MainWindow()
-    win.show()
-    win.setFocus()
-    sys.exit(app.exec_())
+    login = Login()
+    login.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+    if login.exec_() == QtWidgets.QDialog.Accepted:
+        app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        win = MainWindow()
+        win.show()
+        win.setFocus()
+        sys.exit(app.exec_())
 
 # TODO:
 #  V need to create a function and button from the top menu (file menu) that creates a new db

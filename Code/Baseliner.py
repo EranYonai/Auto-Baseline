@@ -2098,7 +2098,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def closeEvent(self, event):
         logging.warning("-----------Application closeEvent-----------")
-        event.accept
+        reply = QtWidgets.QMessageBox.question(
+            self, "Exit Prompt",
+            "Are you sure you want to quit? Any unsaved work will be lost.",
+            QtWidgets.QMessageBox.Cancel |QtWidgets.QMessageBox.Close,
+            QtWidgets.QMessageBox.Cancel)
+        if reply == QtWidgets.QMessageBox.Close:
+            event.accept()
+        else:
+            event.ignore()
+
+
 
     def importaddtoInfoCount(self, type, listValues):
         # This function gets type (child.tag) e.g. "Workstations" and listValues which is the list of all the values of the children texts(childx3.text)

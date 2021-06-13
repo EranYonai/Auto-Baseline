@@ -5081,7 +5081,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Locally backup Databases</string>
+       <string>Create Local DB backup</string>
       </property>
      </widget>
      <widget class="QComboBox" name="comboBox">

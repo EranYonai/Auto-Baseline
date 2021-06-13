@@ -5,6 +5,7 @@ import time
 import logging
 import qdarkstyle
 import cfg
+import shutil
 from PyQt5 import QtWidgets, uic, QtGui
 
 
@@ -88,7 +89,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.refresh_button.clicked.connect(self.refresh)
         self.action_db.triggered.connect(self.choose_database)
         self.actionCreateDB.triggered.connect(self.manage_database)
-
+        self.local_backup.clicked.connect(self.create_local_backup)
         # On initialization:
         start_logger()
         self.load_db_menu()
@@ -100,6 +101,16 @@ class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         logging.warning("-----------Application closeEvent-----------")
         event.accept()
+
+    def create_local_backup(self):
+        try:
+            export_file_location = \
+                QtWidgets.QFileDialog.getExistingDirectory(None, "Local Backup")
+            logging.info('exporting to: ' + export_file_location)
+            shutil.copytree(cfg.FILE_PATHS["DB_LOCATION"], export_file_location + '/', dirs_exist_ok=True)
+            self.local_backup.setStyleSheet('background-color: rgba(0, 255, 30, 0.25);')
+        except:
+            logging.exception("Error in create_local_copy: ")
 
     def create_tabs_tuples(self):
         workstation = (cfg.TABLE_NAMES['WORKSTATION'], self.ws_table, 8, cfg.TABLE_FIELDS['WS'])
@@ -192,6 +203,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 connection.close()
                 logging.info("delete_row: " + sql_query)
                 self.refresh()
+                self.start_edit_listener()
             else:  # For debug purposes, delete this else on release.
                 logging.info("user is deleting empty row.")
         except:
@@ -334,7 +346,7 @@ if __name__ == '__main__':
 #  V need to create a function and button from the top menu (file menu) that creates a new db
 #   Export list of used devices with some options (export approved only, export approved only & times used > 1)
 #   Reset times used for a table
-#   Delete button
+#  V Delete button
 #   Background green of approved rows
 #  V Fix databases update actions upon adding new db (currently create duplicates)
 #  ----

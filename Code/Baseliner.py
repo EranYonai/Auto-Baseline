@@ -2250,7 +2250,7 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
             field.setToolTip('')
 
     def app_ver_na(self):
-        require_ver = ['Vivid (i or q)', 'Vivid IQ', 'Vivid S-70']
+        require_ver = ['GE Vivid i/q', 'Vivid IQ', 'Vivid S-70']
         change_na = True
         for machine in require_ver:
             if self.udialog.ultrasound_combo.currentText() == machine:

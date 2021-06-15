@@ -102,6 +102,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actionCreateDB.triggered.connect(self.manage_database)
         self.local_backup.clicked.connect(self.create_local_backup)
         self.excel_export.clicked.connect(self.export_to_excel)
+
         # On initialization:
         start_logger()
         self.load_db_menu()

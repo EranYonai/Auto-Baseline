@@ -14,3 +14,6 @@ requests==2.25.1
 soupsieve==2.2.1
 urllib3==1.26.4
 zipp==3.4.0
+pandas==1.2.4
+openpyxl==3.0.7
+XlsxWriter==1.4.3

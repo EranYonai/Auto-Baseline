@@ -43,7 +43,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Inventory_details">
      <attribute name="title">
@@ -5100,7 +5100,7 @@
         <x>20</x>
         <y>35</y>
         <width>131</width>
-        <height>31</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
@@ -5116,7 +5116,7 @@
      <x>0</x>
      <y>0</y>
      <width>1042</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuActions">

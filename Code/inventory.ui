@@ -43,7 +43,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Inventory_details">
      <attribute name="title">
@@ -5058,6 +5058,55 @@
      <attribute name="title">
       <string>Additional Features</string>
      </attribute>
+     <widget class="QPushButton" name="excel_export">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>60</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Export to Excel</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="local_backup">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>60</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Create Local DB backup</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>65</y>
+        <width>141</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>35</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Available Databases:</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -5067,7 +5116,7 @@
      <x>0</x>
      <y>0</y>
      <width>1042</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuActions">

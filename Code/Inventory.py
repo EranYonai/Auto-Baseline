@@ -6,6 +6,10 @@ import logging
 import qdarkstyle
 import cfg
 import shutil
+import pandas  # used to export to excel
+import openpyxl  # used by Pandas when working with excel
+import xlsxwriter  # used by Pandas when working with excel
+import os  # used to launch the excel file on the user's machine after it was created
 from PyQt5 import QtWidgets, uic, QtGui
 
 
@@ -35,6 +39,13 @@ def experimental_warning(kind):
         warning.setWindowTitle("Notification")
         warning.exec_()
         logging.info("exited edit mode")
+    if kind == "permission_error":
+        warning = QtWidgets.QMessageBox()
+        warning.setText(
+            "We don't have premission to do that. \nTry closing all open Excel files, \nor selecting a different name.")
+        warning.setIcon(2)  # Set Icon enums: 0::noIcon, 1::Info, 2::Warning, 3::Critical, 4::Question
+        warning.setWindowTitle("Notification")
+        warning.exec_()
 
 
 def start_logger():
@@ -90,6 +101,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.action_db.triggered.connect(self.choose_database)
         self.actionCreateDB.triggered.connect(self.manage_database)
         self.local_backup.clicked.connect(self.create_local_backup)
+        self.excel_export.clicked.connect(self.export_to_excel)
         # On initialization:
         start_logger()
         self.load_db_menu()
@@ -101,6 +113,53 @@ class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         logging.warning("-----------Application closeEvent-----------")
         event.accept()
+
+    # Export the given database to an xlsx file.
+    def export_to_excel(self):
+        try:
+            logging.info('received request to export to excel')
+            database_name = self.comboBox.currentText()  # Get the name of selected database in the combobox
+            db_path = cfg.FILE_PATHS['DB_LOCATION'] + database_name + '.db'  # Define the database's path
+            current_db = sqlite3.connect(db_path)  # Load the selected database
+            save_path = self.save_file_dialogue(database_name,
+                                                "xlsx")  # Let the user select a save path and name with type of xlsx file.
+            table_names = self.get_all_table_names(database_name,
+                                                   current_db)  # Create a list with the names of all tables in the database
+            if save_path != '':  # If the user canceled the saving, excel will not be craeted (might also prevent empty names)
+                with pandas.ExcelWriter(save_path,
+                                        engine="xlsxwriter") as writer:  # Call ExcelWriter which will write into excel files (required to add tabs etc.) and creates it
+                    for name in table_names:  # Iterate over all the table_names
+                        selectedTable = pandas.read_sql("SELECT * FROM " + name, current_db)  # Import the current table
+                        selectedTable.to_excel(writer, sheet_name=name,
+                                               index=False)  # Export the current table to a new tab in the excel file, named after him
+                logging.info('Finished exporting')
+                os.startfile(save_path)  # Open the exported xlsx file on the user's machine
+        except Exception as e:  # If the user try overrwriting an open excel file:
+            experimental_warning('permission_error')  # Raise a warning. (Action will not be completed)
+            logging.exception("error in export_to_excel: ")
+
+    # Returns a list of all tables in given database (to support cases it changes)
+    def get_all_table_names(self, database_name, current_db):
+        try:
+            table_names = []  # Create an empty list for the table names
+            temp_db = current_db.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table';")  # Load table names from the database
+            for name in temp_db:  # Iterate over the loaded database
+                table_names.append(name[
+                                       0])  # Add the name of the current iterated table to the list
+            return table_names  # Returns a list of the tables
+        except:  # In case of any error:
+            logging.exception("exception in get_all_table_names: ")  # Show in log
+            pass  # And ignore
+
+    # Opens a window for selecting name and location for saved file and returns the full path selected including file name
+    def save_file_dialogue(self, default_name, file_type):
+        try:
+            save_path, _filter = QtWidgets.QFileDialog.getSaveFileName(None, "Save File", default_name,
+                                                                       "(*." + file_type + ")")  # As described. (*_Filter discards the tuple recived by default.)
+            return save_path  # Return a string of the path selected
+        except:  # In case of errors:
+            logging.exception("Error in saving file: ")  # Show in log
 
     def create_local_backup(self):
         try:
@@ -252,6 +311,8 @@ class MainWindow(QtWidgets.QMainWindow):
         for db in db_list:
             action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
             action.setCheckable(True)
+            self.comboBox.addItem(
+                db[:-3])  # Populates the comboBox in 'Additional Features'with theavailable databases.
 
     def choose_database(self, action):
         try:

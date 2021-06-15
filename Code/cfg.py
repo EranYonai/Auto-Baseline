@@ -13,8 +13,8 @@ FILE_PATHS = {
 }
 
 APPLICATION_VERSION = {
-    'AutoBaseline': '1.1',
-    'Inventory': '0.2'
+    'AutoBaseline': '1.2-Beta',
+    'Inventory': '0.9'
 }
 
 TABLE_NAMES = {
@@ -147,7 +147,7 @@ TABLE_FIELDS = {
 
 MIN_CORRELATION = 0.7
 MAX_CORRELATION = 1
-PERCENTAGE_TO_PASS_DB = 0.8
+PERCENTAGE_TO_PASS_DB = 0.75
 
 SEARCH_CATALOG_COMMAND = '$s = Invoke-WebRequest -Uri "http://itsusrawsp10939.jnj.com/partnolookup/Main.aspx" -UseDefaultCredentials `\n' \
                          '-Method "POST" `\n' \

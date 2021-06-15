@@ -233,7 +233,7 @@
    </property>
    <item>
     <property name="text">
-     <string>Vivid (i or q)</string>
+     <string>GE Vivid i/q</string>
     </property>
    </item>
    <item>
@@ -248,12 +248,12 @@
    </item>
    <item>
     <property name="text">
-     <string>X300 PE</string>
+     <string>Siemens Acuson X300</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>X700</string>
+     <string>Siemens Acuson X700</string>
     </property>
    </item>
    <item>

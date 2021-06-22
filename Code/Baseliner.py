@@ -1625,7 +1625,10 @@ class MainWindow(QtWidgets.QMainWindow):
                     for y in range(len(fieldsofWS)):
                         child_field = ET.SubElement(child_ws, fieldsofWS[
                             y])  # Creating a child to <Workstation_x> called the field name e.g. <SoftwareVer>
-                        child_field.text = self.wsList_info[x][y]  # adding text to the field
+                        if self.wsList_info[x][y] == "" or self.wsList_info[x][y] == None:
+                            child_field.text = '--'
+                        else:
+                            child_field.text = self.wsList_info[x][y]  # adding text to the field
                     LicensesWS = self.wsList[x].licensesToImport
                     LicensesSPWS = self.wsList[x].licensesSPtoImport
                     for i in range(len(LicensesWS)):

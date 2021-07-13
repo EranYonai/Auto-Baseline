@@ -3155,12 +3155,12 @@ class Pacer_Dialog(QtWidgets.QDialog):
 
     def verification(self):
         self.infoBox()
-        equipment_list_str = [self.unitSN, self.unitV]
+        equipment_list_str = [self.unitV, self.unitSN]
         verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['PACER'])
 
     def infoBox(self):
         self.unitSN = self.pdialog.unitSN_text.text()
-        self.unitV = self.pdialog.unitV_text.text()
+        self.unitV = self.pdialog.unitV_text.text() #Fix Pacer SN and Name are flipped in verification table.
         self.infoList = [self.unitSN, self.unitV]
         self.equipment_list_obj = [self.pdialog.unitSN_text, self.pdialog.unitV_text]
         for field in self.equipment_list_obj:

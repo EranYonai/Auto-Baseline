@@ -1931,7 +1931,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return extToReturn
         if type == "stockert":
             if len(self.stockertList_info[position][10]) > 0:
-                return 'Stockert GmbH SMARTABLATE System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O to Carto Cable:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\nEP to PIU cable:\t%s\nEP Shuttle to PIU:\t%s\nGlobal Port:\t\t%s\nGenerator to WS cable:\t%s\nPatch elect Cable:\t%s\nFoot Pedal:\t\t%s\n-------------------\n' % (
+                return 'Stockert GmbH System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O to Carto Cable:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\nEP to PIU cable:\t%s\nEP Shuttle to PIU:\t%s\nGlobal Port:\t\t%s\nGenerator to WS cable:\t%s\nPatch elect Cable:\t%s\nFoot Pedal:\t\t%s\n-------------------\n' % (
                     position + 1, self.stockertList_info[position][0], self.stockertList_info[position][1],
                     self.stockertList_info[position][2], self.stockertList_info[position][3],
                     self.stockertList_info[position][4], self.stockertList_info[position][5],
@@ -1939,7 +1939,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.stockertList_info[position][8], self.stockertList_info[position][9],
                     self.stockertList_info[position][10])
             else:  # Without footPedal
-                return 'Stockert GmbH SMARTABLATE System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O to Carto Cable:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\nEP to PIU cable:\t%s\nEP Shuttle to PIU:\t%s\nGlobal Port:\t\t%s\nGenerator to WS cable:\t%s\nPatch elect Cable:\t%s\n-------------------\n' % (
+                return 'Stockert GmbH System RF Generator #%d:\nSoftware Version:\t%s\nSerial Number:\t\t%s\nEP I/O to Carto Cable:\t%s\nAblation adaptor Cable:\t%s\nEP I/O Box SN:\t\t%s\nEP to PIU cable:\t%s\nEP Shuttle to PIU:\t%s\nGlobal Port:\t\t%s\nGenerator to WS cable:\t%s\nPatch elect Cable:\t%s\n-------------------\n' % (
                     position + 1, self.stockertList_info[position][0], self.stockertList_info[position][1],
                     self.stockertList_info[position][2], self.stockertList_info[position][3],
                     self.stockertList_info[position][4], self.stockertList_info[position][5],

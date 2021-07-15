@@ -5,3 +5,4 @@ Code/__pycache__/Inventory.cpython-36.pyc
 
 *.pyc
 /venv/*
+/output/*

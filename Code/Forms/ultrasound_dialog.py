@@ -125,7 +125,7 @@ class Ui_Dialog(object):
         self.ultrasound_combo.setItemText(2, _translate("Dialog", "Vivid S-70"))
         self.ultrasound_combo.setItemText(3, _translate("Dialog", "Siemens Acuson X300"))
         self.ultrasound_combo.setItemText(4, _translate("Dialog", "Siemens Acuson X700"))
-        self.ultrasound_combo.setItemText(5, _translate("Dialog", "SC200 System"))
+        self.ultrasound_combo.setItemText(5, _translate("Dialog", "SC2000 System"))
         self.ultrasound_combo.setItemText(6, _translate("Dialog", "Sequoia System (PAL)"))
         self.ultrasound_combo.setItemText(7, _translate("Dialog", "Sequoia System (NTSC)"))
         self.ultrasound_combo.setItemText(8, _translate("Dialog", "P500"))

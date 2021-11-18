@@ -1586,7 +1586,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         toText.append(self.format("spu", 0))
             toText.append(self.format('catheters', None))
             toText.append(self.format('extenders', None))
-            export_file = open(self.exportfilelocation, 'a')
+            export_file = open(self.exportfilelocation, 'w')
             for i in range(len(toText)):
                 export_file.write(toText[i])
             export_file.close()

@@ -5135,6 +5135,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="actionCreateDB"/>
+    <addaction name="actionSelect_Database_Path"/>
    </widget>
    <addaction name="menuActions"/>
   </widget>
@@ -5152,6 +5153,11 @@
   <action name="actionChoose_Database">
    <property name="text">
     <string>Choose Database</string>
+   </property>
+  </action>
+  <action name="actionSelect_Database_Path">
+   <property name="text">
+    <string>Select Database Path</string>
    </property>
   </action>
  </widget>

@@ -102,14 +102,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actionCreateDB.triggered.connect(self.manage_database)
         self.local_backup.clicked.connect(self.create_local_backup)
         self.excel_export.clicked.connect(self.export_to_excel)
+        self.actionSelect_Database_Path.triggered.connect(self.folder_dialog)
 
         # On initialization:
         start_logger()
-        self.load_db_menu()
+        self.load_db_menu(None)
         self.db_current = None
         self.load_data()  # First load of data - current_db is the default
         # refresh_thread = threading.Thread(target=self.auto_refresh, args=(20, ))
         # refresh_thread.start()
+
+    def folder_dialog(self):
+        dialog = QtWidgets.QFileDialog()
+        folder_path = dialog.getExistingDirectory(None, "Select Folder")
+        self.load_db_menu(folder_path)
+
 
     def closeEvent(self, event):
         logging.warning("-----------Application closeEvent-----------")
@@ -295,25 +302,28 @@ class MainWindow(QtWidgets.QMainWindow):
                     cur.execute(sql_command)  # Executes the command
                 connection.commit()  # Commits the changes
                 connection.close()  # Closes connection to db.
-                self.load_db_menu()  # Refreshes the menu
+                self.load_db_menu(None)  # Refreshes the menu
                 logging.info("create_database: new database created! " + db_name)
         except:
             logging.exception("Error in create_database: ")
 
-    def load_db_menu(self):
+    def load_db_menu(self, folder_path):
         try:
-            db_list = os.listdir(cfg.FILE_PATHS['DB_LOCATION'])
+            if folder_path is None:
+                db_list = os.listdir(cfg.FILE_PATHS['DB_LOCATION'])
+            else:
+                db_list = os.listdir(folder_path)
+            for action in self.action_db.actions():
+                self.action_db.removeAction(action)
+            # adds action for each db name in dir.
+            for db in db_list:
+                action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
+                action.setCheckable(True)
+                self.comboBox.addItem(
+                    db[:-3])  # Populates the comboBox in 'Additional Features'with theavailable databases.
         except:
             logging.error("db location invalid: " + cfg.FILE_PATHS['DB_LOCATION'])
         # first, clear the actions
-        for action in self.action_db.actions():
-            self.action_db.removeAction(action)
-        # adds action for each db name in dir.
-        for db in db_list:
-            action = self.action_db.addAction(db[:-3])  # db[:-3] removes the .db from the file name
-            action.setCheckable(True)
-            self.comboBox.addItem(
-                db[:-3])  # Populates the comboBox in 'Additional Features'with theavailable databases.
 
     def choose_database(self, action):
         try:

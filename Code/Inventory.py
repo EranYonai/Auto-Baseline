@@ -90,7 +90,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi("inventory.ui", self)
-        self.resize(1050, 1070)
+        self.resize(1742, 1043)
         # Global attributes:
         self.action_db = self.menuActions.addMenu('Databases')
 
@@ -184,7 +184,7 @@ class MainWindow(QtWidgets.QMainWindow):
         dongle = (cfg.TABLE_NAMES['DONGLE'], self.dongles_table, 5, cfg.TABLE_FIELDS['DONGLE'])
         epu = (cfg.TABLE_NAMES['EPU'], self.epu_table, 4, cfg.TABLE_FIELDS['EPU'])
         printer = (cfg.TABLE_NAMES['PRINTER'], self.printer_table, 4, cfg.TABLE_FIELDS['PRINTER'])
-        spu = (cfg.TABLE_NAMES['SPU'], self.spu_table, 29, cfg.TABLE_FIELDS['SPU'])
+        spu = (cfg.TABLE_NAMES['SPU'], self.spu_table, 31, cfg.TABLE_FIELDS['SPU'])
         demo = (cfg.TABLE_NAMES['DEMO'], self.demo_table, 7, cfg.TABLE_FIELDS['DEMO'])
         return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
                 demo]
@@ -207,8 +207,8 @@ class MainWindow(QtWidgets.QMainWindow):
                             column += 1
                         table_row += 1
                 connection.close()
-            except:
-                logging.exception("exception in load_data:")
+            except Exception as e:
+                logging.exception("exception in load_data:" + e)
         else:
             # What to do?
             pass

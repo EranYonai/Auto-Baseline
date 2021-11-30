@@ -12,7 +12,7 @@ import subprocess, sys
 # from selenium import webdriver # Not using selenium anymore
 # from selenium.webdriver.chrome.options import Options # Not using selenium anymore
 from difflib import SequenceMatcher
-from PyQt5 import QtCore, QtGui, QtWidgets, Qt
+from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QListWidget
 from Forms.MainWindowBig import Ui_MainWindow
 from Forms.system_dialog import Ui_system_dialog
@@ -54,11 +54,10 @@ Function returns a premade tuples object, which specify every machine used in Au
     dongle = ("dongles", 5, cfg.TABLE_FIELDS['DONGLE'])
     epu = ("epus", 4, cfg.TABLE_FIELDS['EPU'])
     printer = ("printers", 4, cfg.TABLE_FIELDS['PRINTER'])
-    spu = ("spus", 29, cfg.TABLE_FIELDS['SPU'])
+    spu = ("spus", 31, cfg.TABLE_FIELDS['SPU'])
     demo = ("demos", 7, cfg.TABLE_FIELDS['DEMO'])
     return [system, workstation, ultrasound, stockert, ngen, nmarq, smartablate, pacer, dongle, epu, printer, spu,
             demo]
-
 
 def insert_sql_get_string(equipment_list, table):
     """
@@ -83,7 +82,6 @@ Function creates a custom INSERT INTO sql command.
     except Exception as e:
         logging.exception('Exception at insert_sql_get_string:')
 
-
 def update_times_used(prime_key, table_str, db):
     try:
         table = find_table_in_tabs(table_str)
@@ -105,7 +103,6 @@ def update_times_used(prime_key, table_str, db):
     except Exception as e:
         logging.exception('Exception at update_times_used:')
 
-
 def find_table_in_tabs(kind):
     """
 A very basic function, finds the ID of the table based on a string
@@ -118,7 +115,6 @@ A very basic function, finds the ID of the table based on a string
             return i
     logging.warning('Exception at update_times_used: kind=' + kind)
     return None
-
 
 def choose_db():
     """
@@ -194,7 +190,6 @@ Function that sends the data recevied to the specific table in a specific db.
     except Exception as e:
         logging.exception("Exception in send_db: ")
 
-
 def db_item_exists(kind, equipment_list, db):
     """
 Checks if the item exists in a specific db according to its PRIME KEY.
@@ -225,7 +220,6 @@ Checks if the item exists in a specific db according to its PRIME KEY.
     except Exception as e:
         logging.exception('Exception at db_item_exists:')
 
-
 def verification_before_db(kind, equipment_list, db):
     # todo: impliment logic when key doesn't exists:
     # Key doesn't exist
@@ -251,7 +245,6 @@ def verification_before_db(kind, equipment_list, db):
         logging.info("user sent less than " + str(cfg.PERCENTAGE_TO_PASS_DB*100) + " % of fields. db didn't accept." )
         experimentalWarning('sent_db_not_full')
 
-
 def similar(str1, str2):
     """
     Gets two string and returns their correlation in precentage (0-1).
@@ -261,7 +254,6 @@ def similar(str1, str2):
     :return: float value
     """
     return SequenceMatcher(None, str1, str2).ratio()
-
 
 def correlation_differences(diffs, kind):
     """
@@ -293,7 +285,6 @@ def correlation_differences(diffs, kind):
     #     suggestion.exec_()
     return diffs_suggestions
 
-
 def verification_between_lists(db_list, equipment_list):
     """
 Function that takes two lists and compare between them, if differences were found return them.
@@ -309,7 +300,6 @@ Function that takes two lists and compare between them, if differences were foun
         if equipment_list[i] != str(db_list[i]):
             verified = False
     return (verified, db_list[len(equipment_list)] == 1, diffs)
-
 
 def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     """
@@ -350,7 +340,6 @@ def verification_dialog(dialogQ, equipment_list_str, equipment_list_obj, type):
     except Exception as e:
         logging.exception("Exception is system verification: ")
 
-
 def select_sql_query(prime_key, table):
     """
 Returns SELECT SQL command according to given parameters
@@ -365,7 +354,6 @@ Returns SELECT SQL command according to given parameters
         return query
     except Exception as e:
         logging.exception("Exception at select_sql_query: ")
-
 
 def write_tooltips(Qobject, tooltip_kind):
     """
@@ -575,8 +563,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.importButton)  # This is the next step of the program, upon importing txt file
 
         write_tooltips(self.ui.title, 'versions_to_title')
-
-    # self.experimentalWarning("beta") Not beta anymore :)
 
     def hideThings(self):
         self.ui.workstation_win_1.hide()
@@ -1323,7 +1309,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                        self.spuList[position].pacingbo_rev, self.spuList[position].digibo,
                                        self.spuList[position].digibo_rev, self.spuList[position].ecgbo,
                                        self.spuList[position].ecgbo_rev, self.spuList[position].spuprobo,
-                                       self.spuList[position].spuprobo_rev]
+                                       self.spuList[position].spuprobo_rev, self.spuList[position].magloc, self.spuList[position].magloc_rev]
         self.updateProgressbars("spu", position)
         self.spuOpened[position] = True
         logging.info("user opened SPU machine")
@@ -1340,8 +1326,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.workstationOpened[position] = True
         self.updateProgressbars("ws", position)
         logging.info("user opened WS machine")
-
-    # self.WSlist_info in place of WS if true add licenses = self.wsList[position].Licenses
 
     def open_cathetersDialog(self, cat_ext):
         cathetersDialog = Catheters_Dialog()
@@ -1820,7 +1804,7 @@ class MainWindow(QtWidgets.QMainWindow):
             fieldofSPU = ['MainfwVer', 'swVer', 'PN', 'SecFwVer', 'SN', 'frontloc', 'frontloc_rev', 'ledbo',
                           'ledbo_rev', 'motherbo', 'motherbo_rev', 'powerb', 'powerb_rev', 'backbo', 'backbo_rev',
                           'upbo', 'upbo_rev', 'tpibo', 'tpibo_rev', 'pacingbo', 'pacingbo_rev', 'digibo', 'digibo_rev',
-                          'ecgbo', 'ecgbo_rev', 'spuprobo', 'spuprobo_rev']
+                          'ecgbo', 'ecgbo_rev', 'spuprobo', 'spuprobo_rev', 'magloc', 'magloc_rev']
             for x in range(self.spuCount):
                 if (self.spuOpened[x]):
                     child_spu = ET.SubElement(title_spu, "SPU_" + str(count_))
@@ -1869,9 +1853,9 @@ class MainWindow(QtWidgets.QMainWindow):
             experimentalWarning('export_error')
             logging.exception("exception in Export_XML: ")
 
-    # format is a function that takes (self,type,position) as arguments.
-    # self being the pyqt5 inheritance - this function is being called by self.format(type,position)
     def format(self, type, position):
+        # format is a function that takes (self,type,position) as arguments.
+        # self being the pyqt5 inheritance - this function is being called by self.format(type,position)
         if type == 'system':
             return 'System #%d: \nSystem Number:\t\t%s\nPIU Configuration:\t%s\nLocation Pad:\t\t%s\nPatch Unit:\t\t%s\nMonitor 1:\t\t%s\nMonitor 2:\t\t%s\nECG Phantom:\t\t%s\nAquarium Number:\t%s\nAquarium Maximo:\t%s\n-------------------\n' % (
                 position + 1, self.sysList_info[position][0], self.sysList_info[position][1],
@@ -2026,7 +2010,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.qdotdonglelist_info[position][0], self.qdotdonglelist_info[position][1],
                 self.qdotdonglelist_info[position][2])
         if type == "spu":
-            return 'SPU:\nS/N: \t\t\t%s\nP/N:\t\t\t%s\nSW Version:\t\t%s\nMain FW Version:\t%s\nSecondary FW Ver:\t%s\n   Board\t| P/N\t |Revision\nFront Location\t|%s|%s\nLed Board\t|%s|%s\nMother Board\t|%s|%s\nBack Board\t|%s|%s\nPower Board\t|%s|%s\nUpper Board\t|%s|%s\nPacing Board\t|%s|%s\nTPI Board\t|%s|%s\nDigital Board\t|%s|%s\nECG Board\t|%s|%s\nSPU Prototypes\t|%s|%s\n-------------------\n' % (
+            return 'SPU:\nS/N: \t\t\t%s\nP/N:\t\t\t%s\nSW Version:\t\t%s\nMain FW Version:\t%s\nSecondary FW Ver:\t%s\n   Board\t| P/N\t |Revision\nFront Location\t|%s|%s\nLed Board\t|%s|%s\nMother Board\t|%s|%s\nBack Board\t|%s|%s\nPower Board\t|%s|%s\nUpper Board\t|%s|%s\nPacing Board\t|%s|%s\nTPI Board\t|%s|%s\nDigital Board\t|%s|%s\nECG Board\t|%s|%s\nSPU Prototypes\t|%s|%s\nMAG Location\t|%s|%s\n-------------------\n' % (
                 self.spuList_info[position][4], self.spuList_info[position][2], self.spuList_info[position][1],
                 self.spuList_info[position][0], self.spuList_info[position][3], self.spuList_info[position][5],
                 self.spuList_info[position][6], self.spuList_info[position][7], self.spuList_info[position][8],
@@ -2035,7 +2019,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.spuList_info[position][15], self.spuList_info[position][16], self.spuList_info[position][19],
                 self.spuList_info[position][20], self.spuList_info[position][17], self.spuList_info[position][18],
                 self.spuList_info[position][21], self.spuList_info[position][22], self.spuList_info[position][23],
-                self.spuList_info[position][24], self.spuList_info[position][25], self.spuList_info[position][26])
+                self.spuList_info[position][24], self.spuList_info[position][25], self.spuList_info[position][26],
+                self.spuList_info[position][27], self.spuList_info[position][28])
 
     def importButton(self):
         try:
@@ -2110,8 +2095,6 @@ class MainWindow(QtWidgets.QMainWindow):
             event.accept()
         else:
             event.ignore()
-
-
 
     def importaddtoInfoCount(self, type, listValues):
         # This function gets type (child.tag) e.g. "Workstations" and listValues which is the list of all the values of the children texts(childx3.text)
@@ -2226,6 +2209,7 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         super(Ultrasound_Dialog, self).__init__()
         self.udialog = Ui_ultrasound_Dialog()
         self.udialog.setupUi(self)
+        self.setWindowTitle('UltraSound Machine')
         self.udialog.confirm_button.clicked.connect(self.confirmPressed)
         self.udialog.check_button.clicked.connect(self.verification)
         self.udialog.ultrasound_combo.currentTextChanged.connect(self.app_ver_na)
@@ -2285,7 +2269,6 @@ class Ultrasound_Dialog(QtWidgets.QDialog):
         self.udialog.ethernet_text.setText(clip[5])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class CatalogHelper_Dialog(QtWidgets.QDialog):
     def __init__(self, mainWin):
         """Here is a good example of inheritance between pyqt5 objects - which works differently then normal python inheritance.
@@ -2294,6 +2277,7 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
         super(CatalogHelper_Dialog, self).__init__()
         self.ui = cathelp_mainUi()
         self.ui.setupUi(self)
+        self.setWindowTitle('Biosense Catalog')
         self.ui.getCatalog_B.clicked.connect(self.oneCatalog)
         self.mainWin = mainWin
 
@@ -2361,14 +2345,13 @@ class CatalogHelper_Dialog(QtWidgets.QDialog):
             notimplemented.exec_()
             logging.info("couldn't find item")
 
-
 class SPU_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(SPU_Dialog, self).__init__()
-        self.spdialog = spu_Ui()
-        self.spdialog.setupUi(self)
-        self.spdialog.confirm_button.clicked.connect(self.confirmPressed)
-        self.spdialog.check_button.clicked.connect(self.verification)
+        uic.loadUi(cfg.FILE_PATHS['SPU_DIALOG'], self)
+        self.setWindowTitle('SPU')
+        self.confirm_button.clicked.connect(self.confirmPressed)
+        self.check_button.clicked.connect(self.verification)
         self.infoBox()
         self.equipment_list_obj = []
 
@@ -2383,82 +2366,84 @@ class SPU_Dialog(QtWidgets.QDialog):
         verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['SPU'])
 
     def infoBox(self):
-        self.mainfwver = self.spdialog.mainfwver_text.text()
-        self.swver = self.spdialog.swver_text.text()
-        self.pn = self.spdialog.pn_text.text()
-        self.secfwver = self.spdialog.secfwver_text.text()
-        self.sn = self.spdialog.sn_text.text()
-        self.frontloc = self.spdialog.frontloc_text.text()
-        self.frontloc_rev = self.spdialog.frontloc_text_rev.text()
-        self.ledbo = self.spdialog.ledbo_text.text()
-        self.ledbo_rev = self.spdialog.ledbo_text_rev.text()
-        self.motherbo = self.spdialog.motherbo_text.text()
-        self.motherbo_rev = self.spdialog.motherbo_text_rev.text()
-        self.powerb = self.spdialog.powerb_text.text()
-        self.powerb_rev = self.spdialog.powerb_text_rev.text()
-        self.backbo = self.spdialog.backbo_text.text()
-        self.backbo_rev = self.spdialog.backbo_text_rev.text()
-        self.upbo = self.spdialog.upbo_text.text()
-        self.upbo_rev = self.spdialog.upbo_text_rev.text()
-        self.backbo = self.spdialog.backbo_text.text()
-        self.backbo_rev = self.spdialog.backbo_text_rev.text()
-        self.tpibo = self.spdialog.tpibo_text.text()
-        self.tpibo_rev = self.spdialog.tpibo_text_rev.text()
-        self.pacingbo = self.spdialog.pacingbo_text.text()
-        self.pacingbo_rev = self.spdialog.pacingbo_text_rev.text()
-        self.digibo = self.spdialog.digibo_text.text()
-        self.digibo_rev = self.spdialog.digibo_text_rev.text()
-        self.ecgbo = self.spdialog.ecgbo_text.text()
-        self.ecgbo_rev = self.spdialog.ecgbo_text_rev.text()
-        self.spuprobo = self.spdialog.spuprobo_text.text()
-        self.spuprobo_rev = self.spdialog.spuprobo_text_rev.text()
-        self.equipment_list_obj = [self.spdialog.sn_text, self.spdialog.pn_text, self.spdialog.swver_text,
-                                   self.spdialog.mainfwver_text, self.spdialog.secfwver_text, self.spdialog.frontloc_text,
-                                   self.spdialog.frontloc_text_rev, self.spdialog.ledbo_text, self.spdialog.ledbo_text_rev,
-                                   self.spdialog.motherbo_text, self.spdialog.motherbo_text_rev, self.spdialog.backbo_text,
-                                   self.spdialog.backbo_text_rev, self.spdialog.powerb_text, self.spdialog.powerb_text_rev,
-                                   self.spdialog.upbo_text, self.spdialog.upbo_text_rev, self.spdialog.pacingbo_text,
-                                   self.spdialog.pacingbo_text_rev, self.spdialog.tpibo_text, self.spdialog.tpibo_text_rev,
-                                   self.spdialog.digibo_text, self.spdialog.digibo_text_rev, self.spdialog.ecgbo_text,
-                                   self.spdialog.ecgbo_text_rev, self.spdialog.spuprobo_text, self.spdialog.spuprobo_text_rev]
+        self.mainfwver = self.mainfwver_text.text()
+        self.swver = self.swver_text.text()
+        self.pn = self.pn_text.text()
+        self.secfwver = self.secfwver_text.text()
+        self.sn = self.sn_text.text()
+        self.frontloc = self.frontloc_text.text()
+        self.frontloc_rev = self.frontloc_text_rev.text()
+        self.ledbo = self.ledbo_text.text()
+        self.ledbo_rev = self.ledbo_text_rev.text()
+        self.motherbo = self.motherbo_text.text()
+        self.motherbo_rev = self.motherbo_text_rev.text()
+        self.powerb = self.powerb_text.text()
+        self.powerb_rev = self.powerb_text_rev.text()
+        self.backbo = self.backbo_text.text()
+        self.backbo_rev = self.backbo_text_rev.text()
+        self.upbo = self.upbo_text.text()
+        self.upbo_rev = self.upbo_text_rev.text()
+        self.backbo = self.backbo_text.text()
+        self.backbo_rev = self.backbo_text_rev.text()
+        self.tpibo = self.tpibo_text.text()
+        self.tpibo_rev = self.tpibo_text_rev.text()
+        self.pacingbo = self.pacingbo_text.text()
+        self.pacingbo_rev = self.pacingbo_text_rev.text()
+        self.digibo = self.digibo_text.text()
+        self.digibo_rev = self.digibo_text_rev.text()
+        self.ecgbo = self.ecgbo_text.text()
+        self.ecgbo_rev = self.ecgbo_text_rev.text()
+        self.spuprobo = self.spuprobo_text.text()
+        self.spuprobo_rev = self.spuprobo_text_rev.text()
+        self.magloc = self.macloc_text.text()
+        self.magloc_rev = self.macloc_text_rev.text()
+        self.equipment_list_obj = [self.sn_text, self.pn_text, self.swver_text,
+                                   self.mainfwver_text, self.secfwver_text, self.frontloc_text,
+                                   self.frontloc_text_rev, self.ledbo_text, self.ledbo_text_rev,
+                                   self.motherbo_text, self.motherbo_text_rev, self.backbo_text,
+                                   self.backbo_text_rev, self.powerb_text, self.powerb_text_rev,
+                                   self.upbo_text, self.upbo_text_rev, self.pacingbo_text,
+                                   self.pacingbo_text_rev, self.tpibo_text, self.tpibo_text_rev,
+                                   self.digibo_text, self.digibo_text_rev, self.ecgbo_text,
+                                   self.ecgbo_text_rev, self.spuprobo_text, self.spuprobo_text_rev, self.macloc_text, self.macloc_text_rev]
         for field in self.equipment_list_obj:
             field.setStyleSheet('')
             field.setToolTip('')
 
     def fillFields(self, clip):
-        self.spdialog.mainfwver_text.setText(clip[0])
-        self.spdialog.swver_text.setText(clip[1])
-        self.spdialog.pn_text.setText(clip[2])
-        self.spdialog.secfwver_text.setText(clip[3])
-        self.spdialog.sn_text.setText(clip[4])
-        self.spdialog.frontloc_text.setText(clip[5])
-        self.spdialog.frontloc_text_rev.setText(clip[6])
-        self.spdialog.ledbo_text.setText(clip[7])
-        self.spdialog.ledbo_text_rev.setText(clip[8])
-        self.spdialog.motherbo_text.setText(clip[9])
-        self.spdialog.motherbo_text_rev.setText(clip[10])
-        self.spdialog.powerb_text.setText(clip[11])
-        self.spdialog.powerb_text_rev.setText(clip[12])
-        self.spdialog.backbo_text.setText(clip[13])
-        self.spdialog.backbo_text_rev.setText(clip[14])
-        self.spdialog.upbo_text.setText(clip[15])
-        self.spdialog.upbo_text_rev.setText(clip[16])
-        self.spdialog.tpibo_text.setText(clip[17])
-        self.spdialog.tpibo_text_rev.setText(clip[18])
-        self.spdialog.pacingbo_text.setText(clip[19])
-        self.spdialog.pacingbo_text_rev.setText(clip[20])
-        self.spdialog.digibo_text.setText(clip[21])
-        self.spdialog.digibo_text_rev.setText(clip[22])
-        self.spdialog.ecgbo_text.setText(clip[23])
-        self.spdialog.ecgbo_text_rev.setText(clip[24])
-        self.spdialog.spuprobo_text.setText(clip[25])
-        self.spdialog.spuprobo_text_rev.setText(clip[26])
+        self.mainfwver_text.setText(clip[0])
+        self.swver_text.setText(clip[1])
+        self.pn_text.setText(clip[2])
+        self.secfwver_text.setText(clip[3])
+        self.sn_text.setText(clip[4])
+        self.frontloc_text.setText(clip[5])
+        self.frontloc_text_rev.setText(clip[6])
+        self.ledbo_text.setText(clip[7])
+        self.ledbo_text_rev.setText(clip[8])
+        self.motherbo_text.setText(clip[9])
+        self.motherbo_text_rev.setText(clip[10])
+        self.powerb_text.setText(clip[11])
+        self.powerb_text_rev.setText(clip[12])
+        self.backbo_text.setText(clip[13])
+        self.backbo_text_rev.setText(clip[14])
+        self.upbo_text.setText(clip[15])
+        self.upbo_text_rev.setText(clip[16])
+        self.tpibo_text.setText(clip[17])
+        self.tpibo_text_rev.setText(clip[18])
+        self.pacingbo_text.setText(clip[19])
+        self.pacingbo_text_rev.setText(clip[20])
+        self.digibo_text.setText(clip[21])
+        self.digibo_text_rev.setText(clip[22])
+        self.ecgbo_text.setText(clip[23])
+        self.ecgbo_text_rev.setText(clip[24])
+        self.spuprobo_text.setText(clip[25])
+        self.spuprobo_text_rev.setText(clip[26])
+        self.macloc_text.setText(clip[27])
+        self.macloc_text_rev.setText(clip[28])
         self.infoBox()
-
 
 class Bard_Dialog(QtWidgets.QDialog):
     pass
-
 
 class SingleCatheter(QtWidgets.QDialog):
     def __init__(self, listValues, parent_win):
@@ -2483,12 +2468,12 @@ class SingleCatheter(QtWidgets.QDialog):
         self.parent_win.mainWin.ui.catheter_list.addItem(item)
         self.close()
 
-
 class System_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(System_Dialog, self).__init__()
         self.sdialog = Ui_system_dialog()
         self.sdialog.setupUi(self)
+        self.setWindowTitle('System')
         self.sdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.sdialog.check_button.clicked.connect(self.verification)
         self.equipment_list_obj = []
@@ -2533,12 +2518,12 @@ class System_Dialog(QtWidgets.QDialog):
         self.sdialog.aquamax_text.setText(clip[8])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class Licenses_Dialog(QtWidgets.QDialog):
     def __init__(self, parentWin):
         super(Licenses_Dialog, self).__init__()
         self.ldialog = Ui_licenses_Dialog()
         self.ldialog.setupUi(self)
+        self.setWindowTitle('Licenses')
         self.licenseClip = []
         self.spClip = []
         self.ldialog.comboBox.currentTextChanged.connect(self.presets)
@@ -2758,12 +2743,12 @@ class Licenses_Dialog(QtWidgets.QDialog):
         if customValue is not None:
             self.ldialog.ManualLine.setText(customValue[0])
 
-
 class Workstation_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Workstation_Dialog, self).__init__()
         self.wdialog = Ui_workstation_Dialog()
         self.wdialog.setupUi(self)
+        self.setWindowTitle('Workstation Machine')
         self.licensesToExport = ""
         self.spToExport = ""
         self.licensesToImport = []
@@ -2870,12 +2855,12 @@ class Workstation_Dialog(QtWidgets.QDialog):
                 toExportSP += spLicenses[i][0] + ' ver: ' + spLicenses[i][1] + ', '
         self.spToExport = toExportSP[:-2]
 
-
 class Catheters_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Catheters_Dialog, self).__init__()
         self.cdialog = catheters_Ui()
         self.cdialog.setupUi(self)
+        self.setWindowTitle('Catheters Dialog')
         self.cdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.cdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -2895,12 +2880,12 @@ class Catheters_Dialog(QtWidgets.QDialog):
         self.Catfamily = self.cdialog.mfg_text_2.text()
         self.CatMFG = self.cdialog.mfg_text.text()
 
-
 class Stockert_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Stockert_Dialog, self).__init__()
         self.stdialog = stockert_Ui()
         self.stdialog.setupUi(self)
+        self.setWindowTitle('Stockert Machine')
         self.stdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.stdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -2952,12 +2937,12 @@ class Stockert_Dialog(QtWidgets.QDialog):
         self.stdialog.footPedal_text.setText(clip[10])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class SmartAblate_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(SmartAblate_Dialog, self).__init__()
         self.sadialog = smartablate_Ui()
         self.sadialog.setupUi(self)
+        self.setWindowTitle('SMARTABLATE Machine')
         self.sadialog.confirm_button.clicked.connect(self.confirmPressed)
         self.sadialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -2993,12 +2978,12 @@ class SmartAblate_Dialog(QtWidgets.QDialog):
         self.sadialog.footPedal_text.setText(clip[4])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class nGEN_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(nGEN_Dialog, self).__init__()
         self.ngdialog = ngen_Ui()
         self.ngdialog.setupUi(self)
+        self.setWindowTitle('nGEN Machine')
         self.ngdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.ngdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -3086,12 +3071,12 @@ class nGEN_Dialog(QtWidgets.QDialog):
         self.ngdialog.foot_pedal_text.setText(clip[25])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class nMARQ_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(nMARQ_Dialog, self).__init__()
         self.nmdialog = nmarq_Ui()
         self.nmdialog.setupUi(self)
+        self.setWindowTitle('nMARQ Machine')
         self.nmdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.nmdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -3138,12 +3123,12 @@ class nMARQ_Dialog(QtWidgets.QDialog):
         self.nmdialog.footPadel_text.setText(clip[8])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class Pacer_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Pacer_Dialog, self).__init__()
         self.pdialog = pacer_Ui()
         self.pdialog.setupUi(self)
+        self.setWindowTitle('Pacer')
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -3155,7 +3140,7 @@ class Pacer_Dialog(QtWidgets.QDialog):
 
     def verification(self):
         self.infoBox()
-        equipment_list_str = [self.unitV, self.unitSN]
+        equipment_list_str = [self.unitSN, self.unitV]
         verification_dialog(self, equipment_list_str, self.equipment_list_obj, cfg.TABLE_NAMES['PACER'])
 
     def infoBox(self):
@@ -3172,12 +3157,12 @@ class Pacer_Dialog(QtWidgets.QDialog):
         self.pdialog.unitV_text.setText(clip[1])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class Printer_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Printer_Dialog, self).__init__()
         self.pdialog = printer_Ui()
         self.pdialog.setupUi(self)
+        self.setWindowTitle('Printer')
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -3206,12 +3191,12 @@ class Printer_Dialog(QtWidgets.QDialog):
         self.pdialog.unitV_text.setText(clip[1])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class qDotDongle_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(qDotDongle_Dialog, self).__init__()
         self.qddialog = qdotdongle_Ui()
         self.qddialog.setupUi(self)
+        self.setWindowTitle('Dongle')
         self.qddialog.confirm_button.clicked.connect(self.confirmPressed)
         self.qddialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -3241,12 +3226,12 @@ class qDotDongle_Dialog(QtWidgets.QDialog):
         self.qddialog.EPcable_text.setText(clip[2])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class epu_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(epu_Dialog, self).__init__()
         self.epdialog = epu_Ui()
         self.epdialog.setupUi(self)
+        self.setWindowTitle('EPU')
         self.epdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.epdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -3275,12 +3260,12 @@ class epu_Dialog(QtWidgets.QDialog):
         self.epdialog.unitV_text.setText(clip[1])
         self.infoBox()  # After filling fields also apply values to self.values.
 
-
 class Demo_Dialog(QtWidgets.QDialog):
     def __init__(self):
         super(Demo_Dialog, self).__init__()
         self.pdialog = demo_Ui()
         self.pdialog.setupUi(self)
+        self.setWindowTitle('Demo Laptop')
         self.pdialog.confirm_button.clicked.connect(self.confirmPressed)
         self.pdialog.check_button.clicked.connect(self.verification)
         self.infoBox()  # By adding self.infoBox() when ending __init__, it puts "" inside infobox fields thus making the app not crash when pressing X or esc
@@ -3321,7 +3306,6 @@ class Demo_Dialog(QtWidgets.QDialog):
         else:
             self.pdialog.surpoint_checkbox.setChecked(False)
         self.infoBox()  # After filling fields also apply values to self.values.
-
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

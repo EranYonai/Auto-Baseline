@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1042</width>
-    <height>1041</height>
+    <width>1742</width>
+    <height>1043</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <widget class="QLabel" name="title">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>610</x>
       <y>0</y>
       <width>381</width>
       <height>78</height>
@@ -38,12 +38,12 @@
      <rect>
       <x>20</x>
       <y>80</y>
-      <width>1001</width>
+      <width>1711</width>
       <height>911</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Inventory_details">
      <attribute name="title">
@@ -54,12 +54,12 @@
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>971</width>
-        <height>791</height>
+        <width>1691</width>
+        <height>801</height>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>11</number>
       </property>
       <widget class="QWidget" name="systems">
        <attribute name="title">
@@ -70,8 +70,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="autoScrollMargin">
@@ -455,8 +455,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="autoScrollMargin">
@@ -834,8 +834,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -1201,8 +1201,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -1593,8 +1593,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -2060,8 +2060,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -2442,8 +2442,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -2804,8 +2804,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -3151,8 +3151,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -3500,8 +3500,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -3844,8 +3844,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -4188,8 +4188,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -4638,6 +4638,16 @@
         </column>
         <column>
          <property name="text">
+          <string>MAG Location</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>MAG Location Rev</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
           <string>Approved</string>
          </property>
         </column>
@@ -4657,8 +4667,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>951</width>
-          <height>741</height>
+          <width>1671</width>
+          <height>761</height>
          </rect>
         </property>
         <property name="alternatingRowColors">
@@ -5011,7 +5021,7 @@
      <widget class="QPushButton" name="editMode_button">
       <property name="geometry">
        <rect>
-        <x>450</x>
+        <x>730</x>
         <y>20</y>
         <width>93</width>
         <height>28</height>
@@ -5027,7 +5037,7 @@
      <widget class="QPushButton" name="refresh_button">
       <property name="geometry">
        <rect>
-        <x>570</x>
+        <x>850</x>
         <y>20</y>
         <width>91</width>
         <height>28</height>
@@ -5043,7 +5053,7 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>610</x>
         <y>20</y>
         <width>93</width>
         <height>28</height>
@@ -5115,8 +5125,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1042</width>
-     <height>21</height>
+     <width>1742</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuActions">

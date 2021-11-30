@@ -481,7 +481,7 @@ class Ui_MainWindow(object):
         self.spu_win.setObjectName("spu_win")
         self.spu_bar = QtWidgets.QProgressBar(self.extra_tab)
         self.spu_bar.setGeometry(QtCore.QRect(180, 180, 118, 23))
-        self.spu_bar.setMaximum(27)
+        self.spu_bar.setMaximum(29)
         self.spu_bar.setProperty("value", 0)
         self.spu_bar.setTextVisible(True)
         self.spu_bar.setInvertedAppearance(False)
@@ -661,8 +661,8 @@ class Ui_MainWindow(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#709dca;\">&lt;STD Name&gt;</span><span style=\" font-size:10pt;\"> STD Baseline After V&amp;V </span><span style=\" font-size:10pt; color:#709dca;\">&lt;Project, Phase and Cycle&gt;</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">Performed by: </span><span style=\" font-size:10pt; color:#709dca;\">&lt;Full Name&gt;</span></p></body></html>"))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#709dca;\">STD Name</span><span style=\" font-size:10pt;\"> STD Baseline After V&amp;V </span><span style=\" font-size:10pt; color:#709dca;\">Project, Phase and Cycle</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">Performed by: </span><span style=\" font-size:10pt; color:#709dca;\">Full Name</span></p></body></html>"))
         self.label.setText(_translate("MainWindow", "Baseline header most include:"))
         self.label_2.setText(_translate("MainWindow", "1. STD Name"))
         self.label_3.setText(_translate("MainWindow", "2. Project (e.g. V7)"))

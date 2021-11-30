@@ -381,7 +381,7 @@ class Ui_licenses_Dialog(object):
         self.dualmonitor.setText(_translate("licenses_Dialog", "Dual-Monitor"))
         self.visitag.setText(_translate("licenses_Dialog", "VISITAG™"))
         self.segct.setText(_translate("licenses_Dialog", "CARTOSEG™ Extended CT"))
-        self.activation3.setText(_translate("licenses_Dialog", "CARTO 3® Activation"))
+        self.activation3.setText(_translate("licenses_Dialog", "Advanced Mapping"))
         self.confidense.setText(_translate("licenses_Dialog", "CONFIDENSE™ Mapping"))
         self.segmr.setText(_translate("licenses_Dialog", "CARTOSEG™ Extended MR"))
         self.famdx.setText(_translate("licenses_Dialog", "FAM Dx"))

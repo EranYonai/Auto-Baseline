@@ -163,7 +163,7 @@ class Ui_workstation_Dialog(object):
         self.label_5.setText(_translate("workstation_Dialog", "Service Tag:"))
         self.label_9.setText(_translate("workstation_Dialog", "Licenses:"))
         self.label_6.setText(_translate("workstation_Dialog", "WS Configuration:"))
-        self.title.setText(_translate("workstation_Dialog", "Work Station"))
+        self.title.setText(_translate("workstation_Dialog", "WorkStation"))
         self.label_4.setText(_translate("workstation_Dialog", "Image Version:"))
         self.label.setText(_translate("workstation_Dialog", "Software Version:"))
         self.label_7.setText(_translate("workstation_Dialog", "WS Model:"))

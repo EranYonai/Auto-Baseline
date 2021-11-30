@@ -1,4 +1,16 @@
-import os
+import os, sys
+from os.path import abspath, join
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 
 PASSWORDS = {
     'DB_MANAGER': 'dbManager',
@@ -8,13 +20,14 @@ FILE_PATHS = {
     # 'DB_LOCATION': "C:\\Users\\Eyonai\\Documents\\GitHub\\AutoBaseline\\Code\\db\\",
     'DB_LOCATION': "L:\\Testing\\Matrix\\Eran Yonai\\Auto Baseline Validation\\dbs\\",
     'POWERSHELL': 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
+    'SPU_DIALOG': resource_path('Forms\\spu_dialog.ui'),
     'BASELINE_LOG': os.getenv('APPDATA') + '\\auto_baseline_logs.log',
     'INVENTORY_LOG': os.getenv('APPDATA') + '\\inventory_logs.log'
 }
 
 APPLICATION_VERSION = {
-    'AutoBaseline': '1.2-Beta',
-    'Inventory': '0.9'
+    'AutoBaseline': '1.3',
+    'Inventory': '1'
 }
 
 TABLE_NAMES = {
@@ -71,7 +84,7 @@ DIALOGS_FIELD_NAMES = {
              'Back Board REV', 'Power Board PN', 'Power Board REV', 'Upper Board PN', 'Upper Board REV',
              'Pacing Board PN',
              'Pacing Board REV', 'TPI Board SN', 'TPI Board REV', 'Digital Board SN', 'Digital Board REV',
-             'ECG Board SN', 'ECG Board REV', 'SPU Prototypes PN', 'SPU Prototypes REV'],
+             'ECG Board SN', 'ECG Board REV', 'SPU Prototypes PN', 'SPU Prototypes REV', 'MAG Location', 'MAG Location REV'],
     'demos': ['WS Type', 'SW Version', 'DSP Version', 'Image Version', 'Service Tag', 'SurPoint']
 }
 
@@ -137,7 +150,7 @@ TABLE_FIELDS = {
             ["tpi_board", "STRING"], ["tpi_board_rev", "STRING"], ["digital_board", "STRING"],
             ["digital_board_rev", "STRING"],
             ["ecg_board", "STRING"], ["ecg_board_rev", "STRING"], ["spu_pro", "STRING"],
-            ["spu_pro_rev", "STRING"], ["approved", "BOOLEAN"],
+            ["spu_pro_rev", "STRING"], ["mag_loc", "STRING"], ["mag_loc_rev", "STRING"], ["approved", "BOOLEAN"],
             ["used", "INTEGER"]],
     'DEMO': [["service_tag", "STRING PRIMARY KEY"], ["ws_type", "STRING"],
              ["sw_version", "STRING"], ["dsp_version", "STRING"],

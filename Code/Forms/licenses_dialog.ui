@@ -264,7 +264,7 @@
     </font>
    </property>
    <property name="text">
-    <string>CARTO 3® Activation</string>
+    <string>Advanced Mapping</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="confidense">

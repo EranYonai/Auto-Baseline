@@ -265,6 +265,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>EA-5070-32F</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="frontloc_text_rev">
    <property name="geometry">
@@ -274,6 +277,9 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>P02</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_10">
@@ -304,6 +310,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>EA-5070-24NP1</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="ledbo_text_rev">
    <property name="geometry">
@@ -313,6 +322,9 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>P01</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_11">
@@ -343,6 +355,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>EA-5070-14NP1</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="motherbo_text_rev">
    <property name="geometry">
@@ -352,6 +367,9 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>P05</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_12">
@@ -382,6 +400,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>P02</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="powerb_text">
    <property name="geometry">
@@ -391,6 +412,9 @@
      <width>131</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>EA-5070-16NP1</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="backbo_text">
@@ -402,6 +426,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>EA-5070-15F</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="upbo_text">
    <property name="geometry">
@@ -412,6 +439,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>EA-5070-21NP1</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="upbo_text_rev">
    <property name="geometry">
@@ -421,6 +451,9 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>P02</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_13">
@@ -450,6 +483,9 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>P03</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_14">
@@ -499,6 +535,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>P03</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="tpibo_text">
    <property name="geometry">
@@ -508,6 +547,9 @@
      <width>131</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>EA-5070-19NP1</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="pacingbo_text">
@@ -519,6 +561,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>EA-5070-23NP1</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="digibo_text">
    <property name="geometry">
@@ -529,6 +574,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>EA-5070-17NP1</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="digibo_text_rev">
    <property name="geometry">
@@ -538,6 +586,9 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>P02</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_16">
@@ -567,6 +618,9 @@
      <width>71</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>P01</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_17">
@@ -616,6 +670,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>P02</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="ecgbo_text">
    <property name="geometry">
@@ -625,6 +682,9 @@
      <width>131</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>EA-5070-18NP1</string>
    </property>
   </widget>
   <widget class="QLabel" name="label1123">
@@ -655,6 +715,9 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="text">
+    <string>P08</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="spuprobo_text">
    <property name="geometry">
@@ -664,6 +727,9 @@
      <width>131</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>EM-5070-00NP1</string>
    </property>
   </widget>
   <widget class="QPushButton" name="check_button">
@@ -702,7 +768,7 @@
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>P05</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="macloc_text">
@@ -715,7 +781,7 @@
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>EA-5070-022F</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_19">
